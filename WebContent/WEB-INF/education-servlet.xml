@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p = "http://www.springframework.org/schema/p"
+	xmlns:util = "http://www.springframework.org/schema/util"
+	xmlns:context = "http://www.springframework.org/schema/context"
+	xmlns:aop = "http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-4.3.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.3.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-4.3.xsd"
+>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	   <property name="messageConverters">
+	        <list>
+	            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	                <property name="supportedMediaTypes">
+	                    <list>
+	                        <value>text/html;charset=UTF-8</value>
+	                    </list>
+	                </property>
+	            </bean>
+	        </list>
+	    </property>
+	</bean>
+	
+	<context:component-scan base-package="com.es.db" />
+	<context:component-scan base-package="com.es.education" />
+	<context:component-scan base-package="com.es.employees" />
+	<context:component-scan base-package="com.es.handler" />
+	<context:component-scan base-package="com.es.instructor" />
+	<context:component-scan base-package="com.es.manager" />
+	<context:component-scan base-package="com.es.notice" />
+	<context:component-scan base-package="com.es.petition" />
+
+
+</beans>
