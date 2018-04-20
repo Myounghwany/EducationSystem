@@ -53,9 +53,10 @@ function checkValtext() {
 <form name=insertForm class="form-horizontal" method="post" action="writeForm.do" enctype="multipart/form-data" onSubmit="return checkValtext()">
 	<select name="selectType" >
 	   	<option value="">글 분류</option>
-		<option value="erp">ERP</option>
-		<option value="web">WEB</option>
-		<option value="bpo">BPO</option>
+		<option value="coding">코딩</option>
+		<option value="system">시스템</option>
+		<option value="db">데이터베이스</option>
+		<option value="design">설계</option>
     </select><br>
 	
 	<br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">제목</span><br>
@@ -66,11 +67,10 @@ function checkValtext() {
 	
 	<br>
 	<div class="form-group">
-		<br><span style="font-family: 'Jeju Gothic', serif; font-size: 4; color: black;">파일첨부 : </span> 
+		<br><span style="font-family: 'Jeju Gothic', serif; font-size: 6; color: black;">파일첨부 : </span> 
 		 <input type="file" name="upfile" size="20" style="font-family: 'Jeju Gothic', serif;">
 	</div>
 
-	<input type="hidden" name="replyboard_no" style="width: 700px; height: 30px;"value="0">
 	<br>
 	<br>
 	<button style="font-family: 'Jeju Gothic', serif;" type="submit">작성 완료</button>
