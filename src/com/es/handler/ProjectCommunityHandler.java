@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.es.projectCommunity.ProjectCommunityDao;
 import com.es.projectCommunity.ProjectCommunityDto;
+
 
 @Controller
 public class ProjectCommunityHandler {
@@ -19,9 +21,7 @@ public class ProjectCommunityHandler {
 	@Resource
 	private ProjectCommunityDao projectDao;
 	
-	private ProjectCommunityDto projectDto;
-	
-	@RequestMapping("/list")
+	@RequestMapping("/ProjectList")
 	public ModelAndView list(HttpServletRequest req, HttpServletResponse rep) {
 		System.out.println("Controller list");
 		
@@ -34,9 +34,13 @@ public class ProjectCommunityHandler {
 	@RequestMapping(value="/ProjectWrite")
 	public ModelAndView ProjectWrite(HttpServletRequest req, HttpServletResponse rep) {
 		System.out.println("Controller ProjectWrite");
-		
-		
 		return new ModelAndView("project_community/write");
+	}
+
+	@RequestMapping(value="/ProjectWrite", method=RequestMethod.GET)
+	public ModelAndView ProjectWriteForm(HttpServletRequest req, HttpServletResponse rep) {
+		System.out.println("Controller ProjectWriteForm");
+		return new ModelAndView("project_community/writeForm");
 	}
 	
 }
