@@ -1,5 +1,8 @@
 package com.es.projectCommunity;
 
-public interface ProjectCommunityDao {
 
+import java.util.List;
+
+public interface ProjectCommunityDao {
+	public List<ProjectCommunityDto> projectList();
 }

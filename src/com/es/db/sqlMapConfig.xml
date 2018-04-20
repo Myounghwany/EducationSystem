@@ -24,5 +24,6 @@
 		<mapper resource="com/es/manager/manager.xml"/>
 		<mapper resource="com/es/notice/notice.xml"/>
 		<mapper resource="com/es/petition/petition.xml"/>
+		<mapper resource="com/es/projectCommunity/projectCommunity.xml"/>
 	</mappers>
 </configuration>

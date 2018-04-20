@@ -12,6 +12,8 @@ public class DefaultHandler {
 
 	@RequestMapping("*")
 	public ModelAndView process(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		System.out.println("defaultHandler");
+		
 		request.setAttribute( "result", "처리할 수 없는 요청입니다" );
 		return new ModelAndView("default");
 	}
