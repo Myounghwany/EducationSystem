@@ -53,6 +53,17 @@ public class ProjectCommunityHandler {
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		System.out.println(project_no);
 		
+		ProjectCommunityDto detail = projectDao.detailProject(project_no);
+		
+		if(detail.getFile_path().equals("")) {
+			File file = new File(detail.getFile_path());
+			if(file.exists()==true) {
+				file.delete();
+			}
+			
+		}
+		
+		
 		int result = projectDao.deleteProject(project_no);
 		System.out.println("result : "+result);
 
@@ -78,7 +89,8 @@ public class ProjectCommunityHandler {
 		String content = req.getParameter("text");
 		String writer = "juhyun";
 		String file_path= "";
-		String file_name= "";
+		String file_save_name= "";
+		String file_ori_name= "";
 		
 		
 		projectDto.setClassification(classification);
@@ -86,7 +98,8 @@ public class ProjectCommunityHandler {
 		projectDto.setContent(content);
 		projectDto.setWriter(writer);
 		projectDto.setFile_path(file_path);
-		projectDto.setFile_name(file_name);
+		projectDto.setFile_save_name(file_save_name);
+		projectDto.setFile_ori_name(file_ori_name);
 		
 		
 		// -- 파일 저장하기
@@ -120,7 +133,10 @@ public class ProjectCommunityHandler {
 			
 			String origName;
 			
-			origName = new String(mfile.getOriginalFilename().getBytes("8859_1"),"UTF-8");
+			/*origName = new String(mfile.getOriginalFilename().getBytes("8859_1"),"UTF-8");*/
+			origName = new String(mfile.getOriginalFilename().getBytes("UTF-8"),"UTF-8");
+			System.out.println(origName);
+			
 			//파일명이 없다면
 			if("".equals(origName)) {
 				continue;
@@ -141,10 +157,12 @@ public class ProjectCommunityHandler {
 			mfile.transferTo(serverFile);
 
 			file_path= path+ File.separator + saveFileName;
-			file_name= saveFileName;
+			file_ori_name= origName;
+			file_save_name= saveFileName;
 
 			projectDto.setFile_path(file_path);
-			projectDto.setFile_name(file_name);
+			projectDto.setFile_ori_name(file_ori_name);
+			projectDto.setFile_save_name(file_save_name);
 			
 		}
 		
@@ -189,6 +207,7 @@ public class ProjectCommunityHandler {
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
 		String path = result.getFile_path();
+		String file_ori_name= new String(result.getFile_ori_name().getBytes("UTF-8"), "ISO-8859-1"); 
 		
 		/*String path = request.getParameter("path");*/
 		File file = new File(path);
@@ -196,11 +215,10 @@ public class ProjectCommunityHandler {
 		/*response.setContentType(getContentType()); */
 		response.setContentLength((int)file.length());
 
-		Map map = new HashMap();
-		map.put("fileNm", file.getName());
 		System.out.println("file.getName() : "+file.getName());
 		
-		response.setHeader("Content-Disposition", "attachment; filename=\""+file.getName()+"\";");
+		
+		response.setHeader("Content-Disposition", "attachment; filename=\""+file_ori_name+"\";");
 		response.setHeader("Content-Transfer-Encoding", "binary");
 		
 		OutputStream out = response.getOutputStream();
@@ -215,7 +233,6 @@ public class ProjectCommunityHandler {
 		}
 		
 		out.flush();
-		
 		
 	}
 	
@@ -246,7 +263,8 @@ public class ProjectCommunityHandler {
 		String content = request.getParameter("text");
 		String writer = "juhyun";
 		String file_path= "";
-		String file_name= "";
+		String file_save_name= "";
+		String file_ori_name= "";
 		
 		projectDto.setProject_no(project_no);
 		projectDto.setClassification(classification);
@@ -285,7 +303,7 @@ public class ProjectCommunityHandler {
 			
 			String origName;
 			
-			origName = new String(mfile.getOriginalFilename().getBytes("8859_1"),"UTF-8");
+			origName = new String(mfile.getOriginalFilename().getBytes("UTF-8"),"UTF-8");
 			//파일명이 없다면
 			if("".equals(origName)) {
 				continue;
@@ -306,16 +324,19 @@ public class ProjectCommunityHandler {
 			mfile.transferTo(serverFile);
 
 			file_path= path+ File.separator + saveFileName;
-			file_name= saveFileName;
+			file_save_name= saveFileName;
+			file_ori_name= origName;
 
 			projectDto.setFile_path(file_path);
-			projectDto.setFile_name(file_name);
+			projectDto.setFile_save_name(file_save_name);
+			projectDto.setFile_ori_name(file_ori_name);
 			
 		}
 		
-		if(file_name.equals("")) {
+		if(file_ori_name.equals("")) {
 			projectDto.setFile_path(detail.getFile_path());
-			projectDto.setFile_name(detail.getFile_name());
+			projectDto.setFile_ori_name(file_ori_name);
+			projectDto.setFile_save_name(file_save_name);
 		}
 		
 		System.out.println("projectDto.getClassification() : "+projectDto.getClassification());

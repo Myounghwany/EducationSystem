@@ -50,7 +50,7 @@ $(document).ready(function(){
 				</tr>
 				<tr>
 					<th>첨부파일</th>
-					<td colspan="3"><a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_name}</a></td>
+					<td colspan="3"><a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 				</tr>
 				<tr>
 					<th colspan="4">

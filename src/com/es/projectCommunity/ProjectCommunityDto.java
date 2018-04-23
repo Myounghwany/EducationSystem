@@ -9,10 +9,23 @@ public class ProjectCommunityDto {
 	private String writer;
 	private String write_time;
 	private String file_path;
-	private String file_name;
+	private String file_save_name;
+	private String file_ori_name;
 	private int hit;
 	
 	
+	public String getFile_save_name() {
+		return file_save_name;
+	}
+	public void setFile_save_name(String file_save_name) {
+		this.file_save_name = file_save_name;
+	}
+	public String getFile_ori_name() {
+		return file_ori_name;
+	}
+	public void setFile_ori_name(String file_ori_name) {
+		this.file_ori_name = file_ori_name;
+	}
 	public int getProject_no() {
 		return project_no;
 	}
@@ -54,12 +67,6 @@ public class ProjectCommunityDto {
 	}
 	public void setFile_path(String file_path) {
 		this.file_path = file_path;
-	}
-	public String getFile_name() {
-		return file_name;
-	}
-	public void setFile_name(String file_name) {
-		this.file_name = file_name;
 	}
 	public int getHit() {
 		return hit;

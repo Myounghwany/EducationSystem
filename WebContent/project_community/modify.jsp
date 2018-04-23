@@ -71,7 +71,7 @@ function checkValtext() {
 	
 	<br>
 	<span>첨부파일</span>
-	<a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_name}</a>
+	<a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a>
 
 	<div class="form-group">
 		<br><span style="font-family: 'Jeju Gothic', serif; font-size: 10; color: black;">파일수정 : </span> 
