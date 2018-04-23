@@ -15,4 +15,10 @@
 	<update id="updateHit" parameterType="com.es.projectCommunity.ProjectCommunityDto">
   		update project_community set hit=#{hit}+1 where project_no=#{project_no}
   	</update> 	
+	<update id="projectModify" parameterType="com.es.projectCommunity.ProjectCommunityDto">
+  		update project_community set classification=#{classification}, title=#{title}, content=#{content}, writer=#{writer}, file_path=#{file_path}, file_name=#{file_name}	where project_no=#{project_no}
+  	</update> 
+  	<delete id="projectDelete" parameterType="int">
+  		delete from project_community where project_no=#{project_no}
+  	</delete>	
 </mapper>

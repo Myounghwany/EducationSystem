@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +45,19 @@ public class ProjectCommunityHandler {
 		System.out.println("list : "+list);
 		return new ModelAndView("project_community/list");
 	}
+	
+	@RequestMapping("/ProjectDelete")
+	public String ProjectDelte(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Controller ProjectDelete");
+		
+		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		System.out.println(project_no);
+		
+		int result = projectDao.deleteProject(project_no);
+		System.out.println("result : "+result);
+
+		return "redirect:ProjectList.do";
+	}
 
 	@RequestMapping(value="/ProjectWrite", method=RequestMethod.GET)
 	public ModelAndView ProjectWrite(HttpServletRequest req, HttpServletResponse rep) {
@@ -65,9 +79,6 @@ public class ProjectCommunityHandler {
 		String writer = "juhyun";
 		String file_path= "";
 		String file_name= "";
-		
-		
-		System.out.println("classification : "+classification+" title : "+title+" contnet : "+content);
 		
 		
 		projectDto.setClassification(classification);
@@ -128,27 +139,15 @@ public class ProjectCommunityHandler {
 			//설정한 path에 파일저장
 			File serverFile = new File(path+ File.separator + saveFileName);
 			mfile.transferTo(serverFile);
-			
-			
-			Map file = new HashMap();
-			file.put("origName",origName);
-			file.put("sfile",serverFile);
-			resultList.add(file);
-			
-			
-				file_path= path+ File.separator + saveFileName;
-				file_name= saveFileName;
-				System.out.println("file_path : "+file_path);
-				System.out.println("file_name : "+file_name);
-	
-				projectDto.setFile_path(file_path);
-				projectDto.setFile_name(file_name);
-				
+
+			file_path= path+ File.separator + saveFileName;
+			file_name= saveFileName;
+
+			projectDto.setFile_path(file_path);
+			projectDto.setFile_name(file_name);
 			
 		}
 		
-		returnObject.put("files", resultList);
-		returnObject.put("params", mhsr.getParameterMap());
 		
 		
 		// write내용 넣기
@@ -232,12 +231,107 @@ public class ProjectCommunityHandler {
 	}
 
 	@RequestMapping(value="/ProjectModify", method=RequestMethod.POST)
-	public ModelAndView ProjectModifyForm(HttpServletRequest request, HttpServletResponse response) {
+	public String ProjectModifyForm(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
 		System.out.println("Controller ProjectModify POST");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		ProjectCommunityDto detail = projectDao.detailProject(project_no);
 		
-		request.setAttribute("project_no", project_no);
-		return new ModelAndView("project_community/modify");
+		HttpSession httpSession = request.getSession();
+		/*String writer = (String) httpSession.getAttribute("userId");*/
+		
+		ProjectCommunityDto projectDto = new ProjectCommunityDto();
+		
+		String classification = request.getParameter("selectType");
+		String title = request.getParameter("title");
+		String content = request.getParameter("text");
+		String writer = "juhyun";
+		String file_path= "";
+		String file_name= "";
+		
+		projectDto.setProject_no(project_no);
+		projectDto.setClassification(classification);
+		projectDto.setTitle(title);
+		projectDto.setContent(content);
+		projectDto.setWriter(writer);
+		
+		
+		System.out.println("classification : "+classification+" title : "+title+" content : "+content+" writer : "+writer);
+		
+		
+		// -- 파일 저장하기
+		
+		String path = request.getServletContext().getRealPath("/save");
+		
+		MultipartHttpServletRequest mhsr = (MultipartHttpServletRequest) request;
+		Iterator<String> iterator = mhsr.getFileNames();
+
+		System.out.println("mhsr.getFileNames() : " +mhsr.getFileNames());
+		System.out.println("iterator : " +iterator);
+		
+		
+		MultipartFile mfile = null;
+		String fieldName = "";
+		
+		//디렉토리가 없으면 생성
+		File dir = new File(path);
+		if(!dir.isDirectory()) {
+			dir.mkdirs();
+		}
+		
+		while(iterator.hasNext()) {
+			fieldName = iterator.next();
+			
+			mfile = mhsr.getFile(fieldName);
+			
+			String origName;
+			
+			origName = new String(mfile.getOriginalFilename().getBytes("8859_1"),"UTF-8");
+			//파일명이 없다면
+			if("".equals(origName)) {
+				continue;
+			}
+			
+			System.out.println("origName : "+origName);
+			
+			
+			//파일 명 변경(uuid로 암호화)
+			String ext = origName.substring(origName.lastIndexOf('.'));//확장자
+			String saveFileName = getUuid() + ext;
+			
+			System.out.println("saveFileName : "+saveFileName);
+			
+			
+			//설정한 path에 파일저장
+			File serverFile = new File(path+ File.separator + saveFileName);
+			mfile.transferTo(serverFile);
+
+			file_path= path+ File.separator + saveFileName;
+			file_name= saveFileName;
+
+			projectDto.setFile_path(file_path);
+			projectDto.setFile_name(file_name);
+			
+		}
+		
+		if(file_name.equals("")) {
+			projectDto.setFile_path(detail.getFile_path());
+			projectDto.setFile_name(detail.getFile_name());
+		}
+		
+		System.out.println("projectDto.getClassification() : "+projectDto.getClassification());
+		System.out.println("projectDto.getContent() : "+projectDto.getContent());
+		System.out.println("projectDto.getFile_path() : "+projectDto.getFile_path());
+		System.out.println("projectDto.getProject_no() :"+projectDto.getProject_no());
+		System.out.println("projectDto.getTitle() : "+projectDto.getTitle());
+		System.out.println("projectDto.getWriter() :"+projectDto.getWriter());
+		
+		
+		
+		int result = projectDao.modifyProject(projectDto);
+		
+		System.out.println("result : " +result);
+		
+		return "redirect:ProjectDetail.do?project_no="+project_no;
 	}
 	
 }

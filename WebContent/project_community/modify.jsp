@@ -80,6 +80,7 @@ function checkValtext() {
 	
 
 	<input type="hidden" value="${result.classification}" name="selected">
+	<input type="hidden" value="${result.project_no}" name="project_no">
 	<br>
 	<br>
 	<button style="font-family: 'Jeju Gothic', serif;" type="submit">작성 완료</button>

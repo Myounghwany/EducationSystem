@@ -55,7 +55,7 @@ $(document).ready(function(){
 				<tr>
 					<th colspan="4">
 						<input class="inputbutton" type="button" value="글수정" onclick="location='ProjectModify.do?project_no=${result.project_no}'"> 
-						<input class="inputbutton" type="button" value="글삭제" onclick="location='deleteForm.do?project_no=${result.project_no}'">						 
+						<input class="inputbutton" type="button" value="글삭제" onclick="location='ProjectDelete.do?project_no=${result.project_no}'">						 
 						<input class="inputbutton" type="button" value="목록보기" onclick="location='ProjectList.do'">
 					</th>	
 				</tr>

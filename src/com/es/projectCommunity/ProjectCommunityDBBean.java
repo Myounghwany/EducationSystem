@@ -28,4 +28,15 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 	public int updateHit(ProjectCommunityDto boardDto) {
 		return SqlMapClient.getSession().update("ProjectCommunity.updateHit",boardDto);
 	}
+	
+	@Override
+	public int modifyProject(ProjectCommunityDto boardDto) {
+		return SqlMapClient.getSession().update("ProjectCommunity.projectModify",boardDto);
+	}
+	
+	@Override
+	public int deleteProject(int project_no) {
+		System.out.println("deleteProject project_no : "+project_no);
+		return SqlMapClient.getSession().delete("ProjectCommunity.projectDelete", project_no);
+	}
 }
