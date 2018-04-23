@@ -3,4 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Education">
+	<select id="EduList" resultType="com.es.education.EduListDto">
+		select list.edu_no, list.edu_name, list.instructor_no,  list.edu_schedule,
+				history.edu_state, history.emp_eval
+		from education_history history, education_list list
+		where history.edu_no = list.edu_no;
+	</select>
+	
+	<select id="EduDetail" resultType="com.es.education.EduListDto" >
+		select * from education_list where edu_no=#{no}
+	</select>
 </mapper>
