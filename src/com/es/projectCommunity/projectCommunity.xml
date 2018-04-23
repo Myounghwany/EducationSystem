@@ -6,4 +6,13 @@
 	<select id="projectList" resultType="com.es.projectCommunity.ProjectCommunityDto">
 		select * from project_community
 	</select>
+	<select id="projectDetail" parameterType="int" resultType="com.es.projectCommunity.ProjectCommunityDto">
+		select * from project_community where project_no=#{project_no}
+	</select>
+	<insert id="projectWrite" parameterType="com.es.projectCommunity.ProjectCommunityDto">
+		insert into project_community(classification, title, content, writer, write_time, file_path, file_name) values(#{classification},#{title},#{content},#{writer},now(),#{file_path},#{file_name}) 
+	</insert>
+	<update id="updateHit" parameterType="com.es.projectCommunity.ProjectCommunityDto">
+  		update project_community set hit=#{hit}+1 where project_no=#{project_no}
+  	</update> 	
 </mapper>

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 @Configuration
 public class CreateBean {
 	
+	
 	@Bean
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();

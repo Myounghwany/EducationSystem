@@ -26,15 +26,15 @@ $(document).ready(function(){
 
 <table border="1" align="center">
 	<tr>
-		<td>글번호</td>
-		<td>분류</td>
-		<td>제목</td>
-		<td>작성자</td>
-		<td>작성시간</td>
-		<td>조회수</td>
+		<td width="7%">글번호</td>
+		<td width="7%">분류</td>
+		<td width="30%">제목</td>
+		<td width="15%">작성자</td>
+		<td width="10%">작성시간</td>
+		<td width="10%">조회수</td>
 	</tr>
 	<c:choose>
-		<c:when test="${empty requestScope.accountList}">
+		<c:when test="${empty requestScope.list}">
 		<tr>
 			<td colspan="7" align="center">등록된 글이 없습니다.</td>
 		</tr>
@@ -42,19 +42,19 @@ $(document).ready(function(){
 		<c:otherwise>
 			<c:forEach items="${requestScope.list}" var="list" varStatus="state">
 				<tr>
-					<td>${list.account_number}</td>
-					<td>${list.account_number}</td>
-					<td>${list.account_number}</td>
-					<td>${list.account_number}</td>
-					<td>${list.account_number}</td>
-					<td>${list.account_name}</td>
-					<td>${list.remain_money}</td>
+					<td>${list.project_no}</td>
+					<td>${list.classification}</td>
+					<td><a href="ProjectDetail.do?project_no=${list.project_no}">${list.title}</a></td>
+					<td>${list.writer}</td>
+					<td>${list.write_time}</td>
+					<td>${list.hit}</td>
 				</tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
 </table>
 
+<br>
 <button id="writeBtn">작성하기</button>
 
 

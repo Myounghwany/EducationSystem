@@ -1,6 +1,5 @@
 package com.es.projectCommunity;
 
-import org.springframework.web.multipart.MultipartFile;
 
 public class ProjectCommunityDto {
 	private int project_no;
@@ -12,15 +11,8 @@ public class ProjectCommunityDto {
 	private String file_path;
 	private String file_name;
 	private int hit;
-	private MultipartFile upfile;
 	
 	
-	public MultipartFile getUpfile() {
-		return upfile;
-	}
-	public void setUpfile(MultipartFile upfile) {
-		this.upfile = upfile;
-	}
 	public int getProject_no() {
 		return project_no;
 	}

@@ -33,11 +33,17 @@
         <property name="maxInMemorySize" value="100000000" />
     </bean>
 	
-	<bean id="uploadPath" class="java.lang.String">
-    <!-- 파일업로드 디렉토리-->
-    	<constructor-arg value="해당디렉토리"/>
+ 	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"> 
+		<property name="order" value="0"/> 
+	</bean>
+	
+<!-- 	<bean id="viewResolvers" class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="order" value="2" /><property name="prefix" value="/WEB-INF/jsp/" /> 
+		<property name="suffix" value=".jsp" /> 
 	</bean>
 
+	<bean id="fileDownload" class="com.es.projectCommunity.DownloadView"/>
+ -->
 	
 	<context:component-scan base-package="com.es.db" />
 	<context:component-scan base-package="com.es.education" />
