@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.es.education.EduListDao;
-import com.es.education.EduListDto;
+import com.es.education.EduHistoryDao;
+import com.es.education.EduHistoryDto;
 
 @Controller
 public class EducationHandler {
 	/* 나현 - 수강목록  */
 	@Resource
-	private EduListDao edulistDao;
+	private EduHistoryDao edulistDao;
 	
 	@RequestMapping("/eduhistory")
 	public String eduHistory(Model model) {
-		List<EduListDto> edu_list = edulistDao.eduList();
+		List<EduHistoryDto> edu_list = edulistDao.eduHistoryList();
 		model.addAttribute("edu_list", edu_list);
 		
 		return "edu_history/main";
@@ -34,11 +34,11 @@ public class EducationHandler {
 	@RequestMapping("/eduhistory/detail")
 	public String eduHistoryDetail(Model model, @RequestParam("edu_no") int no){
 		//select box로 보여줄 직원의 수강목록
-		List<EduListDto> edu_list = edulistDao.eduList();
+		List<EduHistoryDto> edu_list = edulistDao.eduHistoryList();
 		model.addAttribute("edu_list", edu_list);
 		
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
-		EduListDto edu_detail = edulistDao.eduDetail(no);
+		EduHistoryDto edu_detail = edulistDao.eduHistoryDetail(no);
 		model.addAttribute("edu_detail", edu_detail);
 
 		return "edu_history/detail";
@@ -47,7 +47,7 @@ public class EducationHandler {
 	/* 나현 - 강의평가 페이지*/
 	@RequestMapping("/eduhistory/emp_eval")
 	public String empEval(Model model, @RequestParam("edu_no") int no) {
-		EduListDto edu_detail = edulistDao.eduDetail(no);
+		EduHistoryDto edu_detail = edulistDao.eduHistoryDetail(no);
 		model.addAttribute("edu_detail", edu_detail);
 		
 		return "edu_history/emp_eval";
@@ -58,12 +58,11 @@ public class EducationHandler {
 	public @ResponseBody String WriteEmpEval(Model model, @RequestParam("edu_no") int no, 
 								@RequestParam("emp_eval") String emp_eval,
 								HttpServletResponse response) throws Exception {
-		System.out.println(no);
-		System.out.println("emp_eval : " + emp_eval);
+		System.out.println("교육번호:" +no + ", 강의평가란 : " + emp_eval);
 		
 		// 비지니스 로직
-
-		
+		int result = edulistDao.insertEmpEval(no, emp_eval);
+		System.out.println("result:" + result);
 		
 		String command = "<script>";
 		command += "window.close();";
