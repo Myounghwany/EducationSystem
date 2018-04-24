@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
 function action(val){
-	location.href='${path}/edulist/detail.do?edu_no='+val;
+	location.href='${path}/eduhistory/detail.do?edu_no='+val;
 }
 </script>
 <style type="text/css">
@@ -93,7 +93,7 @@ function action(val){
 			
 		</table>
 		<button style="margin-top: 2%;"
-			onclick="location.href='${path}/edulist.do'">목록</button>
+			onclick="location.href='${path}/eduhistory.do'">목록</button>
 	</div>
 </body>
 </html>
