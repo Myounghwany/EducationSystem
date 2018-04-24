@@ -65,12 +65,14 @@ function action(val){
 				<td>${edu_detail.edu_date}</td>
 			</tr>
 			<tr>
-				<td>강사</td>
+				<td>강사번호</td>
 				<td>${edu_detail.instructor_no}</td>
 				<td>교육장소</td>
 				<td>${edu_detail.edu_location}</td>
 			</tr>
 			<tr>
+				<td>강사이름</td>
+				<td>${edu_detail.instructor_name}</td>
 				<td>소요예산</td>
 				<td><pre>${edu_detail.budget}</pre></td>
 			</tr>

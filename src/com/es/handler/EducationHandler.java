@@ -3,12 +3,14 @@ package com.es.handler;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.es.education.EduListDao;
 import com.es.education.EduListDto;
@@ -53,11 +55,21 @@ public class EducationHandler {
 	
 	/* 나현 - 강의평가 제출 */
 	@RequestMapping(value="/eduhistory/write_emp_eval", method=RequestMethod.POST)
-	public String WriteEmpEval(Model model, @RequestParam("edu_no") int no, 
-								@RequestParam("emp_eval") String emp_eval) {
-		System.out.println("come.,.....");
+	public @ResponseBody String WriteEmpEval(Model model, @RequestParam("edu_no") int no, 
+								@RequestParam("emp_eval") String emp_eval,
+								HttpServletResponse response) throws Exception {
+		System.out.println(no);
 		System.out.println("emp_eval : " + emp_eval);
-		return "edu_history/main";
+		
+		// 비지니스 로직
+
+		
+		
+		String command = "<script>";
+		command += "window.close();";
+		command += "window.opener.location.reload();";
+		command += "</script>";
+		
+		return command;
 	}
-	
 }

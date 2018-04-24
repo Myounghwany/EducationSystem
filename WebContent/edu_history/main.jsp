@@ -51,12 +51,11 @@
 				<c:forEach items="${edu_list}" var="edulist" varStatus="state">
 					<tr>
 						<td><a href="eduhistory/detail.do?edu_no=${edulist.edu_no}">${edulist.edu_name}</a></td>
-						<td>${edulist.instructor_no}</td>
+						<td>${edulist.instructor_name}</td>
 						<td>${edulist.edu_schedule}</td>
 						<td>${edulist.edu_state}</td>
 						<td>
 						<c:if test="${empty edulist.emp_eval}">
-							<script>window.name="main"</script>
 							<button onclick="window.open('eduhistory/emp_eval.do?edu_no=${edulist.edu_no}', '강의평가',
 									'width=430,height=300,location=no,status=no,scrollbars=yes,resizeable=no,left=700,top=200');">
 								강의평가
