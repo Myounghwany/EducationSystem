@@ -1,5 +1,6 @@
 package com.es.projectCommunity;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -10,8 +11,20 @@ import com.es.db.SqlMapClient;
 public class ProjectCommunityDBBean implements ProjectCommunityDao {
 	
 	@Override
-	public List<ProjectCommunityDto> projectList() {
-		return SqlMapClient.getSession().selectList("ProjectCommunity.projectList");
+	public List<ProjectCommunityDto> projectList(HashMap<String, Object> map) {
+		
+		if(map.get("opt")==null){//전체
+			return SqlMapClient.getSession().selectList("ProjectCommunity.projectList",map);
+		}else if(map.get("opt").equals("0")){ //제목
+			System.out.println("제목으로 검색");
+			return SqlMapClient.getSession().selectList("ProjectCommunity.selectTitleList",map);
+		}else if(map.get("opt").equals("1")) {//내용
+			return SqlMapClient.getSession().selectList("ProjectCommunity.selectContentList",map);
+		}else if(map.get("opt").equals("2")) {//제목+내용
+			return SqlMapClient.getSession().selectList("ProjectCommunity.selectTCList",map);
+		}else {//글쓴이
+			return SqlMapClient.getSession().selectList("ProjectCommunity.selectWriterList",map);
+		}
 	}
 	
 	@Override
@@ -36,7 +49,24 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 	
 	@Override
 	public int deleteProject(int project_no) {
-		System.out.println("deleteProject project_no : "+project_no);
 		return SqlMapClient.getSession().delete("ProjectCommunity.projectDelete", project_no);
+	}
+
+	@Override
+	public int projectListCount(HashMap<String, Object> map) {
+		
+		if(map.get("opt")==null){//전체
+			return SqlMapClient.getSession().selectOne("ProjectCommunity.projectListCount");
+		}else if(map.get("opt").equals("0")){ //제목
+			System.out.println("제목으로 검색");
+			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectTitleListCount",map);
+		}else if(map.get("opt").equals("1")) {//내용
+			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectContentListCount",map);
+		}else if(map.get("opt").equals("2")) {//제목+내용
+			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectTCListCount",map);
+		}else {//글쓴이
+			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectWriterListCount",map);
+		}
+		
 	}
 }

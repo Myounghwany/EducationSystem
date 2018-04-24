@@ -30,6 +30,7 @@ import com.es.projectCommunity.ProjectCommunityDto;
 
 
 
+
 @Controller
 public class ProjectCommunityHandler {
 
@@ -38,12 +39,64 @@ public class ProjectCommunityHandler {
 	private ProjectCommunityDao projectDao;
 	
 	@RequestMapping("/ProjectList")
-	public ModelAndView list(HttpServletRequest req, HttpServletResponse rep) {
+	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller list");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<ProjectCommunityDto> list;
+		int totalList = 0;
 		
-		List<ProjectCommunityDto> list = projectDao.projectList();
-		req.setAttribute("list", list);
-		System.out.println("list : "+list);
+		
+		int spage = 1;
+		if(request.getParameter("page") != null) 
+			spage = Integer.parseInt(request.getParameter("page")); //현재페이지
+		int start =spage*10-9; // 현재페이지 시작 페이징번호
+		
+		/*1페이지
+		1 1~10
+		2 11~20
+		
+		pageNum =  1
+		
+		1~10
+		
+		(pageNum - 1) * 10 + 1 = 1
+		(1 - 1) * 10 + 1 = 1
+		(2 - 1) * 10 + 1 = 11
+		*/
+		map.put("start",start-1);
+		
+		
+		list = projectDao.projectList(map);
+		
+		/*검색 O*/
+		if(request.getParameter("opt") !=null) { 
+			String opt = request.getParameter("opt");
+			String condition = request.getParameter("condition");
+			request.setAttribute("condition", condition);
+			map.put("opt",opt);
+			map.put("condition",condition);
+			list = projectDao.projectList(map);
+			
+			totalList = list.size();
+		}
+		
+
+		totalList = projectDao.projectListCount(map);
+		request.setAttribute("listCount", totalList); 
+		
+		
+		/*페이징 처리*/
+		int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
+		int startPage = (int)(spage/5.0+0.8)*5-4; //시작페이지 번호
+		int endPage= startPage+4;			//마지막 페이지 번호
+		if(endPage > maxPage) endPage = maxPage;
+
+		request.setAttribute("spage", spage);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
+		request.setAttribute("list", list);
+
 		return new ModelAndView("project_community/list");
 	}
 	
