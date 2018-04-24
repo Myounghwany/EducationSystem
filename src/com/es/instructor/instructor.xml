@@ -3,4 +3,37 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Instructor">
+	<select id="selectAccountNo" resultType="String" parameterType="String">
+		select account_no from account where id = #{id} 
+	</select>
+	<select id="selectInstructorCheck" resultType="String" parameterType="String">
+		select count(instructor_no) instructor_check from instructor where emp_no = #{account_no} 
+	</select>
+	<select id="selectInstructorNo" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+		select ifnull(instructor_no, 0) instructor_no, approval_state from instructor where emp_no = #{account_no} 
+	</select>
+	<insert id="insertInstructorRequest" parameterType = "com.es.instructor.InstructorDataBean">
+		insert into instructor select concat('I', (select date_format(now(), '%Y%m')), (select lpad(count(*)+1, 4, '0') from instructor)), #{emp_no}, null, 1, now(), #{name};
+	</insert>
+	<select id="selectEduReq" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+		select * from education_list where instructor_no = #{account_no} and approval_state != 2
+	</select>
+	<select id="selectEduList" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+		select * from education_list where instructor_no = #{account_no} and approval_state = 2
+	</select>
+	<select id = "selectEduCode" resultType = "com.es.instructor.InstructorDataBean">
+		select * from education_code
+	</select>
+	<select id = "selectBelongNo" resultType = "com.es.instructor.InstructorDataBean">
+		select * from belong
+	</select> 
+	<select id="selectEmployeesName" resultType="String" parameterType = "String">
+		select name from employees where emp_no = #{account_no}
+	</select>
+	<select id = "selectInstructor" resultType = "com.es.instructor.InstructorDataBean">
+		select * from instructor where approval_state = 3
+	</select>
+	<select id = "selectDepartment" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+		select * from department where belong_no = #{belong_no}
+	</select>
 </mapper>

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Shopping</title>
+<title>EducationSystem</title>
 
 <link rel="StyleSheet" href="${path}/css/bootstrap.min.css">
 
@@ -35,7 +35,7 @@
 				<li><a href="${path}/#">교육목록/신청</a></li>
 				<li><a href="${path}/#">청원</a></li>
 				<li><a href="${path}/#">수강목록</a></li>
-				<li><a href="${path}/#">강사</a></li>
+				<li><a href="${path}/instructor/main.do">강사</a></li>
 				<li><a href="${path}/#">프로젝트공유</a></li>
 			</ul>
 		</div>
