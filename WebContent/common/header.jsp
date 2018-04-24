@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Shopping</title>
 
-<link rel="StyleSheet" href="${path}/css/bootstrap.min.css">
+<link rel="StyleSheet" href="/EducationSystem/css/bootstrap.min.css">
 
 </head>
 <body style="width: 70%; margin: 0 auto;">

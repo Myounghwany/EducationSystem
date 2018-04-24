@@ -3,4 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Employees">
+	<select id="BelongList" resultType="com.es.employees.BelongDto">
+		select * from belong
+	</select>
+	<select id="DepartmentList" resultType="com.es.employees.DepartmentDto">
+		select * from department
+	</select>
+	<select id="PositionList" resultType="com.es.employees.PositionDto">
+		select * from position
+	</select>
+	<select id="EmployeesCount" resultType="int">
+		select count(*) from employees
+	</select>
 </mapper>
