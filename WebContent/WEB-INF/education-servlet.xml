@@ -28,6 +28,23 @@
 	    </property>
 	</bean>
 	
+	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000" />
+        <property name="maxInMemorySize" value="100000000" />
+    </bean>
+	
+ 	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"> 
+		<property name="order" value="0"/> 
+	</bean>
+	
+<!-- 	<bean id="viewResolvers" class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="order" value="2" /><property name="prefix" value="/WEB-INF/jsp/" /> 
+		<property name="suffix" value=".jsp" /> 
+	</bean>
+
+	<bean id="fileDownload" class="com.es.projectCommunity.DownloadView"/>
+ -->
+	
 	<context:component-scan base-package="com.es.db" />
 	<context:component-scan base-package="com.es.education" />
 	<context:component-scan base-package="com.es.employees" />

@@ -5,11 +5,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Project Community 글쓰기</title>
+<title>Project Community Modify</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 $(document).ready(function(){
+	
+	var tmp = $('[name="selected"]').val();
+	
+	$("select option[value="+tmp+"]").attr("selected", true);
 
+	
 	
 	$('#resultTransfer').css('display',"none");
 	
@@ -18,6 +23,7 @@ $(document).ready(function(){
 	});	
 		
 	});
+	
 	
 function checkValtext() {
 	var f = window.document.insertForm;
@@ -47,11 +53,10 @@ function checkValtext() {
 </head>
 <jsp:include page="../common/header.jsp" />
 <body>
-<h1>Project Community 글쓰기</h1>
 
 
-<form name=insertForm class="form-horizontal" method="post" action="ProjectWrite.do" enctype="multipart/form-data" onSubmit="return checkValtext()">
-	<select name="selectType" >
+<form name=insertForm class="form-horizontal" method="post" action="ProjectModify.do" enctype="multipart/form-data" onSubmit="return checkValtext()">
+	<select name="selectType">
 	   	<option value="">글 분류</option>
 		<option value="coding">코딩</option>
 		<option value="system">시스템</option>
@@ -59,22 +64,30 @@ function checkValtext() {
 		<option value="design">설계</option>
     </select><br>
 	
-	<br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">제목</span><br>
-	<input type="text" name="title" style="width: 700px; height: 30px;"	value="">
+	<br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">${result.title} </span><br>
 	
 	<br><br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">게시글</span><br>
 	<textarea class="form-control" rows="10" name="text" style="width: 700px; height: 800px;"></textarea>
 	
 	<br>
+	<span>첨부파일</span>
+	<a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a>
+
 	<div class="form-group">
-		<br><span style="font-family: 'Jeju Gothic', serif; font-size: 6; color: black;">파일첨부 : </span> 
+		<br><span style="font-family: 'Jeju Gothic', serif; font-size: 10; color: black;">파일수정 : </span> 
 		 <input type="file" name="upfile" size="20" style="font-family: 'Jeju Gothic', serif;">
 	</div>
+	
 
+	<input type="hidden" value="${result.classification}" name="selected">
+	<input type="hidden" value="${result.project_no}" name="project_no">
 	<br>
 	<br>
 	<button style="font-family: 'Jeju Gothic', serif;" type="submit">작성 완료</button>
 </form>
+
+
+
 
 
 </body>
