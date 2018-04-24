@@ -13,4 +13,25 @@
 	<select id="EduDetail" resultType="com.es.education.EduListDto" >
 		select * from education_list where edu_no=#{no}
 	</select>
+	
+	<select id="EducationList" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+		l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+		l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+		i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code
+	</select>
+	
+	<select id="EducationListDetail" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+		l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+		l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+		i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.edu_no=#{edu_no}
+	</select>
+	
+	
+	
 </mapper>

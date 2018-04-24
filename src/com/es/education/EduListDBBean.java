@@ -18,4 +18,14 @@ public class EduListDBBean implements EduListDao{
 	public EduListDto eduDetail(int no) {
 		return SqlMapClient.getSession().selectOne("Education.EduDetail", no);
 	}
+	
+	@Override
+	public List<EducationListDto> EducationList() {
+		return SqlMapClient.getSession().selectList("Education.EducationList");
+	}
+	
+	@Override
+	public EducationListDto EducationListDetail(int edu_no) {
+		return SqlMapClient.getSession().selectOne("Education.EducationListDetail",edu_no);
+	}
 }

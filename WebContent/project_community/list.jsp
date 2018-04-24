@@ -33,6 +33,7 @@ function searchCheck(){
 <body>
 <h1>Project Community List</h1>
 
+<div>
 <form action="ProjectList.do" name="searchform" onsubmit="return searchCheck()">
 	<select name="opt">
 		<option value="0">제목</option>
@@ -42,7 +43,7 @@ function searchCheck(){
 	</select> 
 	<input type="text" size="20" name="condition" />&nbsp; <input	type="submit" value="검색" />
 </form>
-
+</div>
 
 
 <table border="1" align="center">

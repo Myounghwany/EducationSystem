@@ -109,7 +109,7 @@ public class ProjectCommunityHandler {
 		
 		ProjectCommunityDto detail = projectDao.detailProject(project_no);
 		
-		if(detail.getFile_path().equals("")) {
+		if(detail.getFile_ori_name() != null) {
 			File file = new File(detail.getFile_path());
 			if(file.exists()==true) {
 				file.delete();
