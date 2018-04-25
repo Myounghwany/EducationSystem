@@ -81,16 +81,15 @@ function action(val){
 				<td colspan="3"><pre>${edu_detail.note}</pre></td>
 			</tr>
 		</table>
+		<br>
 		<!-- 강의자료 테이블 -->
 		<table width="70%">
 			<tr>
 				<th colspan="4" style="font-size: 1.5em;">강의 자료</th>
 			</tr>
 			<tr>
-				<td width="10%">자료명</td>
-				<td width="30%"><b></b></td>
-				<td width="10%">다운링크</td>
-				<td width="30%">ㅁㅁㅁ</td>
+				<td width="5%">첨부파일</td>
+				<td width="30%"><a href="${path}/eduhistory/eduHistoryFile.do?edu_no=${edu_detail.edu_no}">${edu_detail.file_ori_name}</a></td>
 			</tr>
 			
 		</table>

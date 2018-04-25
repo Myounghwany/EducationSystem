@@ -18,6 +18,24 @@
 		}
 	}
 </script>
+<script type="text/javascript">
+	
+	var textCountLimit = 1000;
+	$(document).ready(function(){
+		$('textarea[name=emp_eval]').keyup(function(){
+			//텍스트영역의 길이를 체크
+			var textLength = $(this).val().length;
+			
+			//입력된 텍스트 길이를 #textCount에 업데이트해줌
+			$('#textCount').text(textLength);
+			
+			//제한된 길이보다 입력된 길이가 큰 경우 제한 길이만큼 자르고 텍스트영역에 넣음
+			if(textLength>textCountLimit){
+				$(this).val($(this).val().substr(0, textCountLimit));
+			}
+		});
+	});
+</script>
 </head>
 <body>
 	<div align="center">
@@ -42,11 +60,16 @@
 				</tr>
 				<tr>
 					<td>강의평가</td>
-					<td><input type="text" id="emp_eval" name="emp_eval"></td>
+					<td>
+						<textarea rows="6" cols="30" id="emp_eval" name="emp_eval"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
-					<span style="color: red; font-size: 5px;">*제출하면 다시 수정 불가능합니다.</span>
+					<span style="color: red; font-size: 8px;">*제출하면 다시 수정 불가능합니다.</span>
+					<span style="float: right; font-size: 8px;">
+						(<span id="textCount" class="textCount">0</span>/1000)
+					</span>
 					</td>
 				</tr>
 				<tr align="center">
