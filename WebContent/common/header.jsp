@@ -34,7 +34,7 @@
 				<li><a href="${path}/#">공지사항</a></li>
 				<li><a href="${path}/EducationList.do">교육목록/신청</a></li>
 				<li><a href="${path}/#">청원</a></li>
-				<li><a href="${path}/edulist.do">수강목록</a></li>
+				<li><a href="${path}/eduhistory.do">수강목록</a></li>
 				<li><a href="${path}/#">강사</a></li>
 				<li><a href="${path}/ProjectList.do">프로젝트공유</a></li>
 			</ul>

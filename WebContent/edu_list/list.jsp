@@ -10,13 +10,74 @@
 
 $(document).ready(function() {
                  
-    
+
+	$('#applicationBtn').click(function(){
+		var edu_no = $('#edu_no').html();
+		
+		
+		$.ajax({
+			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+			url : 'EducationList/application.do',
+			type : 'get',
+			data : {
+				edu_no : edu_no
+			},
+			dataType:"text",  //다른서버에서도 데이터를 주고받을수 있게 dataType을 설정해 줘야함..
+			success : function(data){
+
+				if(data != 0){
+					alert("신청이 정상적으로 되었습니다.");
+				}else{
+					alert("신청 불가");
+				}
+
+				location.href="${path}/EducationList.do";
+				
+			},
+			error : function(request,status,error){
+				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+			}
+		});
+		
+		
+
+	});
+	
 });
 
 
 function listBtn(no){
-	alert(no);	
 	document.getElementById('id01').style.display='block';
+	var edu_no = no; 
+	
+	$.ajax({
+		contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+		url : 'detailM.do',
+		type : 'get',
+		data : {
+			edu_no : edu_no
+		},
+		headers: { 
+            Accept : "application/json"
+        },
+		dataType:"json",  //다른서버에서도 데이터를 주고받을수 있게 dataType을 설정해 줘야함..
+		success : function(data){
+			
+			$('#edu_no').html(edu_no);
+			$('#belong_name').html(data.belong_name);
+			$('#edu_field').html(data.edu_field);
+			$('#edu_name').html(data.edu_name);
+			$('#edu_schedule').html(data.edu_schedule);
+			$('#instructor_name').html(data.instructor_name);
+			
+		},
+		error : function(request,status,error){
+			alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+			console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+		}
+	});
+	
 	
 }
 
@@ -48,6 +109,9 @@ function listBtn(no){
 <body>
 <h2>교육목록/신청</h2>
 	<br>
+	
+	
+	<span>*클릭하면 상세보기 페이지로 넘어갑니다.</span>
 	<table align="center" border="1" id="title">
 		<tr>
 			<th>교육코드</th>
@@ -101,6 +165,9 @@ function listBtn(no){
         
         
         <table border="1">
+        	<tr>
+        		<td>교육코드</td><td><span id="edu_no"> </span></td> 
+        	</tr>
         	<tr>
         		<td>소속명</td><td><span id="belong_name"> </span></td> 
         	</tr>

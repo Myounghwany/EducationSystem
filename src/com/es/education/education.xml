@@ -4,14 +4,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Education">
 	<select id="EduList" resultType="com.es.education.EduListDto">
-		select list.edu_no, list.edu_name, list.instructor_no,  list.edu_schedule,
-				history.edu_state, history.emp_eval
-		from education_history history, education_list list
-		where history.edu_no = list.edu_no;
+		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
+				h.edu_state, h.emp_eval, instructor.name as instructor_name
+		from education_history h, education_list l, instructor
+		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no;
 	</select>
 	
 	<select id="EduDetail" resultType="com.es.education.EduListDto" >
-		select * from education_list where edu_no=#{no}
+		select *, i.name as instructor_name
+		from education_list l, instructor i
+		where edu_no=#{no} and i.instructor_no = l.instructor_no;
 	</select>
 	
 	<select id="EducationList" resultType="com.es.education.EducationListDto">
@@ -32,6 +34,13 @@
 		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.edu_no=#{edu_no}
 	</select>
 	
+	<select id="EducationApplicants" resultType="int">
+		select count(distinct emp_no) from education_history where edu_no=#{edu_no}
+	</select>
+	
+	<insert id="EducationApplication" parameterType="hashmap">
+		insert into education_history(emp_no, instructor_no, edu_no) values(#{emp_no},#{instructor_no},#{edu_no})
+	</insert>
 	
 	
 </mapper>

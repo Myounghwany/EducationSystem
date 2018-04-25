@@ -44,21 +44,22 @@
 		<c:choose>
 			<c:when test="${empty edu_list}">
 				<tr>
-					<td>수강내역이 존재하지 않습니다.</td>
+					<td colspan="5">수강내역이 존재하지 않습니다.</td>
 				</tr>
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${edu_list}" var="edulist" varStatus="state">
 					<tr>
-						<td><a href="edulist/detail.do?edu_no=${edulist.edu_no}">${edulist.edu_name}</a></td>
-						<td>${edulist.instructor_no}</td>
+						<td><a href="eduhistory/detail.do?edu_no=${edulist.edu_no}">${edulist.edu_name}</a></td>
+						<td>${edulist.instructor_name}</td>
 						<td>${edulist.edu_schedule}</td>
 						<td>${edulist.edu_state}</td>
 						<td>
 						<c:if test="${empty edulist.emp_eval}">
-								<a data-toggle="modal" href="#myModal">강의평가
-									<input type="hidden" name="edu_no" value="${edulist.edu_no}">
-								</a>
+							<button onclick="window.open('eduhistory/emp_eval.do?edu_no=${edulist.edu_no}', '강의평가',
+									'width=430,height=300,location=no,status=no,scrollbars=yes,resizeable=no,left=700,top=200');">
+								강의평가
+							</button>
 						</c:if> 
 						<c:if test="${!empty edulist.emp_eval}">
 								<!-- 직원이 강사에 대한 평가를 완료했다면 -->평가완료
@@ -68,39 +69,6 @@
 			</c:otherwise>
 		</c:choose>
 	</table>
-	<!-- 모달 팝업 -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span><span class="sr-only">Close</span>
-					</button>
-					<span class="modal-title" id="myModalLabel">강의평가하기</span>
-				</div>
-				
-				<form id="loginForm" name="loginForm" class="form-signin" method="post" action="${path}/user/login">
-					<div class="modal-body">
-					
-					교육명 : ${edu_no} <br>
-					강사명 : 	<br>
-					교육일 : 	<br>
-					강의평가 : <input type="text" name="text" width="500px" height="500px">
-					
-				
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Save changes</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
 </body>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="http://googledrive.com/host/0B-QKv6rUoIcGREtrRTljTlQ3OTg"></script>
-<!-- ie10-viewport-bug-workaround.js -->
-<script src="http://googledrive.com/host/0B-QKv6rUoIcGeHd6VV9JczlHUjg"></script>
+
 <!-- holder.js -->
