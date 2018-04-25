@@ -14,8 +14,7 @@ import com.es.employees.PositionDto;
 public class ManagerDBBean implements ManagerDao {
 
 	@Override
-	public List<EmpListDto> getEmpList(int pageNum) {
-		int start = (pageNum - 1) * 10; 
+	public List<EmpListDto> getEmpList(int start) {
 		return SqlMapClient.getSession().selectList("Manager.EmpMainList", start);		
 	}
 
@@ -37,6 +36,11 @@ public class ManagerDBBean implements ManagerDao {
 	@Override
 	public int getEmpCount() {
 		return SqlMapClient.getSession().selectOne("Employees.EmployeesCount");
+	}
+
+	@Override
+	public List<InstListDto> getInstList(int start) {
+		return SqlMapClient.getSession().selectList("Instructor.InstructorCount");
 	}
 	
 }

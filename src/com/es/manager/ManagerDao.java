@@ -19,4 +19,6 @@ public interface ManagerDao {
 
 	int getEmpCount();
 
+	List<InstListDto> getInstList(int start);
+
 }
