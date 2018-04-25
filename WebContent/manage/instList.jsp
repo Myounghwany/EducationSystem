@@ -34,9 +34,9 @@
 				break;			
 			}
 		});
-		$('#empNum').click(function() {
-			var emp_no = $(this).html();
-			location.href='manageEmpDetail.do?emp_no='+emp_no;
+		$('#instNum').click(function() {
+			var instructor_no = $(this).html();
+			location.href='manageInstDetail.do?inst_no='+instructor_no;
 		});
 	});
 </script>
@@ -80,36 +80,43 @@
 					<table>
 						<thead>
 							<tr>
-								<th>사번</th>
+								<th>강사번호</th>
+								<th>분류</th>
 								<th>이름</th>
-								<th>부서</th>
-								<th>직급</th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${empList}" var="empList">
+							<c:forEach items="${instList}" var="instList">
 								<tr>
-									<td id="empNum">${empList.emp_no}</td>
-									<td>${empList.name}</td>
-									<td>${empList.dept_name}</td>
-									<td>${empList.position_name}</td>
+									<td id="instNum">${instList.instructor_no}</td>
+									<td>
+										<c:choose>
+											<c:when test="${null == instList.emp_no}">
+												외부 강사
+											</c:when>
+											<c:otherwise>
+												내부 강사
+											</c:otherwise>
+										</c:choose>
+									</td>
+									<td>${instList.name}</td>
 								</tr>
 							</c:forEach>
 							<tr>
 								<td colspan="4" style="text-align: center">
 									<c:if test="${pageStart > 5}">
-										<a href="manageEmpList.do?pageNum=${pageStart-1}">[이전]</a>
+										<a href="manageInstList.do?pageNum=${pageStart-1}">[이전]</a>
 										&nbsp;|
 									</c:if>
 									<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
-										&nbsp;<a href="manageEmpList.do?pageNum=${page}">${page}</a>
+										&nbsp;<a href="manageInstList.do?pageNum=${page}">${page}</a>
 										<c:if test="${page != pageEnd}">
 											&nbsp;|
 										</c:if>
 									</c:forEach>
 									<c:if test="${next == 1}">
 										&nbsp;|
-										<a href="manageEmpList.do?pageNum=${pageEnd+1}">[다음]</a>
+										<a href="manageInstList.do?pageNum=${pageEnd+1}">[다음]</a>
 									</c:if>
 								</td>
 							</tr>

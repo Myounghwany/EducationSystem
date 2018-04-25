@@ -21,4 +21,6 @@ public interface ManagerDao {
 
 	List<InstListDto> getInstList(int start);
 
+	int getInstCount();
+
 }

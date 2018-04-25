@@ -70,7 +70,7 @@ public class ManagerHandler {
 			pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		}
 		int start = (pageNum - 1) * 10;
-		int count = managerDao.getEmpCount();
+		int count = managerDao.getInstCount();
 		if(start > count) {
 			start = (count / 10) * 10;
 		}

@@ -10,4 +10,10 @@
 		order by e.emp_no asc
 		limit #{start}, 10
 	</select>
+	<select id="InstMainList" parameterType="int" resultType="com.es.manager.InstListDto">
+		select emp_no, instructor_no, name
+		from Instructor
+		order by instructor_no asc
+		limit #{start}, 10
+	</select>
 </mapper>

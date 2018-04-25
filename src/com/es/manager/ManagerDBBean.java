@@ -40,7 +40,12 @@ public class ManagerDBBean implements ManagerDao {
 
 	@Override
 	public List<InstListDto> getInstList(int start) {
-		return SqlMapClient.getSession().selectList("Instructor.InstructorCount");
+		return SqlMapClient.getSession().selectList("Manager.InstMainList", start);
+	}
+
+	@Override
+	public int getInstCount() {
+		return SqlMapClient.getSession().selectOne("Instructor.InstructorCount");
 	}
 	
 }
