@@ -3,19 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Education">
-	<select id="EduList" resultType="com.es.education.EduListDto">
-		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
-				h.edu_state, h.emp_eval, instructor.name as instructor_name
-		from education_history h, education_list l, instructor
-		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no;
-	</select>
-	
-	<select id="EduDetail" resultType="com.es.education.EduListDto" >
-		select *, i.name as instructor_name
-		from education_list l, instructor i
-		where edu_no=#{no} and i.instructor_no = l.instructor_no;
-	</select>
-	
+
+	<!-- 교육목록 리스트 -->
 	<select id="EducationList" resultType="com.es.education.EducationListDto">
 		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
 		l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
@@ -25,6 +14,7 @@
 		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code
 	</select>
 	
+	<!-- 교육목록 디테일 -->
 	<select id="EducationListDetail" resultType="com.es.education.EducationListDto">
 		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
 		l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
@@ -34,13 +24,36 @@
 		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.edu_no=#{edu_no}
 	</select>
 	
+	<!-- 교육 현재 신청자 수 -->
 	<select id="EducationApplicants" resultType="int">
 		select count(distinct emp_no) from education_history where edu_no=#{edu_no}
 	</select>
 	
+	<!-- 교육 신청 -->
 	<insert id="EducationApplication" parameterType="hashmap">
 		insert into education_history(emp_no, instructor_no, edu_no) values(#{emp_no},#{instructor_no},#{edu_no})
 	</insert>
 	
 	
+	<!-- 수강목록 리스트  -->
+	<select id="EduHistory" resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
+				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from education_history h, education_list l, instructor, education_detail detail
+		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
+				and detail.edu_no = l.edu_no and h.emp_no=#{account}
+		order by h.edu_state = 'I' desc, l.edu_schedule desc;
+	</select>
+	
+	<!-- 수강목록 상세 커리큘럼 보기 -->
+	<select id="EduHistoryDetail" resultType="com.es.education.EduHistoryDto" >
+		select *, i.name as instructor_name
+		from education_list l, instructor i, education_detail detail
+		where l.edu_no=#{no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no;
+	</select>
+	
+	<!-- 직원의 강의평가 null인 것을 새로 입력한 거로 수정 -->
+	<update id="insertEmpEval" parameterType="hashmap">
+		update education_history set emp_eval=#{emp_eval} where edu_no=#{no}
+	</update>
 </mapper>

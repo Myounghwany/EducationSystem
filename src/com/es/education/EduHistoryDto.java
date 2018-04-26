@@ -1,6 +1,10 @@
 package com.es.education;
 
-public class EduListDto {
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+public class EduHistoryDto {
 	private String emp_no;
 	private int no;			 //pk번호
 	private int edu_no; 	 //교육번호
@@ -25,7 +29,43 @@ public class EduListDto {
 	private String emp_eval; //직원평가
 	private String edu_state; //이수여부
 	private String instructor_eval;
+	private String file_path;
+	private String file_save_name;
+	private String file_ori_name;
+	private Date end_date; //교육종료일
 	
+	public Date getEnd_date() {
+		return end_date;
+	}
+
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+
+	public String getFile_path() {
+		return file_path;
+	}
+
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
+	}
+
+	public String getFile_save_name() {
+		return file_save_name;
+	}
+
+	public void setFile_save_name(String file_save_name) {
+		this.file_save_name = file_save_name;
+	}
+
+	public String getFile_ori_name() {
+		return file_ori_name;
+	}
+
+	public void setFile_ori_name(String file_ori_name) {
+		this.file_ori_name = file_ori_name;
+	}
+
 	private String instructor_name;
 
 	public String getEmp_no() {

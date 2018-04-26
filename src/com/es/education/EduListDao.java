@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface EduListDao {
-	public List<EduListDto> eduList();
 	
 	
 	public List<EducationListDto> EducationList();
@@ -13,5 +12,4 @@ public interface EduListDao {
 	public int EducationApplication(HashMap<String, Object> map);
 	
 	
-	public EduListDto eduDetail(int no);
 }

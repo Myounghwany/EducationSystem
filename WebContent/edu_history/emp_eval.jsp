@@ -1,17 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Á÷¿øÀÇ °­ÀÇÆò°¡ ÆäÀÌÁö</title>
+<title>ì§ì›ì˜ ê°•ì˜í‰ê°€ í˜ì´ì§€</title>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 	function test() {
 		var emp_eval = document.getElementById("emp_eval").value;
 		var form = document.form;
 		if (emp_eval == '') {
-			alert('Æò°¡¶õÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.');
+			alert('í‰ê°€ë€ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.');
 		} else {
 			form.method = "post";
 			form.action = "${path}/eduhistory/write_emp_eval.do?edu_no=" + ${edu_detail.edu_no};
@@ -19,44 +18,77 @@
 		}
 	}
 </script>
+<script type="text/javascript">
+	
+	var textCountLimit = 1000;
+	$(document).ready(function(){
+		$('textarea[name=emp_eval]').keyup(function(){
+			//í…ìŠ¤íŠ¸ì˜ì—­ì˜ ê¸¸ì´ë¥¼ ì²´í¬
+			var textLength = $(this).val().length;
+			
+			//ì…ë ¥ëœ í…ìŠ¤íŠ¸ ê¸¸ì´ë¥¼ #textCountì— ì—…ë°ì´íŠ¸í•´ì¤Œ
+			$('#textCount').text(textLength);
+			
+			//ì œí•œëœ ê¸¸ì´ë³´ë‹¤ ì…ë ¥ëœ ê¸¸ì´ê°€ í° ê²½ìš° ì œí•œ ê¸¸ì´ë§Œí¼ ìë¥´ê³  í…ìŠ¤íŠ¸ì˜ì—­ì— ë„£ìŒ
+			if(textLength>textCountLimit){
+				$(this).val($(this).val().substr(0, textCountLimit));
+			}
+		});
+	});
+</script>
 </head>
 <body>
 	<div align="center">
-		<h4>°­ÀÇÆò°¡ÇÏ±â</h4>
 		<form id="form" name="form">
 			<table>
 				<tr>
-					<td>±³À°¸í</td>
-					<td>${edu_detail.edu_name}</td>
+					<th colspan="2" height="40px">ê°•ì˜í‰ê°€í•˜ê¸°</th>
 				</tr>
 				<tr>
-					<td width="80px">±³À°ºĞ¾ß</td>
+					<td><b>êµìœ¡ëª…</b></td>
+					<td><b>${edu_detail.edu_name}</b></td>
+				</tr>
+				<tr>
+					<td width="80px">êµìœ¡ë¶„ì•¼</td>
 					<td>${edu_detail.edu_field}</td>
 				</tr>
 				<tr>
-					<td>°­»ç¸í</td>
+					<td>ê°•ì‚¬ëª…</td>
 					<td>${edu_detail.instructor_name}</td>
 				</tr>
 				<tr>
-					<td>±³À°ÀÏ</td>
+					<td>êµìœ¡ì¼</td>
 					<td>${edu_detail.edu_schedule}</td>
 				</tr>
 				<tr>
-					<td>°­ÀÇÆò°¡</td>
-					<td><input type="text" id="emp_eval" name="emp_eval"></td>
+					<td>ê°•ì˜í‰ê°€</td>
+					<td>
+						<textarea rows="6" cols="30" id="emp_eval" name="emp_eval"></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-					<span style="color: red; font-size: 5px;">*Á¦ÃâÇÏ¸é ´Ù½Ã ¼öÁ¤ ºÒ°¡´ÉÇÕ´Ï´Ù.</span>
+					<td colspan="2" height="40px">
+					<span style="color: red; font-size: 8px;">*ì œì¶œí•˜ë©´ ë‹¤ì‹œ ìˆ˜ì • ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.</span>
+					<span style="float: right; font-size: 8px;">
+						(<span id="textCount" class="textCount">0</span>/1000)
+					</span>
 					</td>
 				</tr>
 				<tr align="center">
 					<td colspan="2">
-						<input type="button" onclick="test();" value="Á¦Ãâ">
-						<button onclick="window.close();">Ãë¼Ò</button></td>
+						<input type="button" onclick="test();" value="ì œì¶œ">
+						<button onclick="window.close();">ì·¨ì†Œ</button></td>
 				</tr>
 			</table>
 		</form>
 	</div>
 </body>
 </html>
+<style>
+th{
+	background-color: #EAEAEA;
+}
+b{
+	color: #5F00FF;
+}
+</style>

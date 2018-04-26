@@ -19,18 +19,6 @@ $(document).ready(function() {
 		target += newArr[i].belong_name+' , '+newArr[i].dept_name+' , '+newArr[i].position_name;
 	}
 	
-/* 	while(newArr.length > 0){
-		
-		alert(newArr.pop());
-		
-		alert(newArr.pop().belong_name)		;
-		alert(newArr.pop().dept_name)		;
-		alert(newArr.pop().position_name)		;
-		
-		belong_name = newArr.pop().belong_name;
-		dept_name = newArr.pop().dept_name;	
-		position_name = newArr.pop().position_name; 
-	} */
 	
 	$('#edu_target').html(target);
 
@@ -45,7 +33,7 @@ $(document).ready(function() {
 			data : {
 				edu_no : edu_no
 			},
-			dataType:"text",  //다른서버에서도 데이터를 주고받을수 있게 dataType을 설정해 줘야함..
+			dataType:"text",  
 			success : function(data){
 
 				if(data != 0){
@@ -137,7 +125,7 @@ $(document).ready(function() {
 			</tr>
 			<tr>
 				<td>첨부파일</td>
-				<td></td>
+				<td><a href="${path}/eduhistory/eduHistoryFile.do?edu_no=${detail.edu_no}">첨부파일</a></td>
 				<td>신청마감일</td>
 				<td>${detail.closing_date}</td>
 			</tr>
