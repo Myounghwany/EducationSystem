@@ -22,6 +22,7 @@
 	td {
 		height: 30px;
 		background-color: #FDFFFF;
+		vertical-align: middle;
 	}
 	a:hover {
 		color : #FF5E00;
@@ -35,12 +36,12 @@
 	<h2>수강목록 페이지</h2>
 	세션계졍 : ${sessionScope.account} <br>
 	java코드 오늘 날짜 : ${date} <br>
-	<table align="center" border="1">
+	<table align="center" border="1" >
 		<tr>
 			<th>교육명</th>
 			<th>강사명</th>
-			<th>교육일</th>
-			<th>이수여부</th>
+			<th width="25%">교육일</th>
+			<th width="10%">이수여부</th>
 			<th>강의평가</th>
 		</tr>
 		<c:choose>

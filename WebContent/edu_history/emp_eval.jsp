@@ -39,12 +39,14 @@
 </head>
 <body>
 	<div align="center">
-		<h4>강의평가하기</h4>
 		<form id="form" name="form">
 			<table>
 				<tr>
-					<td>교육명</td>
-					<td>${edu_detail.edu_name}</td>
+					<th colspan="2" height="40px">강의평가하기</th>
+				</tr>
+				<tr>
+					<td><b>교육명</b></td>
+					<td><b>${edu_detail.edu_name}</b></td>
 				</tr>
 				<tr>
 					<td width="80px">교육분야</td>
@@ -65,7 +67,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td colspan="2" height="40px">
 					<span style="color: red; font-size: 8px;">*제출하면 다시 수정 불가능합니다.</span>
 					<span style="float: right; font-size: 8px;">
 						(<span id="textCount" class="textCount">0</span>/1000)
@@ -82,3 +84,11 @@
 	</div>
 </body>
 </html>
+<style>
+th{
+	background-color: #EAEAEA;
+}
+b{
+	color: #5F00FF;
+}
+</style>

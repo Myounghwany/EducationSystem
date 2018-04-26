@@ -1,6 +1,8 @@
 package com.es.education;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class EduHistoryDto {
 	private String emp_no;
