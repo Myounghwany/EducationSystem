@@ -1,5 +1,11 @@
 package com.es.handler;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.es.education.EduListDao;
 import com.es.education.EduListDto;
 import com.es.education.EducationListDto;
+
 
 @Controller
 public class EducationHandler {
@@ -55,7 +62,22 @@ public class EducationHandler {
 	@RequestMapping("/EducationList")
 	public ModelAndView eduList(HttpServletRequest request, HttpServletResponse response) {
 		List<EducationListDto> edu_list = edulistDao.EducationList();
-		System.out.println(edu_list);
+		List eduTargetList = new ArrayList();
+		
+		
+		for(int i=0; edu_list.size() > i ;i++) {
+			String eduTarget = null; 
+	        try {
+	        	eduTarget = new String(edu_list.get(i).getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+	        	eduTargetList.add(i, eduTarget);
+	        	
+	        } catch (UnsupportedEncodingException e) {
+	           e.printStackTrace();
+	        }
+			
+		}
+		
+		request.setAttribute("targetList", eduTargetList);
 		request.setAttribute("list", edu_list);
 		return new ModelAndView("edu_list/list");
 	}
@@ -70,6 +92,14 @@ public class EducationHandler {
 		EducationListDto edu_detail = edulistDao.EducationListDetail(edu_no);
 		int applicants = edulistDao.EducationApplicants(edu_no);
 		
+		String eduTarget = null; 
+        try {
+        	eduTarget = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+           e.printStackTrace();
+        }
+        
+        request.setAttribute("eduTarget", eduTarget);
 		request.setAttribute("applicants", applicants);
 		request.setAttribute("detail", edu_detail);
 		return new ModelAndView("edu_list/detail");
@@ -103,9 +133,11 @@ public class EducationHandler {
 		System.out.println("handler application ");
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 
+		
 		EducationListDto edu_detail = edulistDao.EducationListDetail(edu_no);
 		HttpSession httpSession = request.getSession();
 		/*String writer = (String) httpSession.getAttribute("userId");*/
+		
 		
 		String emp_no = "E2018040001";
 		String instructor_no = edu_detail.getInstructor_no();
@@ -117,11 +149,10 @@ public class EducationHandler {
 		map.put("instructor_no", instructor_no);
 		
 		int application = edulistDao.EducationApplication(map);
-		
-		
 		return application;
 		
 	}
+
 
 	
 	

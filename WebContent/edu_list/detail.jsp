@@ -10,7 +10,31 @@
 <script type="text/javascript">
 $(document).ready(function() {
     
+	var edu_target =  ${eduTarget};  
+	var str = JSON.stringify(edu_target);
+	var newArr = JSON.parse(str);
+	var target ="";
+	
+	for(var i=0; newArr.length > i ;i++){
+		target += newArr[i].belong_name+' , '+newArr[i].dept_name+' , '+newArr[i].position_name;
+	}
+	
+/* 	while(newArr.length > 0){
+		
+		alert(newArr.pop());
+		
+		alert(newArr.pop().belong_name)		;
+		alert(newArr.pop().dept_name)		;
+		alert(newArr.pop().position_name)		;
+		
+		belong_name = newArr.pop().belong_name;
+		dept_name = newArr.pop().dept_name;	
+		position_name = newArr.pop().position_name; 
+	} */
+	
+	$('#edu_target').html(target);
 
+	
 	$('#applicationBtn').click(function(){
 		var edu_no = $('#edu_no').val();
 		
@@ -85,7 +109,7 @@ $(document).ready(function() {
 				<td>교육명</td>
 				<td>${detail.edu_name}</td>
 				<td>교육대상</td>
-				<td>${detail.edu_target}</td>
+				<td id="edu_target">${detail.edu_target}</td>
 			</tr>
 			<tr>
 				<td>교육방법</td>

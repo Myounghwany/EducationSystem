@@ -10,10 +10,27 @@
 
 $(document).ready(function() {
                  
-
+	var index = "";
+	var edu_target =  ${targetList}; 
+	
+ 	for(var i=0; ed_target.length>i ; i++){
+		index = $("."+(i)).text();
+		
+		var str ="";
+		
+		for(var j=0; edu_target[i].length > j ; j++){
+			str = str+' , '+edu_target[i][j].belong_name+' , '+edu_target[i][j].dept_name+' , '+edu_target[i][j].position_name;
+			console.log(str);
+			
+			$("."+(i)).text(str);
+		
+		}
+	} 
+	
+	
+	
 	$('#applicationBtn').click(function(){
 		var edu_no = $('#edu_no').html();
-		
 		
 		$.ajax({
 			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
@@ -22,7 +39,7 @@ $(document).ready(function() {
 			data : {
 				edu_no : edu_no
 			},
-			dataType:"text",  //다른서버에서도 데이터를 주고받을수 있게 dataType을 설정해 줘야함..
+			dataType:"text",  
 			success : function(data){
 
 				if(data != 0){
@@ -137,7 +154,7 @@ function listBtn(no){
 						<td id="ed_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_no}</td>
 						<td id="be_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.belong_no}</td>
 						<td id="ed_field" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_field}</td>
-						<td id="ed_target" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_target}</td>
+						<td id="ed_target" class='${state.index}' onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_target}</td>
 						<td id="ma" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.manager}</td>
 						<td id="ed_schedule" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_schedule}</td>
 						<td id="in_name" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.instructor_name}</td>
