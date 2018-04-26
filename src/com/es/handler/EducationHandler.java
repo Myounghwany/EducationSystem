@@ -79,6 +79,9 @@ public class EducationHandler {
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
 		
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
+		System.out.println("edu_detail : "+edu_detail);
+		
+		
 		int applicants = edDao.EducationApplicants(edu_no);
 		
 		String eduTarget = null; 
@@ -219,6 +222,7 @@ public class EducationHandler {
 	public void eduHistoryFileDownload(Model model, @RequestParam("edu_no") int no,
 				HttpServletRequest req, HttpServletResponse res) throws IOException {
 		EduHistoryDto edu_detail = edulistDao.eduHistoryDetail(no);
+		
 		
 		//파일 : 주현언니 community의  ProjectFileDownload 서블릿 참고
 		String path = edu_detail.getFile_path();

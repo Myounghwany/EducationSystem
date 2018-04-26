@@ -12,6 +12,7 @@ public class EduHistoryDBBean implements EduHistoryDao{
 	
 	@Override
 	public List<EduHistoryDto> eduHistoryList(String account) {
+		System.out.println("eduHistory ");
 		return SqlMapClient.getSession().selectList("Education.EduHistory", account);
 	}
 	

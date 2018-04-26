@@ -19,7 +19,7 @@ $(document).ready(function() {
 		var str ="";
 		
 		for(var j=0; edu_target[i].length > j ; j++){
-			str = str+' , '+edu_target[i][j].belong_name+' , '+edu_target[i][j].dept_name+' , '+edu_target[i][j].position_name;
+			str += edu_target[i][j].belong_name+' , '+edu_target[i][j].dept_name+' , '+edu_target[i][j].position_name;
 			console.log(str);
 			
 			$("."+(i)).text(str);

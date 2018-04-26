@@ -125,7 +125,7 @@ $(document).ready(function() {
 			</tr>
 			<tr>
 				<td>첨부파일</td>
-				<td><a href="${path}/eduhistory/eduHistoryFile.do?edu_no=${detail.edu_no}">첨부파일</a></td>
+				<td><a href="${path}/eduhistory/eduHistoryFile.do?edu_no=${detail.edu_no}">${detail.file_ori_name}</a></td>
 				<td>신청마감일</td>
 				<td>${detail.closing_date}</td>
 			</tr>
