@@ -57,15 +57,7 @@ function action(val){
 				<td width="10%">교육명</td>
 				<td width="30%"><b>${edu_detail.edu_name}</b></td>
 				<td width="10%">교육대상</td>
-				
-				<td width="30%">
-				<c:forEach var="belong_name" items="${belong_name}">
-				소속 : ${belong_name}
-				</c:forEach>
-				<br>
-				부서 : ${dept_name} <br>
-				직급 : ${position_name}
-				</td>
+				<td width="30%">${edu_target}</td>
 			</tr>
 			<tr>
 				<td>교육분야</td>

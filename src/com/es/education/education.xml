@@ -10,14 +10,14 @@
 		from education_history h, education_list l, instructor, education_detail detail
 		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
 				and detail.edu_no = l.edu_no and h.emp_no=#{account}
-		order by h.edu_state = 'I' desc, l.edu_schedule desc;
+		order by h.edu_state = 'I' desc, l.edu_schedule desc
 	</select>
 	
 	<!-- 수강목록 상세 커리큘럼 보기 -->
 	<select id="EduHistoryDetail" resultType="com.es.education.EduHistoryDto" >
 		select *, i.name as instructor_name
 		from education_list l, instructor i, education_detail detail
-		where l.edu_no=#{no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no;
+		where l.edu_no=#{no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no
 	</select>
 	
 	<!-- 직원의 강의평가 null인 것을 새로 입력한 거로 수정 -->

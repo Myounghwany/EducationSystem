@@ -66,45 +66,37 @@ public class EducationHandler {
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
 		EduHistoryDto edu_detail = edulistDao.eduHistoryDetail(no);
 		model.addAttribute("edu_detail", edu_detail);
-		
+
 		//---json data (교육대상)
-		String target = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
-		System.out.println(target); //한글 인코딩 확인
-        
+		String target = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
+		
+
 		// String을 JSON으로 파싱
 		JSONParser jsonParser = new JSONParser();
-		
-        JSONArray arr = (JSONArray) jsonParser.parse(target);
-		System.out.println(arr);
-       //---- 형변환 잘 되었는지 확인  ------
-       if( arr instanceof JSONArray) {
-    	   System.out.println("arr은 JSONArray 입니다.");
-       } else {
-    	   System.out.println("arr은 문자열");
-       }
-       //-----------------------------
-       
-       HashMap<String, String> map1 = new HashMap<String, String>();
-       
-       for(int i=0; i<arr.size(); i++) {
-    	   JSONObject tmp = (JSONObject)arr.get(i);
-    	   String dept_name = (String)tmp.get("dept_name");
-    	   String belong_name  = (String)tmp.get("belong_name");
-    	   String position_name = (String)tmp.get("position_name");
-    	   
-    	   /*
-    	   model.addAttribute("belong_name", belong_name); //소속 WEB
-    	   model.addAttribute("dept_name", dept_name); //부서 WEB A팀
-    	   model.addAttribute("position_name", position_name); // 직급 전체
-    	   */
-    	   map1.put("belong_name", belong_name);
-    	   map1.put("dept_name", dept_name);
-    	   map1.put("position_name", position_name);
-    	   
-    	   for(String key : map1.keySet()) {
-    		   System.out.println("key : " + key + "/ value : " + map1.get(key));
-    	   }
-       }
+
+		JSONArray arr = (JSONArray) jsonParser.parse(target);
+
+		//---- 형변환 잘 되었는지 확인  ------
+		if( arr instanceof JSONArray) {
+			//System.out.println("arr은 JSONArray 입니다.");
+		} else {
+			System.out.println("arr은 문자열");
+		}
+		//-----------------------------
+
+		String aaa = "";
+		for(int i=0; i<arr.size(); i++) {
+			JSONObject tmp = (JSONObject)arr.get(i);
+
+			String dept_name = (String)tmp.get("dept_name");
+			String belong_name  = (String)tmp.get("belong_name");
+			String position_name = (String)tmp.get("position_name");
+
+			aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
+
+		}
+		System.out.println("target : " + aaa);
+		model.addAttribute("edu_target", aaa);
 		return "edu_history/detail";
 	}
 	
