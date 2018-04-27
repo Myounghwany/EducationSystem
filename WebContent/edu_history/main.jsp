@@ -4,40 +4,66 @@
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application"/>
 <jsp:include page="../common/header.jsp" />
 <head>
-
 <title>수강목록 페이지</title>
+<!-- table css -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
-	table {
-		color: black;
-		width: 80%;
-		margin-top : 2%;
-		text-align: center;
-		border-color: #BDBDBD;
-	}
-	th {
-		background-color: #EAEAEA;
-		text-align: center;
-		height: 50px;
-	}
-	td {
-		height: 30px;
-		background-color: #FDFFFF;
-		vertical-align: middle;
-	}
-	a:hover {
-		color : #FF5E00;
-		text-decoration: none;
-		font-weight: bold;
-	}
-	</style>
+th {
+	background-color: #EAEAEA;
+}
+
+table {
+	width: 80%;
+}
+
+a:link {
+	text-decoration: none;
+	color : black;
+}
+a:visited { color: black; text-decoration: none;}
+
+a:hover {
+	text-decoration: none;
+	color: #FF5E00;
+}
+
+.button {
+	background-color: #4CAF50; /* Green */
+	border: none;
+	color: white;
+	padding: 3px 12px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	-webkit-transition-duration: 0.4s; /* Safari */
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.button2 {
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+.button2:hover {
+	background-color: #008CBA;
+	color: white;
+}
+</style>
 </head>
 
 <body>
 	<h2>수강목록 페이지</h2>
+	<div style="width: 80%; margin: 20px auto">
 	세션계졍 : ${sessionScope.account} <br>
-	java코드 오늘 날짜 : ${date} <br>
-	<table align="center" border="1" >
+	java코드 오늘 날짜 : ${date} <br><br>
+	<table class="w3-table w3-bordered" >
 		<tr>
+			<th>번호</th>
 			<th>교육명</th>
 			<th>강사명</th>
 			<th width="25%">교육일</th>
@@ -53,6 +79,7 @@
 			<c:otherwise>
 				<c:forEach items="${edu_list}" var="edulist" varStatus="state">
 					<tr>
+						<td>${state.count}</td>
 						<td><a href="eduhistory/detail.do?edu_no=${edulist.edu_no}">${edulist.edu_name}</a></td>
 						<td>${edulist.instructor_name}</td>
 						<td>${edulist.edu_schedule}</td>
@@ -63,7 +90,8 @@
 							 2. 현재 수강중이 아닐 때
 							 3. 강의 종료일 < 오늘 날짜일 때  -->
 						<c:if test="${ empty edulist.emp_eval and edulist.edu_state != 'I' and edulist.end_date lt date }">
-							<button onclick="window.open('eduhistory/emp_eval.do?edu_no=${edulist.edu_no}', '강의평가',
+							<button class="button button2"
+									onclick="window.open('eduhistory/emp_eval.do?edu_no=${edulist.edu_no}', '강의평가',
 									'width=600,height=320,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
 								강의평가
 							</button>
@@ -82,6 +110,7 @@
 			</c:otherwise>
 		</c:choose>
 	</table>
+	</div>
 </body>
 
 <!-- holder.js -->
