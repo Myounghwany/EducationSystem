@@ -84,7 +84,27 @@ $(document).ready(function() {
 <body>
 	<h2>교육목록 해당 교육명 상세페이지</h2>
 	<div align="center" id="wrapper">
-		<button id="applicationBtn">교육신청</button>
+		
+		<c:set var="check" value="0"/>
+		<c:forEach items="${apCheck}" var="apCheck" varStatus="state">
+			
+			<c:choose>
+			<c:when test="${apCheck eq detail.edu_no}">
+				<c:set var="check" value="${check +1}" />
+			</c:when>
+			<c:otherwise>
+			
+			</c:otherwise>
+			</c:choose>
+		</c:forEach>
+		
+		
+		<c:if test="${check eq 0 }">
+			<button id="applicationBtn">교육신청</button>
+		</c:if>
+		<c:if test="${check ne 0 }">
+			<span>신청완료</span>
+		</c:if>
 		
 		<table width="70%" border="1">
 			<tr>

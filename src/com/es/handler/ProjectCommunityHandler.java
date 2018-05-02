@@ -76,7 +76,6 @@ public class ProjectCommunityHandler {
 			map.put("condition",condition);
 			list = projectDao.projectList(map);
 			
-			totalList = list.size();
 		}
 		
 
@@ -294,6 +293,7 @@ public class ProjectCommunityHandler {
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
+		System.out.println(result);
 		request.setAttribute("result", result);
 		
 		return new ModelAndView("project_community/modify");
@@ -305,15 +305,19 @@ public class ProjectCommunityHandler {
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		ProjectCommunityDto detail = projectDao.detailProject(project_no);
 		
-		HttpSession httpSession = request.getSession();
 		/*String writer = (String) httpSession.getAttribute("userId");*/
+		
+		/*세션등록*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("name", "juhyun");
+		String name =  (String) httpSession.getAttribute("name");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
 		
 		String classification = request.getParameter("selectType");
 		String title = request.getParameter("title");
 		String content = request.getParameter("text");
-		String writer = "juhyun";
+		String writer = name;
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";

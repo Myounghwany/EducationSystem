@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application"/>
 <jsp:include page="../common/header.jsp" />
 <title>교육목록/신청</title>
@@ -12,22 +13,27 @@ $(document).ready(function() {
                  
 	var index = "";
 	var edu_target =  ${targetList}; 
+	var apCheck = ${apCheck};
+	var listCount = ${listCount};
 	
- 	for(var i=0; ed_target.length>i ; i++){
+
+	for(var i=0; edu_target.length>i ; i++){
 		index = $("."+(i)).text();
 		
 		var str ="";
 		
 		for(var j=0; edu_target[i].length > j ; j++){
 			str += edu_target[i][j].belong_name+' , '+edu_target[i][j].dept_name+' , '+edu_target[i][j].position_name;
-			console.log(str);
 			
 			$("."+(i)).text(str);
 		
 		}
 	} 
+
+ 	
 	
-	
+ 	
+ 	
 	
 	$('#applicationBtn').click(function(){
 		var edu_no = $('#edu_no').html();
@@ -78,7 +84,7 @@ function listBtn(no){
 		headers: { 
             Accept : "application/json"
         },
-		dataType:"json",  //다른서버에서도 데이터를 주고받을수 있게 dataType을 설정해 줘야함..
+		dataType:"json", 
 		success : function(data){
 			
 			$('#edu_no').html(edu_no);
@@ -127,11 +133,25 @@ function listBtn(no){
 <h2>교육목록/신청</h2>
 	<br>
 	
+	<div>
+<form action="EducationList.do" name="searchform" onsubmit="return searchCheck()">
+	<select name="opt">
+		<option value="0">교육명</option>
+		<option value="1">교육번호</option>
+		<option value="2">교육분야</option>
+		<option value="3">강사명</option>
+	</select> 
+	<input type="text" size="20" name="condition" />&nbsp; <input	type="submit" value="검색" />
+</form>
+</div>
+	
+	
 	
 	<span>*클릭하면 상세보기 페이지로 넘어갑니다.</span>
 	<table align="center" border="1" id="title">
 		<tr>
-			<th>교육코드</th>
+			<th>교육번호</th>
+			<th>교육명</th>
 			<th>소속번호</th>
 			<th>교육분야</th>
 			<th>교육대상</th>
@@ -145,22 +165,36 @@ function listBtn(no){
 		<c:choose>
 			<c:when test="${empty list}">
 				<tr>
-					<td>수강내역이 존재하지 않습니다.</td>
+					<td colspan="11">해당하는 교육이 존재하지 않습니다.</td>
 				</tr>
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${list}" var="edulist" varStatus="state">
 					<tr>
 						<td id="ed_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_no}</td>
+						<td id="ed_name" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_name}</td>
 						<td id="be_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.belong_no}</td>
 						<td id="ed_field" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_field}</td>
-						<td id="ed_target" class='${state.index}' onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_target}</td>
+						<td id="ed_target" class='${state.index}' onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'"></td>
 						<td id="ma" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.manager}</td>
 						<td id="ed_schedule" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_schedule}</td>
 						<td id="in_name" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.instructor_name}</td>
 						<td id="ap_limit" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.applicants_limit}</td>
 						<td id="closing" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.closing_date}</td>
-						<td><input type="button" value="교육신청" onclick="listBtn(${edulist.edu_no})"></td>
+							
+							<c:set var="doneLoop" value="false"/>
+							<c:forEach items="${history}" var="history" varStatus="state1">
+								<c:if test="${not doneLoop}">
+									<c:if test="${history.edu_no eq edulist.edu_no}">
+									<td>신청완료</td>
+									<c:set var="doneLoop" value="true"/> 
+									</c:if>
+									<c:if test="${history.edu_no ne edulist.edu_no  and state1.count eq historySize }">
+									<td class="appBtnLo"><input type="button" value="교육신청" onclick="listBtn(${edulist.edu_no})"></td>
+									</c:if>
+								</c:if>
+							</c:forEach>
+ 
 					</tr>
 				</c:forEach>
 			</c:otherwise>
@@ -209,7 +243,31 @@ function listBtn(no){
     </div>
   </div>
   
-  
+  <div align="center">
+	<c:if test="${startPage != 1}">
+		<a href='EducationList.do?page=${startPage-1}'>[ 이전 ]</a>
+	</c:if>
+
+	<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+		<c:if test="${pageNum == spage}">
+                ${pageNum}&nbsp;
+            </c:if>
+		<c:if test="${pageNum != spage}">
+			<a href='EducationList.do?page=${pageNum}'>${pageNum}&nbsp;</a>
+		</c:if>
+	</c:forEach>
+
+	<c:if test="${endPage != maxPage }">
+		<a href='EducationList.do?page=${endPage+1 }'>[다음]</a>
+	</c:if>
+
+<c:if test="${condition != null}">
+	<p align="center">
+		<b><a href="EducationList.do">되돌아가기</a></b>
+	</p>
+</c:if>
+
+</div>
 	
 	
 </body>

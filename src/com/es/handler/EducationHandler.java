@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,21 +41,74 @@ public class EducationHandler {
 	
 	@Resource
 	private EduListDao edDao;
+	
+	@Resource
 	private EduHistoryDao edulistDao;
 	
 	/*주현- 교육목록*/
 	@RequestMapping("/EducationList")
 	public ModelAndView eduList(HttpServletRequest request, HttpServletResponse response) {
-		List<EducationListDto> edu_list = edDao.EducationList();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<EducationListDto> edu_list = null;
 		List eduTargetList = new ArrayList();
 		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
+		List<EduHistoryDto> edu_history = edulistDao.eduHistoryList(emp_no);
+		request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
+		request.setAttribute("historySize", edu_history.size()); // 수강한 교육을 찾기위해
+		
+		System.out.println("emp_no : "+emp_no);
+
+		
+		/*페이징*/
+		
+		int totalList = 0;
+		int spage = 1;
+		if(request.getParameter("page") != null) 
+			spage = Integer.parseInt(request.getParameter("page")); //현재페이지
+		int start =spage*10-9; // 현재페이지 시작 페이징번호
+		
+		map.put("start",start-1);
+		
+		
+		/*검색 O*/
+		if(request.getParameter("opt") !=null) { 
+			String opt = request.getParameter("opt");
+			String condition = request.getParameter("condition");
+			request.setAttribute("condition", condition);
+			
+			System.out.println("Handler opt : "+opt+" condition : "+condition);
+			
+			map.put("opt",opt);
+			map.put("condition",condition);
+			
+		}
+		
+		edu_list = edDao.EducationList(map);
+		totalList = edDao.EducationListCount(map);
+		request.setAttribute("listCount", totalList); 
+		
+		/*페이징 처리*/
+		int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
+		int startPage = (int)(spage/5.0+0.8)*5-4; //시작페이지 번호
+		int endPage= startPage+4;			//마지막 페이지 번호
+		if(endPage > maxPage) endPage = maxPage;
+
+		request.setAttribute("spage", spage);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
 		
 		for(int i=0; edu_list.size() > i ;i++) {
 			String eduTarget = null; 
+			
 	        try {
 	        	eduTarget = new String(edu_list.get(i).getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
 	        	eduTargetList.add(i, eduTarget);
-	        	
 	        } catch (UnsupportedEncodingException e) {
 	           e.printStackTrace();
 	        }
@@ -81,6 +132,29 @@ public class EducationHandler {
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
 		System.out.println("edu_detail : "+edu_detail);
 		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+
+		/* 수강신청했는지 알려고*/
+		List apCheck = new ArrayList();
+		
+		
+		List<EduHistoryDto> edu_history = edulistDao.eduHistoryList(emp_no);
+		request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
+		request.setAttribute("historySize", edu_history.size()); // 수강한 교육을 찾기위해
+		
+		for(int i=0; edu_history.size() > i ;i++) {
+			apCheck.add(i, edu_history.get(i).getEdu_no());
+		}
+		
+		request.setAttribute("apCheck", apCheck); // 수강한 교육을 찾기위해
+		System.out.println("apCheck : "+apCheck);
+		System.out.println("emp_no : "+emp_no);
+
+		
+		
 		
 		int applicants = edDao.EducationApplicants(edu_no);
 		
@@ -90,7 +164,8 @@ public class EducationHandler {
         } catch (UnsupportedEncodingException e) {
            e.printStackTrace();
         }
-      	/*request.setAttribute("file", file);*/
+        
+        
         request.setAttribute("eduTarget", eduTarget);
 		request.setAttribute("applicants", applicants);
 		request.setAttribute("detail", edu_detail);
@@ -128,10 +203,9 @@ public class EducationHandler {
 		
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
 		HttpSession httpSession = request.getSession();
-		/*String writer = (String) httpSession.getAttribute("userId");*/
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
-		
-		String emp_no = "E2018040001";
 		String instructor_no = edu_detail.getInstructor_no();
 
 		System.out.println("emp_no : "+emp_no+" instructor_no : "+instructor_no+" edu_no : "+edu_no);
@@ -139,6 +213,12 @@ public class EducationHandler {
 		map.put("edu_no", edu_no);
 		map.put("emp_no", emp_no);
 		map.put("instructor_no", instructor_no);
+		
+		//유효성 검사 --> 이 사번이 신청을 했는지
+		/*int appCheck = edDao.EdApCheck(map);
+		if(appCheck != 0) return 800;*/
+		
+		
 		
 		int application = edDao.EducationApplication(map);
 		return application;

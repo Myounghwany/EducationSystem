@@ -64,7 +64,7 @@ function checkValtext() {
 		<option value="design">설계</option>
     </select><br>
 	
-	<br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">${result.title} </span><br>
+	<br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">${result.title}</span><br>
 	
 	<br><br><span style="font-family: 'Jeju Gothic', serif; font-size: 20px; color: black;">게시글</span><br>
 	<textarea class="form-control" rows="10" name="text" style="width: 700px; height: 800px;"></textarea>
@@ -79,6 +79,7 @@ function checkValtext() {
 	</div>
 	
 
+	<input type="hidden" name="title" value="${result.title}">
 	<input type="hidden" value="${result.classification}" name="selected">
 	<input type="hidden" value="${result.project_no}" name="project_no">
 	<br>
