@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>직원의 강의평가 페이지</title>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
@@ -13,7 +14,7 @@
 			alert('평가란을 입력해주세요.');
 		} else {
 			form.method = "post";
-			form.action = "${path}/eduhistory/write_emp_eval.do?edu_no=" + ${edu_detail.edu_no};
+			form.action = "${path}/eduhistory/write_emp_eval.do?edu_no=" + ${eduhistory_detail.edu_no};
 			form.submit();
 		}
 	}
@@ -46,19 +47,19 @@
 				</tr>
 				<tr>
 					<td><b>교육명</b></td>
-					<td><b>${edu_detail.edu_name}</b></td>
+					<td><b>${eduhistory_detail.edu_name}</b></td>
 				</tr>
 				<tr>
 					<td width="80px">교육분야</td>
-					<td>${edu_detail.edu_field}</td>
+					<td>${eduhistory_detail.edu_field}</td>
 				</tr>
 				<tr>
 					<td>강사명</td>
-					<td>${edu_detail.instructor_name}</td>
+					<td>${eduhistory_detail.instructor_name}</td>
 				</tr>
 				<tr>
 					<td>교육일</td>
-					<td>${edu_detail.edu_schedule}</td>
+					<td>${eduhistory_detail.edu_schedule}</td>
 				</tr>
 				<tr>
 					<td>강의평가</td>
@@ -76,8 +77,8 @@
 				</tr>
 				<tr align="center">
 					<td colspan="2">
-						<input type="button" onclick="test();" value="제출">
-						<button onclick="window.close();">취소</button></td>
+						<input type="button" class="w3-button w3-white w3-border" onclick="test();" value="제출">
+						<button class="w3-button w3-white w3-border" onclick="window.close();">취소</button></td>
 				</tr>
 			</table>
 		</form>

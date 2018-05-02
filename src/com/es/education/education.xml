@@ -24,4 +24,5 @@
 	<update id="insertEmpEval" parameterType="hashmap">
 		update education_history set emp_eval=#{emp_eval} where edu_no=#{no}
 	</update>
+	
 </mapper>
