@@ -8,12 +8,12 @@ import com.es.db.SqlMapClient;
 
 @Component("instructorDao")
 public class InstructorDBBean implements InstructorDao{
-
+	/*
 	@Override
 	public String selectAccountNo(String id) {
 		return SqlMapClient.getSession().selectOne("Instructor.selectAccountNo", id);
 	}
-
+*/
 	@Override
 	public List selectInstructorNo(String account_no) {
 		return SqlMapClient.getSession().selectList("Instructor.selectInstructorNo", account_no);
@@ -25,8 +25,8 @@ public class InstructorDBBean implements InstructorDao{
 	}
 
 	@Override
-	public int insertInstReq(InstructorDataBean instructorDataBean) {
-		return SqlMapClient.getSession().insert("Instructor.insertInstructorRequest", instructorDataBean);
+	public int insertInstReq(InstructorDto InstructorDto) {
+		return SqlMapClient.getSession().insert("Instructor.insertInstructorRequest", InstructorDto);
 	}
 	
 	@Override
@@ -56,12 +56,53 @@ public class InstructorDBBean implements InstructorDao{
 	}
 
 	@Override
-	public List<InstructorDataBean> selectInstructor() {
+	public List<InstructorDto> selectInstructor() {
 		return SqlMapClient.getSession().selectList("Instructor.selectInstructor");
 	}
 
 	@Override
-	public List<InstructorDataBean> selectDepartment(String belong_no) {
+	public List<InstructorDto> selectDepartment(String belong_no) {
 		return SqlMapClient.getSession().selectList("Instructor.selectDepartment", belong_no);
 	}
+
+	@Override
+	public List<InstructorDto> selectPosition() {
+		return SqlMapClient.getSession().selectList("Instructor.selectPosition");
+	}
+
+	@Override
+	public int insertEduReq(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().insert("Instructor.insertEduReq", instructorDto);
+	}
+
+	@Override
+	public int insertEduReqDetail(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().insert("Instructor.insertEduReqDetail", instructorDto);
+	}
+
+	@Override
+	public List<InstructorDto> selectEduList2(String edu_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduList2", edu_no);
+	}
+
+	@Override
+	public List<InstructorDto> selectEduDetail(String edu_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduDetail", edu_no);
+	}
+
+	@Override
+	public List<InstructorDto> selectEduHistory(String edu_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduHistory", edu_no);
+	}
+
+	@Override
+	public int modifyEdu(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().update("Instructor.updateEdu", instructorDto);
+	}
+
+	@Override
+	public int modifyEduDetail(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().update("Instructor.updateEduDetail", instructorDto);
+	}
+
 }

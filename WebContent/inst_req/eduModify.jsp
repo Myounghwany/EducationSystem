@@ -82,7 +82,7 @@
 	}
 	
 	function addTarget(){
-		var form = document.eduForm;
+		var form = document.eduModifyForm;
 		var belong = form.target_belong;
 		var department = form.target_department;
 		var position = form.target_position;
@@ -98,7 +98,7 @@
 		/* $('.table1').append('<input type = "hidden" value = "">'); */
 	}
 	function removeTarget(){
-		var form = document.eduForm;
+		var form = document.eduModifyForm;
 		var o = form.elements['select1'];
 		var idx = o.selectedIndex;
 		if(idx == -1 ) return;
@@ -108,83 +108,70 @@
 	}
 </script>
 <body>
-	<h3>교육신청 페이지</h3>
-	강사번호 : ${instructor_no }
+	<h3>강의계획서 수정 페이지</h3>
 	<br/>
-	<form name= "eduForm" method="post" action = "eduReq.do" enctype="multipart/form-data">
+	<form name= "eduModifyForm" method="post" action = "eduModify.do" enctype="multipart/form-data">
+		<input type="hidden" name="edu_no" value="${edu_no }">
 		<table class="table1" border = "1">
+		<c:forEach items = "${edu_list }" var = "item">
+		<c:forEach items = "${edu_detail }" var = "item2">
 			<tr>
 				<td width="130px">교육코드</td>
 				<td>
-					<select name = "edu_code">
-						<option value = "">교육코드</option>
-						<c:forEach items = "${edu_code }" var = "item">
-							<option value = "${item.edu_code }">${item.edu_name }</option>
-						</c:forEach>
-					</select>
+						${item.edu_code_name }
 				</td>
 			</tr>
 			<tr>
 				<td>소속번호</td>
 				<td>
-					<select name = "belong_no">
-						<option value = "">소속</option>
-						<c:forEach items = "${belong_no }" var = "item">
-							<option value = "${item.belong_no }">${item.name }</option>
-						</c:forEach>
-					</select>
+					${item.name }
 				</td>
 			</tr>
 			<tr>
 				<td>교육분야</td>
-				<td><input type="text" name="edu_field"/></td>
+				<td>${item.edu_field }</td>
 			</tr>
 			<tr>
 				<td>교육명</td>
-				<td><input type="text" name="edu_name"/></td>
+				<td>${item.edu_name }</td>
 			</tr>
 			<tr>
 				<td>교육방법</td>
-				<td><input type="text" name="edu_way"/></td>
+				<td><input type="text" name="edu_way" value="${item.edu_way }"/></td>
 			</tr>
 			<tr>
 				<td>교육일정</td>
 				<td>	
-					<input type="text" id="startDate" name="startDate">
-					<input type="text" id="endDate" name="endDate">
+					<input type="text" id="startDate" name="startDate"  value="${item2.start_date }"/>
+					<input type="text" id="endDate" name="endDate" value="${item2.end_date }"/>
 				</td>
 			</tr>
 			<tr>
 				<td>교육일시</td>
-				<td><input type="text" name="edu_date"/></td>
+				<td><input type="text" name="edu_date" value="${item.edu_date }"/></td>
 			</tr>
 			<tr>
 				<td>소요시간</td>
-				<td><input type="text" name="input_time"/></td>
+				<td><input type="text" name="input_time" value="${item2.input_time }"/></td>
 			</tr>
 			<tr>
 				<td>신청마감일</td>
-				<td><input type="text" name="closing_date" id="closingDate"></td>
+				<td><input type="text" name="closing_date" id="closingDate" value="${item.closing_date }"/></td>
 			</tr>
 			<tr>
 				<td>교육장소</td>
-				<td><input type="text" name="edu_location"/></td>
+				<td><input type="text" name="edu_location" value="${item.edu_location }"/></td>
 			</tr>
 			<tr>
 				<td>강사</td>
-				<td>
-					<select name = "instructor_no">
-						<option value = "">강사선택</option>
-						<c:forEach items = "${instructor }" var = "item">
-							<option value = "${item.instructor_no }">${item.name } - ${item.instructor_no }</option>
-						</c:forEach>
-					</select>
-				</td>
+				<td>${item.instructor_name }</td>
 			</tr>
 			<tr>
 				<td>담당자</td>
-				<td><input type="text" name = "manager"/></td>
+				<td>${item.manager }</td>
 			</tr>
+		</c:forEach>
+		</c:forEach>
 			<tr>
 				<td>교육대상</td>
 				<td>소속 : 
@@ -224,24 +211,32 @@
 				</td>
 					
 			</tr>
+			<c:forEach items = "${edu_list }" var = "item">
+			<c:forEach items = "${edu_detail }" var = "item2">
 			<tr>
 				<td>소요예산</td>
 				<td><textarea class="form-control" rows="4" name="budget" maxlength="1000"
-					style="width: 700px; height: 500px;"></textarea></td>
+					style="width: 700px; height: 500px;">${item.budget }</textarea></td>
 			</tr>
 			<tr>
 				<td>비고</td>
 				<td><textarea class="form-control" rows="4" name="note" maxlength="1000"
-					style="width: 700px; height: 500px;"></textarea></td>
+					style="width: 700px; height: 500px;">${item.note }</textarea></td>
 			</tr>
 			<tr>
 				<td>신청자 제한 수</td>
-				<td><input type="text" name="applicants_limit"/>명</td>
+				<td><input type="text" name="applicants_limit" value="${item.applicants_limit }"/>명</td>
+			</tr>
+			<tr>
+				<td>기존파일</td>
+				<td>${item2.file_ori_name }</td>
 			</tr>
 			<tr>
 				<td>파일첨부</td>
-				<td><input type="file" name="file_name"/></td>
+				<td><input type="file" name="file_name" /></td>
 			</tr>
+			</c:forEach>
+			</c:forEach>
 		</table>
 		<br/>	
 		<div class="eduReqBtn">

@@ -38,6 +38,10 @@
 	function eduRegBtn(instructor_no){
 		location.href="/EducationSystem/instructor/edu_req.do?instructor_no=" + instructor_no;
 	}
+	function isntEvalBtn(edu_no){
+		window.name = "parentForm";
+		window.open = ("/EducationSystem/instructor/inst_eval.do?edu_no=" + edu_no, "evalForm", "width=570, height=350, resizable = no, scrollbars = no");
+	}
 </script>
 <jsp:include page="../common/header.jsp" />
 <body>
@@ -100,10 +104,10 @@
 						<c:forEach items = "${result2 }" var = "item">
 							<tr>
 								<td>${item.edu_field }</td>
-								<td>${item.edu_name }</td>
+								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
 								<td>${item.applicants_limit } 명</td>
-								<td></td>
+								<td><button onclick="isntEvalBtn('${item.edu_no }');">평가하기</button></td>
 							</tr>
 						</c:forEach>
 					</table>
@@ -114,5 +118,9 @@
 			</c:choose>
 		</c:otherwise>
 	</c:choose>
+	
+	
+	${target }
+	
 	
 </body>

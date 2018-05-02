@@ -1,6 +1,8 @@
 package com.es.instructor;
 
-public class InstructorDataBean {
+import java.util.List;
+
+public class InstructorDto {
 	private String id;
 	private String account_no;
 	private String instructor_no;
@@ -25,6 +27,22 @@ public class InstructorDataBean {
 	private String emp_no;
 	private int dept_no;
 	private String dept_name;
+	private int position_no;
+	private String position_name;
+	private int task_no;
+	private String start_date;
+	private String end_date;
+	private int input_time;
+	private int input_num;
+	private String file_path;
+	private String file_ori_name;
+	private String file_save_name;
+	private int no;
+	private String edu_state;
+	private String emp_eval;
+	private String instructor_eval;
+	private String edu_code_name;
+	private String instructor_name;
 	public String getId() {
 		return id;
 	}
@@ -168,6 +186,102 @@ public class InstructorDataBean {
 	}
 	public void setDept_name(String dept_name) {
 		this.dept_name = dept_name;
+	}
+	public int getPosition_no() {
+		return position_no;
+	}
+	public void setPosition_no(int position_no) {
+		this.position_no = position_no;
+	}
+	public String getPosition_name() {
+		return position_name;
+	}
+	public void setPosition_name(String position_name) {
+		this.position_name = position_name;
+	}
+	public int getTask_no() {
+		return task_no;
+	}
+	public void setTask_no(int task_no) {
+		this.task_no = task_no;
+	}
+	public String getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(String start_date) {
+		this.start_date = start_date;
+	}
+	public String getEnd_date() {
+		return end_date;
+	}
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+	public int getInput_time() {
+		return input_time;
+	}
+	public void setInput_time(int input_time) {
+		this.input_time = input_time;
+	}
+	public int getInput_num() {
+		return input_num;
+	}
+	public void setInput_num(int input_num) {
+		this.input_num = input_num;
+	}
+	public String getFile_path() {
+		return file_path;
+	}
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
+	}
+	public String getFile_ori_name() {
+		return file_ori_name;
+	}
+	public void setFile_ori_name(String file_ori_name) {
+		this.file_ori_name = file_ori_name;
+	}
+	public String getFile_save_name() {
+		return file_save_name;
+	}
+	public void setFile_save_name(String file_save_name) {
+		this.file_save_name = file_save_name;
+	}
+	public int getNo() {
+		return no;
+	}
+	public void setNo(int no) {
+		this.no = no;
+	}
+	public String getEdu_state() {
+		return edu_state;
+	}
+	public void setEdu_state(String edu_state) {
+		this.edu_state = edu_state;
+	}
+	public String getEmp_eval() {
+		return emp_eval;
+	}
+	public void setEmp_eval(String emp_eval) {
+		this.emp_eval = emp_eval;
+	}
+	public String getInstructor_eval() {
+		return instructor_eval;
+	}
+	public void setInstructor_eval(String instructor_eval) {
+		this.instructor_eval = instructor_eval;
+	}
+	public String getEdu_code_name() {
+		return edu_code_name;
+	}
+	public void setEdu_code_name(String edu_code_name) {
+		this.edu_code_name = edu_code_name;
+	}
+	public String getInstructor_name() {
+		return instructor_name;
+	}
+	public void setInstructor_name(String instructor_name) {
+		this.instructor_name = instructor_name;
 	}
 	
 }

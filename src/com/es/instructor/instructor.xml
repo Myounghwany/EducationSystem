@@ -3,37 +3,62 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Instructor">
-	<select id="selectAccountNo" resultType="String" parameterType="String">
+	<!-- <select id="selectAccountNo" resultType="String" parameterType="String">
 		select account_no from account where id = #{id} 
-	</select>
+	</select> -->
 	<select id="selectInstructorCheck" resultType="String" parameterType="String">
 		select count(instructor_no) instructor_check from instructor where emp_no = #{account_no} 
 	</select>
-	<select id="selectInstructorNo" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+	<select id="selectInstructorNo" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
 		select ifnull(instructor_no, 0) instructor_no, approval_state from instructor where emp_no = #{account_no} 
 	</select>
-	<insert id="insertInstructorRequest" parameterType = "com.es.instructor.InstructorDataBean">
+	<insert id="insertInstructorRequest" parameterType = "com.es.instructor.InstructorDto">
 		insert into instructor select concat('I', (select date_format(now(), '%Y%m')), (select lpad(count(*)+1, 4, '0') from instructor)), #{emp_no}, null, 1, now(), #{name};
 	</insert>
-	<select id="selectEduReq" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
-		select * from education_list where instructor_no = #{account_no} and approval_state != 2
+	<select id="selectEduReq" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
+		select * from education_list where instructor_no = #{account_no} and approval_state != 3
 	</select>
-	<select id="selectEduList" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
-		select * from education_list where instructor_no = #{account_no} and approval_state = 2
+	<select id="selectEduList" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
+		select * from education_list where instructor_no = #{account_no} and approval_state = 3
 	</select>
-	<select id = "selectEduCode" resultType = "com.es.instructor.InstructorDataBean">
+	<select id = "selectEduCode" resultType = "com.es.instructor.InstructorDto">
 		select * from education_code
 	</select>
-	<select id = "selectBelongNo" resultType = "com.es.instructor.InstructorDataBean">
+	<select id = "selectBelongNo" resultType = "com.es.instructor.InstructorDto">
 		select * from belong
 	</select> 
 	<select id="selectEmployeesName" resultType="String" parameterType = "String">
 		select name from employees where emp_no = #{account_no}
 	</select>
-	<select id = "selectInstructor" resultType = "com.es.instructor.InstructorDataBean">
+	<select id = "selectInstructor" resultType = "com.es.instructor.InstructorDto">
 		select * from instructor where approval_state = 3
 	</select>
-	<select id = "selectDepartment" resultType = "com.es.instructor.InstructorDataBean" parameterType = "String">
+	<select id = "selectDepartment" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
 		select * from department where belong_no = #{belong_no}
 	</select>
+	<select id = "selectPosition" resultType = "com.es.instructor.InstructorDto">
+		select * from position
+	</select>
+	<insert id = "insertEduReq" parameterType = "com.es.instructor.InstructorDto" >
+		insert into education_list values(NULL, #{belong_no}, #{edu_field}, #{edu_code}, #{edu_name}, #{edu_target}, #{manager}, #{edu_way}, #{edu_schedule}, #{edu_date}, #{edu_location}, #{instructor_no}, #{budget}, #{note}, #{applicants_limit}, STR_TO_DATE(concat(#{closing_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), 1)
+	</insert>
+	<insert id = "insertEduReqDetail" parameterType = "com.es.instructor.InstructorDto">
+		insert into education_detail values(NULL, LAST_INSERT_ID(), STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), #{input_time}, NULL, #{file_path}, #{file_ori_name}, #{file_save_name})
+	</insert>
+	<select id = "selectEduList2" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
+		select *, C.edu_name edu_code_name, D.name instructor_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code left join instructor D on A.instructor_no = D.instructor_no where edu_no = #{edu_no}
+	</select>
+	<select id = "selectEduDetail" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
+		select * from education_detail where edu_no = #{edu_no}
+	</select>
+	<select id = "selectEduHistory" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
+		select * from education_History A join employees B on A.emp_no = B.emp_no left join department C on B.dept_no = C.dept_no where edu_no = #{edu_no}
+	</select>
+	<update id="updateEdu" parameterType = "com.es.instructor.InstructorDto">
+		update education_list set edu_target = #{edu_target}, edu_way = #{edu_way}, edu_schedule = #{edu_schedule}, edu_date = #{edu_date}, edu_location = #{edu_location}, budget = #{budget}, note = #{note}, applicants_limit = #{applicants_limit}, closing_date = STR_TO_DATE(concat(#{closing_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s') where edu_no = #{edu_no}
+	</update>
+	<update id="updateEduDetail" parameterType = "com.es.instructor.InstructorDto">
+		update education_detail set start_date = STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), end_date = STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), input_time = #{input_time}, file_path = #{file_path}, file_ori_name = #{file_ori_name}, file_save_name = #{file_save_name} where edu_no = #{edu_no}
+	</update>
+	
 </mapper>

@@ -17,7 +17,7 @@
 						http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 						http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 						http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
+        				http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
 						
 >
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
@@ -34,6 +34,12 @@
 	    </property>
 	</bean>
 	
+	<!-- MultipartResolver -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000"/>
+        <property name="maxInMemorySize" value="100000000"/>
+    </bean>
+	
 	<context:component-scan base-package="com.es.db" />
 	<context:component-scan base-package="com.es.education" />
 	<context:component-scan base-package="com.es.employees" />
@@ -44,5 +50,7 @@
 	<context:component-scan base-package="com.es.petition" />
 
 	<mvc:annotation-driven />
-	
+
+
+
 </beans>
