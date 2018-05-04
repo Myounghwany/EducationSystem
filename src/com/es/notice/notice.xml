@@ -3,4 +3,32 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Notice">
+
+	<select id="selectAll" resultType="com.es.notice.NoticeDataBean"> 
+			select * from notice ORDER BY notice_no DESC
+	</select>
+	
+	<insert id="insertNotice" parameterType="com.es.notice.NoticeDataBean">
+	
+	</insert>
+	
+	<select id="check" resultType="int" parameterType="String">
+	
+	</select>
+	
+	<select id="selectOne" resultType="com.es.notice.NoticeDataBean">
+	
+	</select>
+	
+	<select id="updateNotice" parameterType="com.es.notice.NoticeDataBean">
+	
+	</select>
+	
+	<delete id="deleteNotice" parameterType="com.es.notice.NoticeDataBean">
+	
+	</delete>
+	
+	<select id="search" resultType="com.es.notice.NoticeDataBean">
+	
+	</select>
 </mapper>
