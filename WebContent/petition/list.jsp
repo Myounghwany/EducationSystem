@@ -65,7 +65,7 @@ function searchcheck(){
 					  <td><a href="PetitionDetail.do?petition_no=${list.petition_no}">${list.title}</a></td>
 					  <td>${list.writer}</td>
 					  <td>${list.write_time} ~ </td> 		<!-- 청원기간 -->
-					  <td></td> 							<!-- 참여인원-->
+					  <td></td> 							<!-- 참여인원${count}-->
 				 	 </tr>
 				</c:forEach>
 		    </c:otherwise>

@@ -40,5 +40,11 @@ public class PetitionDBBean implements PetitionDao {
 		}
 		 
 	}
+
+	@Override
+	public int agreeCountList(HashMap<String, Object> map) {
+		System.out.println("추천3개넘김확인쿼리");
+		return (Integer)SqlMapClient.getSession().selectOne( "Petition.agreeCountList", map );
+	}
  
 }

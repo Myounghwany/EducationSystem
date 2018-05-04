@@ -37,9 +37,9 @@
 		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
 	</insert>
 	
-<!-- 	<select id="agreeCount" parameterType="com.es.petition.PetitionLikeDto" resultType="Integer"> -->
-<!-- 		select count(*) from petition_like where petition_no=#{petition_no} -->
-<!-- 	</select> -->
+	<select id="agreeCountList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+			select count(*) from petition_like where petition_no=#{petition_no}
+	</select>
 	
 	<select id="agreeCount" parameterType="Integer" resultType="Integer">
 		select count(*) from petition_like where petition_no=#{petition_no}

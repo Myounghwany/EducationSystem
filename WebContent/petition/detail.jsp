@@ -20,27 +20,13 @@ function clickcheck() {
 </head>
 <jsp:include page="../common/header.jsp"/>
 <body> 
-<% String agree = (String) request.getAttribute("agree");
-	if (agree == "true") {
-		 %>
-		 <script>
-		 	alert('참여는 한번만 가능합니다.');
-		 </script>
-		 <%
-	} else if (agree == "false") {
-		%>
-		<script>
-			alert('참여하였습니다.');
-		</script>
-		<%
-	}
-%>
+
 <table style="width: 70%" border="1">
 		<tr> 
 		  <td colspan="2"> 진행상태[진행중] </td>
 		</tr>
 		<tr> 
-		  <td colspan="2"> ${count}</td>
+		  <td colspan="2"> ${count} </td>
 		</tr> 
 		<tr>
 		  <td> 참여인원: 00 명 </td>

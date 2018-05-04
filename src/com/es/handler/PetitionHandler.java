@@ -116,13 +116,7 @@ public class PetitionHandler {
 		 
 		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
 		int count = petitionLikeDao.agreeCount(petition_no);
-		
-		if(request.getParameter("msg") == "true" ) {
-			request.setAttribute("agree","true");
-		} else if (request.getParameter("msg") == "false") {
-			request.setAttribute("agree","false");
-		}
-		
+		 
 		request.setAttribute("count", count);
 		request.setAttribute("result", petitionDto);  
 		
@@ -149,15 +143,18 @@ public class PetitionHandler {
 		if(count >2) { 
 			petitionLikeDao.approvalUpdate(petition_no);
 		}
-		
+		 
 		if ( agree == 0 ) {
-			String msg = "true";
-			return "redirect:PetitionDetail.do?petition_no="+petition_no+"&msg="+msg;
-		} else {
-			String msg = "false";
-			return "redirect:PetitionDetail.do?petition_no="+petition_no+"&msg="+msg;
-		}
+			response.setContentType("text/html; charset=UTF-8"); 
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('참여는 한번만 가능합니다.'); history.go(-1); </script>"); 
+			out.flush(); 
+			return null;
+		} 
+
+		return "redirect:PetitionDetail.do?petition_no="+petition_no;
 	}
+
 	
 	@RequestMapping("/PetitionFileDownload")
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException { 
@@ -224,6 +221,9 @@ public class PetitionHandler {
 		int endPage= startPage+4; 
 		if(endPage > maxPage) endPage = maxPage; 
 
+//		int count = petitionDao.agreeCountList(map);
+		 
+//		request.setAttribute("count", count);
 		request.setAttribute("spage", spage);
 		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("startPage", startPage);

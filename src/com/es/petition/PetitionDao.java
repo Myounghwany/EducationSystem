@@ -11,5 +11,7 @@ public interface PetitionDao {
 	
 	List<PetitionDto> petitionList(HashMap<String, Object> map);
  
+	int agreeCountList(HashMap<String, Object> map);
+ 
 
 }
