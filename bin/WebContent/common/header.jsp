@@ -6,9 +6,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Education System</title>
+<title>Shopping</title>
 
-<link rel="StyleSheet" href="/EducationSystem/css/bootstrap.min.css">
+<link rel="StyleSheet" href="${path}/css/bootstrap.min.css">
 
 </head>
 <body style="width: 70%; margin: 0 auto;">
@@ -27,16 +27,16 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="${path}/main.do">HOME</a>
+			<a class="navbar-brand" href="${path}">HOME</a>
 		</div>
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="${path}/#">공지사항</a></li>
-				<li><a href="${path}/EducationList.do">교육목록/신청</a></li>
+				<li><a href="${path}/#">교육목록/신청</a></li>
 				<li><a href="${path}/#">청원</a></li>
-				<li><a href="${path}/eduhistory.do">수강목록</a></li>
+				<li><a href="${path}/#">수강목록</a></li>
 				<li><a href="${path}/#">강사</a></li>
-				<li><a href="${path}/ProjectList.do">프로젝트공유</a></li>
+				<li><a href="${path}/#">프로젝트공유</a></li>
 			</ul>
 		</div>
 	</div>

@@ -3,4 +3,151 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Education">
+
+	<!-- 교육목록 리스트 -->
+	<select id="EducationList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			limit #{start}, 10
+	</select>
+	
+	<!-- 교육목록 리스트 Count -->
+	<select id="EducationListCount" parameterType="hashmap" resultType="int">
+		select count(*)
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code
+	</select>
+	
+	<!-- 교육목록 디테일 -->
+	<select id="EducationListDetail" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, 
+			l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name, d.file_path, d.file_save_name, d.file_ori_name
+		from education_list l, instructor i,  belong b, education_code e, education_detail d
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.edu_no=#{edu_no} and d.edu_no=#{edu_no}
+	</select>
+	
+	<!-- 교육 현재 신청자 수 -->
+	<select id="EducationApplicants" resultType="int">
+		select count(distinct emp_no) from education_history where edu_no=#{edu_no}
+	</select>
+	
+	<!-- 교육 신청 -->
+	<insert id="EducationApplication" parameterType="hashmap">
+		insert into education_history(emp_no, instructor_no, edu_no) values(#{emp_no},#{instructor_no},#{edu_no})
+	</insert>
+
+	<!-- 신청 검사 -->
+	<select id="EdApCheck" parameterType="hashmap" resultType="int">
+		select count(*) from education_history where edu_no=#{edu_no} and emp_no=#{emp_no}
+	</select>
+	
+	<!-- 교육명으로 검색-->
+	<select id="selectTitleList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_name like CONCAT('%',#{condition},'%') limit #{start}, 10
+	</select>
+	
+	<!-- 교육명으로 검색 Count -->
+	<select id="selectTitleListCount" parameterType="hashmap" resultType="int">
+		select count(*)
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_name like CONCAT('%',#{condition},'%')
+	</select>
+
+	<!-- 교육번호로 검색-->
+	<select id="selectNoList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_no=#{condition} limit #{start}, 10
+	</select>
+	
+	<!-- 교육번호로 검색 Count -->
+	<select id="selectCodeListCount" parameterType="hashmap" resultType="int">
+		select count(*)
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_no=#{condition}
+	</select>
+
+
+	<!-- 교육분야로 검색-->
+	<select id="selectFieldList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_field like CONCAT('%',#{condition},'%') limit #{start}, 10
+	</select>
+	
+	<!-- 교육분야로 검색 Count-->
+	<select id="selectFieldListCount" parameterType="hashmap" resultType="int">
+		select count(*)
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and l.edu_field like CONCAT('%',#{condition},'%')
+	</select>
+
+	<!-- 강사명으로 검색-->
+	<select id="selectInstructorList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
+		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
+			l.edu_target edu_target, l.manager manager, l.edu_way edu_way, l.edu_schedule edu_schedule, l.edu_date edu_date, l.edu_location edu_location, l.instructor_no instructor_no,
+			l.budget budget, l.note note, l.applicants_limit applicants_limit, l.closing_date closing_date, l.approval_state approval_state, 
+			i.name instructor_name, b.name belong_name, e.edu_name edu_code_name
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and i.name like CONCAT('%',#{condition},'%') limit #{start}, 10
+	</select>
+	
+	<!-- 강사명으로 검색 Count-->
+	<select id="selectInstructorListCount" parameterType="hashmap" resultType="int">
+		select count(*)
+		from education_list l, instructor i,  belong b, education_code e
+		where l.instructor_no = i.instructor_no and l.belong_no = b.belong_no and l.edu_code = e.edu_code and l.approval_state = 3
+			and i.name like CONCAT('%',#{condition},'%')
+	</select>
+	
+	
+	
+	
+	
+	<!-- 수강목록 리스트  -->
+	<select id="EduHistory" resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
+				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from education_history h, education_list l, instructor, education_detail detail
+		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
+				and detail.edu_no = l.edu_no and h.emp_no=#{account}
+		order by h.edu_state = 'I' desc, l.edu_schedule desc;
+	</select>
+	
+	<!-- 수강목록 상세 커리큘럼 보기 -->
+	<select id="EduHistoryDetail" resultType="com.es.education.EduHistoryDto" >
+		select *, i.name as instructor_name
+		from education_list l, instructor i, education_detail detail
+		where l.edu_no=#{no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no;
+	</select>
+	
+	<!-- 직원의 강의평가 null인 것을 새로 입력한 거로 수정 -->
+	<update id="insertEmpEval" parameterType="hashmap">
+		update education_history set emp_eval=#{emp_eval} where edu_no=#{no}
+	</update>
 </mapper>
