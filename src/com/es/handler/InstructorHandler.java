@@ -42,7 +42,7 @@ public class InstructorHandler {
 	@Resource
 	private InstructorDao instructorDao;
 	
-	String file_path = "C:\\ExpressJava\\workspace\\EducationSystem\\WebContent\\inst_req\\img\\"; 
+	/*String file_path = "C:\\ExpressJava\\workspace\\EducationSystem\\WebContent\\inst_req\\img\\"; */
 	
 	
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
@@ -174,7 +174,12 @@ public class InstructorHandler {
 	@RequestMapping(value = "/eduReq", method = RequestMethod.POST)
 	public String EduReg(HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
 		String file_ori_name = file.getOriginalFilename();
-		String file_save_name = uploadFile(file_ori_name, file.getBytes());
+		String file_path = request.getServletContext().getRealPath("/save");
+		String file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+		File dir = new File(file_path);
+		if(!dir.isDirectory()) {
+			dir.mkdirs();
+		}
 		File f = new File(file_path+file.getOriginalFilename());
 	    file.transferTo(f);
 	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
@@ -261,7 +266,7 @@ public class InstructorHandler {
 		
 		return "redirect:/instructor/main.do";
 	}
-	private String uploadFile(String originalName, byte[] fileData) throws Exception{
+	private String uploadFile(String file_path, String originalName, byte[] fileData) throws Exception{
         // uuid 생성(Universal Unique IDentifier, 범용 고유 식별자)
         UUID uuid = UUID.randomUUID();
         // 랜덤생성+파일이름 저장
@@ -336,7 +341,7 @@ public class InstructorHandler {
 		
 		if (header.contains("MSIE") || header.contains("Trident")) {        // 익스플로러의 경우 한글처리
 			fileName = URLEncoder.encode(file_ori_name.toString(),"UTF-8").replaceAll("\\+", "%20");
-	    } else {                                                            // 익스플로러 이외 한글처리
+	    } else {                                                            // 익스플로러 이외 한글처리	
 	    	fileName = new String(file_ori_name.getBytes("utf-8"), "ISO-8859-1");
 	    }
 		File file = new File(file_path+file_ori_name);
@@ -403,9 +408,13 @@ public class InstructorHandler {
 	
 	@RequestMapping(value = "/eduModify", method = RequestMethod.POST)
 	public String EduModify(HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
-		
+		String file_path = request.getServletContext().getRealPath("/save");
+		File dir = new File(file_path);
+		if(!dir.isDirectory()) {
+			dir.mkdirs();
+		}
 		String file_ori_name = file.getOriginalFilename();
-		String file_save_name = uploadFile(file_ori_name, file.getBytes());
+		String file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
 		File f = new File(file_path+file.getOriginalFilename());
 	    file.transferTo(f);
 	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
@@ -491,7 +500,8 @@ public class InstructorHandler {
 	}
 	
 	@RequestMapping(value = "/inst_eval", method = RequestMethod.POST)
-	public void InstEvalPro(HttpServletRequest request, HttpServletResponse response, Model model, int[] no, String[] edu_state, String[] instructor_eval) throws Exception{
+	public String InstEvalPro(HttpServletRequest request, HttpServletResponse response, Model model, int[] no, String[] edu_state, String[] instructor_eval) throws Exception{
+		System.out.println("/inst_eval");
 		String edu_no = request.getParameter("edu_no");
 		for (int i=0 ; i<instructor_eval.length ; i++) {
 			no[i] = no[i];
@@ -504,5 +514,6 @@ public class InstructorHandler {
 			instructorDto.setEdu_state(edu_state[i]);
 			instructorDao.updateInstEval(instructorDto);
 		}
+		return "redirect:/instructor/main.do";
 	}
 }

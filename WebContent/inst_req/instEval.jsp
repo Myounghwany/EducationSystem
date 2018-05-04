@@ -21,22 +21,25 @@
 </style>
 <script>
 $(document).ready(function(){
-	
-	$('#edu_state').val('Y').prop("selected", true);
+	var length = $("input[name=no]").length;
+	alert(length);
+	var list = new Array(); 
+	<c:forEach items = "${edu_history }" var = "item">
+		list.push("${item.edu_state}");
+	</c:forEach>
+	for(var i = 0; i<length; i++){
+		var edu_state = list[i];
+		alert(edu_state);
+		$('input[value*="'+edu_state+'"]').prop("selected", true);
+		$('#edu_state').val(edu_state).prop("selected", true);
+	}
 });
 
 function checkValue(){
-	if(!document.replyInfo.instructor_eval.value==''){
-		alert('평가를 입력하세요');
-		document.replyInfo.instructor_eval.focus();
-	}else{
+		alert('평가마감일 알려주기');
 		document.replyInfo.method = "post";
 		document.replyInfo.submit(); 
 		self.close();
-		/* window.opener.document.location.reload(); 
-        opener.evalForm = null;
-        self.close(); */
-	} 
 }
 </script>
 <body>
@@ -58,7 +61,7 @@ function checkValue(){
 	        			<td>평가</td>
 	        		</tr>
 	        		<c:forEach items = "${edu_history }" var = "item">
-	        		<input type="hidden" value="${item.no }" name = "no"/>
+	        		<input type="hidden" value="${item.no }" name = "no" id="no"/>
 	        			<tr>
 	        				<td>
 	        					${item.emp_no }
@@ -70,9 +73,9 @@ function checkValue(){
 	        					${item.name }
 	        				</td>
 	        				<td>
-	        					<!-- hidden으로 item.edu_state넣어주기 -->
+	        					<input type="hidden" value="${item.edu_state }" id = "state"/>
 	        					<select name="edu_state" id="edu_state">
-	        						<option value="I" >교육진행중</option>
+	        						<option value="I" >이수선택</option>
 	        						<option value="Y" >Y</option>
 	        						<option value="N" >N</option>
 	        					</select>
