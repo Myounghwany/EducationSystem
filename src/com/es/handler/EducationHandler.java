@@ -72,6 +72,7 @@ public class EducationHandler {
 			spage = Integer.parseInt(request.getParameter("page")); //현재페이지
 		int start =spage*10-9; // 현재페이지 시작 페이징번호
 		
+		System.out.println("start : "+start);
 		map.put("start",start-1);
 		
 		
@@ -92,12 +93,17 @@ public class EducationHandler {
 		totalList = edDao.EducationListCount(map);
 		request.setAttribute("listCount", totalList); 
 		
+		
+		
+		
 		/*페이징 처리*/
 		int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
 		int startPage = (int)(spage/5.0+0.8)*5-4; //시작페이지 번호
 		int endPage= startPage+4;			//마지막 페이지 번호
 		if(endPage > maxPage) endPage = maxPage;
 
+		
+		System.out.println("spage : "+spage+" maxPage : "+maxPage+" startPage : "+startPage+" endPage : "+endPage);
 		request.setAttribute("spage", spage);
 		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("startPage", startPage);

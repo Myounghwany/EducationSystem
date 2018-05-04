@@ -83,6 +83,8 @@ public class ProjectCommunityHandler {
 		request.setAttribute("listCount", totalList); 
 		
 		
+		System.out.println("totalList : "+totalList+" spage : "+spage);
+		
 		/*페이징 처리*/
 		int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
 		int startPage = (int)(spage/5.0+0.8)*5-4; //시작페이지 번호
