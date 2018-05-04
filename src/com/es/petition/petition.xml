@@ -3,4 +3,50 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Petition">
+	<insert id="petitionWrite" parameterType="com.es.petition.PetitionDto">
+		insert into petition(title, classification, content, writer, file_path, file_save_name, file_ori_name) 
+		 values(#{title},#{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name}) 
+	</insert>
+ 
+ 	<select id="petitionDetail" parameterType="int" resultType="com.es.petition.PetitionDto">
+		select * from petition where petition_no=#{petition_no}
+	</select>
+  
+ 	<select id="petitionList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition order by write_time desc limit #{start}, 10
+	</select>  
+	<select id="searchTitleList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where title like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
+	</select>
+	<select id="searchContentList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where content like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
+	</select>
+	<select id="searchTCList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+			select * from petition where content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%')
+			 order by write_time desc limit #{start}, 10
+	</select>
+	<select id="searchWriterList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where writer like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
+	</select> 
+	
+	<select id="agreeCheck" parameterType="com.es.petition.PetitionLikeDto" resultType="Integer">
+		select count(*) from petition_like where petition_no=#{petition_no} and emp_no=#{emp_no}
+	</select>
+	
+	<insert id="petitionAgree" parameterType="com.es.petition.PetitionLikeDto">
+		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
+	</insert>
+	
+	<select id="agreeCountList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+			select count(*) from petition_like where petition_no=#{petition_no}
+	</select>
+	
+	<select id="agreeCount" parameterType="Integer" resultType="Integer">
+		select count(*) from petition_like where petition_no=#{petition_no}
+	</select>
+	
+	<update id="approvalUpdate" parameterType="Integer"> 
+		update petition set approval_state=1 where petition_no=#{petition_no}
+	</update>
+	  
 </mapper>
