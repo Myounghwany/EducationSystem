@@ -84,8 +84,6 @@ function checkValue(){
 	        		</c:forEach>
 	        		
 	        	</table>
-	        	      
-	           
 	          	<input type="button" value="저장" onclick="checkValue()">
             	<input type="button" value="창닫기" onclick="window.close()">
 	        </form>
