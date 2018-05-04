@@ -10,12 +10,14 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel= "stylesheet" type="text/css" href="${path}/css/nahyun.css">
 </head>
-
+<script type="text/javascript">
+	
+</script>
 <body>
 	<h2>수강목록 페이지</h2>
 	<div style="width: 80%; margin: 20px auto">
 	세션계졍 : ${sessionScope.account} <br>
-	java코드 오늘 날짜 : ${date} <br><br>
+	강의평가는 수강종료일 이후 <b>15일</b> 이내에 하셔야 합니다. <br><br>
 	<table class="w3-table w3-bordered" >
 		<tr>
 			<th>번호</th>
@@ -43,8 +45,9 @@
 						<!-- 강의평가 버튼 생성 조건 
 							 1. 직원이 강의평가 하지 않았을 때
 							 2. 현재 수강중이 아닐 때
-							 3. 강의 종료일 < 오늘 날짜일 때  -->
-						<c:if test="${ empty HistoryList.emp_eval and HistoryList.edu_state != 'I' and HistoryList.end_date lt date }">
+							 3. 강의 종료일 < 강의종료일 +10 까지  -->
+						
+						<c:if test="${ empty HistoryList.emp_eval and HistoryList.edu_state != 'I' and HistoryList.buttonFlag eq 1}">
 							<button class="button button2"
 									onclick="window.open('eduhistory/emp_eval.do?edu_no=${HistoryList.edu_no}', '강의평가',
 									'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
@@ -57,7 +60,7 @@
 						<!-- 현재 수강중 표시 조건
 							 1.수강목록 테이블(history)의 이수여부가 I일 때
 							 2.오늘 날짜 < 강의 종료일일 때  -->
-						<c:if test="${HistoryList.edu_state eq 'I' and date lt HistoryList.end_date }" >
+						<c:if test="${HistoryList.edu_state eq 'I'}" >
 								<span style="color:blue;">현재 수강중 </span>
 						</c:if>
 					</tr>

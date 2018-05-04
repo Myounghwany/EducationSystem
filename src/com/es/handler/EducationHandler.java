@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -240,10 +243,37 @@ public class EducationHandler {
 
 		/* 직원의 전체 수강내역 리스트 */
 		List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(account);
+		
+		for(EduHistoryDto dto : eduhistory_list) {
+			Date tempDate = dto.getEnd_date();	// end date 가져온다
+			
+			// end date에 7일 더한다
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(tempDate);
+			cal.add(Calendar.DATE, 15);
+			
+			System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
+			
+			// 현재 날짜 가져 온다
+			Date curDate = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(curDate);
+			System.out.println("현재 시각 : " + c.getTime());
+			
+			// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
+			if( c.getTime().before(cal.getTime()) ) { //현재 날짜 < 평가마감일 (버튼 생성)
+				// 비교해서 현재 날짜가 더 전이면
+				dto.setButtonFlag(1);
+				System.out.println("Flag 1 전송");
+			} else {
+				// 비교해서 현재 날짜가 이 후면
+				dto.setButtonFlag(0);
+				System.out.println("Flag 0 전송");
+			}
+		}
+		System.out.println(eduhistory_list.get(7));
 		model.addAttribute("eduhistory_list", eduhistory_list);
-		Date date = new Date();
-		model.addAttribute("date", date); //현재 날짜
-		 
+		
 		return "edu_history/main";
 	}
 	/* 나현 - 수강목록 끝 */
@@ -260,7 +290,7 @@ public class EducationHandler {
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
 		EduHistoryDto eduhistory_detail = eduhistoryDao.eduHistoryDetail(no);
 		model.addAttribute("eduhistory_detail", eduhistory_detail);
-
+		
 		//---json data (교육대상)
 		String target = new String(eduhistory_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
 		
