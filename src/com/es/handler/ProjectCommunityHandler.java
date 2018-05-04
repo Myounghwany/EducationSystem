@@ -27,9 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.es.projectCommunity.ProjectCommunityDao;
 import com.es.projectCommunity.ProjectCommunityDto;
 
-
-
-
 @Controller
 public class ProjectCommunityHandler {
 
@@ -43,7 +40,6 @@ public class ProjectCommunityHandler {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<ProjectCommunityDto> list;
 		int totalList = 0;
-		
 		
 		int spage = 1;
 		if(request.getParameter("page") != null) 
@@ -64,7 +60,6 @@ public class ProjectCommunityHandler {
 		*/
 		map.put("start",start-1);
 		
-		
 		list = projectDao.projectList(map);
 		
 		/*검색 O*/
@@ -79,10 +74,8 @@ public class ProjectCommunityHandler {
 			totalList = list.size();
 		}
 		
-
 		totalList = projectDao.projectListCount(map);
 		request.setAttribute("listCount", totalList); 
-		
 		
 		/*페이징 처리*/
 		int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
@@ -113,9 +106,7 @@ public class ProjectCommunityHandler {
 			if(file.exists()==true) {
 				file.delete();
 			}
-			
 		}
-		
 		
 		int result = projectDao.deleteProject(project_no);
 		System.out.println("result : "+result);
@@ -145,7 +136,6 @@ public class ProjectCommunityHandler {
 		String file_save_name= "";
 		String file_ori_name= "";
 		
-		
 		projectDto.setClassification(classification);
 		projectDto.setTitle(title);
 		projectDto.setContent(content);
@@ -154,9 +144,7 @@ public class ProjectCommunityHandler {
 		projectDto.setFile_save_name(file_save_name);
 		projectDto.setFile_ori_name(file_ori_name);
 		
-		
 		// -- 파일 저장하기
-		
 		String path = req.getServletContext().getRealPath("/save");
 		Map returnObject = new HashMap();
 		
@@ -167,7 +155,6 @@ public class ProjectCommunityHandler {
 
 		System.out.println("mhsr.getFileNames() : " +mhsr.getFileNames());
 		System.out.println("iterator : " +iterator);
-		
 		
 		MultipartFile mfile = null;
 		String fieldName = "";
