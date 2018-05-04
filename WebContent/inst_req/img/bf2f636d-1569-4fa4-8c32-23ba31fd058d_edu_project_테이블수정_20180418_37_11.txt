@@ -1,0 +1,235 @@
+﻿-- 테이블 순서는 관계를 고려하여 한 번에 실행해도 에러가 발생하지 않게 정렬되었습니다.
+
+-- employees Table Create SQL
+CREATE TABLE employees
+(
+    `emp_no`       INT             NOT NULL    COMMENT '사번', 
+    `name`         VARCHAR(45)     NOT NULL    COMMENT '이름', 
+    `identity_no`  VARCHAR(15)     NOT NULL    COMMENT '주민등록번호', 
+    `address`      VARCHAR(300)    NOT NULL    COMMENT '주소', 
+    `phone`        VARCHAR(13)     NOT NULL    COMMENT '전화번호', 
+    `e-mail`       VARCHAR(45)     NOT NULL    COMMENT '이메일', 
+    `job_grade`    INT             NOT NULL    COMMENT '직급', 
+    `dept_no`      INT             NOT NULL    COMMENT '부서', 
+    `belong_no`    INT             NOT NULL    COMMENT '소속번호', 
+    PRIMARY KEY (emp_no)
+);
+
+ALTER TABLE employees COMMENT '직원 테이블';
+
+
+-- notice Table Create SQL
+CREATE TABLE notice
+(
+    `notice_no`     INT              NOT NULL    AUTO_INCREMENT COMMENT '글번호', 
+    `title`         VARCHAR(300)     NOT NULL    COMMENT '제목', 
+    `content`       VARCHAR(1000)    NOT NULL    COMMENT '내용', 
+    `writer`        VARCHAR(45)      NOT NULL    COMMENT '작성자', 
+    `write_time`    TIMESTAMP        NOT NULL    COMMENT '작성시간', 
+    `hit`           INT              NULL        COMMENT '조회수', 
+    `file_path`     VARCHAR(300)     NULL        COMMENT '첨부파일경로', 
+    `file_name`     VARCHAR(300)     NULL        COMMENT '첨부파일이름', 
+    `notice_state`  VARCHAR(3)       NULL        COMMENT 'Y - 상단에 표시, N or null - 상단에 표시 안함.', 
+    PRIMARY KEY (notice_no)
+);
+
+ALTER TABLE notice COMMENT '공지사항테이블';
+
+
+-- education_detail Table Create SQL
+CREATE TABLE education_detail
+(
+    `task_no`     INT             NOT NULL    AUTO_INCREMENT COMMENT '교육상세정보테이블pk', 
+    `edu_no`      INT             NOT NULL    COMMENT '교육번호', 
+    `start_date`  DATETIME        NULL        COMMENT '시작일', 
+    `end_date`    DATETIME        NULL        COMMENT '종료일', 
+    `input_time`  INT             NULL        COMMENT '투입시간', 
+    `input_num`   INT             NULL        COMMENT '투입인원', 
+    `file_path`   VARCHAR(500)    NULL        COMMENT '첨부파일경로', 
+    `file_name`   VARCHAR(500)    NULL        COMMENT '첨부파일이름', 
+    PRIMARY KEY (task_no)
+);
+
+ALTER TABLE education_detail COMMENT '교육상세정보 테이블';
+
+
+-- education_list Table Create SQL
+CREATE TABLE education_list
+(
+    `edu_no`            INT              NOT NULL    AUTO_INCREMENT COMMENT '교육번호', 
+    `belong_no`         INT              NOT NULL    COMMENT '소속번호', 
+    `edu_field`         VARCHAR(45)      NOT NULL    COMMENT '교육분야', 
+    `edu_code`          INT              NOT NULL    COMMENT '교육분류코드 테이블에서 얻어옴', 
+    `edu_name`          VARCHAR(200)     NOT NULL    COMMENT '교육명', 
+    `edu_target`        VARCHAR(200)     NOT NULL    COMMENT '교육대상', 
+    `manager`           VARCHAR(45)      NOT NULL    COMMENT '담당자', 
+    `edu_way`           VARCHAR(45)      NOT NULL    COMMENT '교육방법', 
+    `edu_schedule`      VARCHAR(50)      NOT NULL    COMMENT '교육일정', 
+    `edu_date`          VARCHAR(200)     NOT NULL    COMMENT '교육일시', 
+    `edu_location`      VARCHAR(300)     NOT NULL    COMMENT '교육장소', 
+    `instructor_no`     INT              NOT NULL    COMMENT '강사번호', 
+    `budget`            VARCHAR(1000)    NULL        COMMENT '소요예산', 
+    `note`              VARCHAR(1000)    NULL        COMMENT '비고', 
+    `applicants_limit`  INT              NOT NULL    COMMENT '신청자수제한수', 
+    `closing_date`      DATETIME         NOT NULL    COMMENT '신청마감일', 
+    `approval_state`    INT              NOT NULL    COMMENT '승인여부(강사가 강의게시글 개설 요청 시 hr팀의 승인여부)', 
+    PRIMARY KEY (edu_no)
+);
+
+ALTER TABLE education_list COMMENT '교육리스트테이블';
+
+
+-- belong Table Create SQL
+CREATE TABLE belong
+(
+    `belong_no`  INT            NOT NULL    COMMENT '소속번호', 
+    `name`       VARCHAR(45)    NULL        COMMENT '소속명', 
+    PRIMARY KEY (belong_no)
+);
+
+ALTER TABLE belong COMMENT '소속테이블';
+
+
+-- education_history Table Create SQL
+CREATE TABLE education_history
+(
+    `no`               INT              NOT NULL    AUTO_INCREMENT COMMENT 'pk번호', 
+    `emp_no`           INT              NOT NULL    COMMENT '직원번호', 
+    `instructor_no`    INT              NOT NULL    COMMENT '강사번호', 
+    `edu_no`           INT              NOT NULL    COMMENT '교육번호', 
+    `edu_state`        VARCHAR(3)       NOT NULL    COMMENT '이수여부(Y/N)', 
+    `emp_ eval`        VARCHAR(1000)    NULL        COMMENT '직원평가', 
+    `instructor_eval`  VARCHAR(1000)    NULL        COMMENT '강사평가', 
+    PRIMARY KEY (no)
+);
+
+ALTER TABLE education_history COMMENT '수강내역테이블';
+
+
+-- instructor Table Create SQL
+CREATE TABLE instructor
+(
+    `instructor_no`   INT         NOT NULL    COMMENT '강사번호', 
+    `emp_no`          INT         NULL        COMMENT 'null이면 외부강사', 
+    `hire_date`       DATETIME    NOT NULL    COMMENT '강사된 날', 
+    `approval_state`  INT         NOT NULL    COMMENT '승인여부', 
+    `approval_date`   DATETIME    NOT NULL    COMMENT '승인날짜', 
+    PRIMARY KEY (instructor_no)
+);
+
+ALTER TABLE instructor COMMENT '강사테이블';
+
+
+-- external_instructor Table Create SQL
+CREATE TABLE external_instructor
+(
+    `instructor_no`  INT             NOT NULL    COMMENT '강사번호', 
+    `name`           VARCHAR(45)     NOT NULL    COMMENT '이름', 
+    `identity_no`    VARCHAR(15)     NOT NULL    COMMENT '주민등록번호', 
+    `address`        VARCHAR(300)    NOT NULL    COMMENT '주소', 
+    `phone`          VARCHAR(13)     NOT NULL    COMMENT '전화번호', 
+    `e-mail`         VARCHAR(45)     NOT NULL    COMMENT '이메일', 
+    PRIMARY KEY (instructor_no)
+);
+
+ALTER TABLE external_instructor COMMENT '외부강사테이블';
+
+
+-- instructor_fee Table Create SQL
+CREATE TABLE instructor_fee
+(
+    `no`             INT    NOT NULL    AUTO_INCREMENT COMMENT 'pk', 
+    `instructor_no`  INT    NOT NULL    COMMENT '강사번호', 
+    `year`           INT    NOT NULL    COMMENT '년', 
+    `month`          INT    NOT NULL    COMMENT '월', 
+    `total_time`     INT    NOT NULL    COMMENT '강의시간', 
+    `fee`            INT    NOT NULL    COMMENT '강의료', 
+    PRIMARY KEY (no)
+);
+
+ALTER TABLE instructor_fee COMMENT '강사료 테이블';
+
+
+-- account Table Create SQL
+CREATE TABLE account
+(
+    `id`          VARCHAR(20)    NOT NULL    COMMENT '아이디', 
+    `pwd`         VARCHAR(20)    NOT NULL    COMMENT '비밀번호', 
+    `account_no`  INT            NOT NULL    COMMENT '사번or강사번호', 
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE account COMMENT '계정테이블';
+
+
+-- petition Table Create SQL
+CREATE TABLE petition
+(
+    `petition_no`     INT              NOT NULL    AUTO_INCREMENT COMMENT '청원글번호', 
+    `classification`  VARCHAR(50)      NOT NULL    COMMENT '분류', 
+    `title`           VARCHAR(300)     NOT NULL    COMMENT '제목', 
+    `content`         VARCHAR(1000)    NOT NULL    COMMENT '내용', 
+    `writer`          VARCHAR(45)      NOT NULL    COMMENT '작성자', 
+    `write_time`      TIMESTAMP        NOT NULL    COMMENT '작성시간', 
+    `file_path`       VARCHAR(500)     NULL        COMMENT '첨부파일경로', 
+    `file_name`       VARCHAR(500)     NULL        COMMENT '첨부파일이름', 
+    `approval_state`  INT              NULL        COMMENT '청원진행상태 0 - 진행 중, 1 - 심사시작, 2 - 청원수용, 3 - 청원거부, 4 - 기간만료', 
+    PRIMARY KEY (petition_no)
+);
+
+ALTER TABLE petition COMMENT '청원테이블';
+
+
+-- petition_like Table Create SQL
+CREATE TABLE petition_like
+(
+    `no`           INT            NOT NULL    AUTO_INCREMENT COMMENT 'pk번호', 
+    `petition_no`  INT            NOT NULL    COMMENT '글번호', 
+    `id`           VARCHAR(20)    NOT NULL    COMMENT 'id', 
+    PRIMARY KEY (no)
+);
+
+ALTER TABLE petition_like COMMENT '좋아요 테이블';
+
+
+-- education_code Table Create SQL
+CREATE TABLE education_code
+(
+    `edu_code`  INT            NOT NULL    COMMENT '교육코드로 교육을 구분', 
+    `edu_name`  VARCHAR(45)    NOT NULL    COMMENT '교육명', 
+    PRIMARY KEY (edu_code)
+);
+
+ALTER TABLE education_code COMMENT '교육분류코드';
+
+
+-- department Table Create SQL
+CREATE TABLE department
+(
+    `dept_no`    INT            NOT NULL    COMMENT '부서번호', 
+    `dept_name`  VARCHAR(45)    NOT NULL    COMMENT '부서이름', 
+    `belong_no`  INT            NOT NULL    COMMENT '소속번호', 
+    PRIMARY KEY (dept_no)
+);
+
+ALTER TABLE department COMMENT '부서테이블';
+
+
+-- project_community Table Create SQL
+CREATE TABLE project_community
+(
+    `project_no`      INT              NOT NULL    AUTO_INCREMENT COMMENT '글번호', 
+    `classification`  VARCHAR(50)      NULL        COMMENT '분류', 
+    `title`           VARCHAR(300)     NULL        COMMENT '제목', 
+    `content`         VARCHAR(1000)    NULL        COMMENT '내용', 
+    `writer`          VARCHAR(45)      NULL        COMMENT '작성자', 
+    `write_time`      TIMESTAMP        NULL        COMMENT '작성시간', 
+    `file_path`       VARCHAR(500)     NULL        COMMENT '첨부파일경로', 
+    `file_name`       VARCHAR(500)     NULL        COMMENT '첨부파일이름', 
+    `hit`             INT              NULL        COMMENT '조회수', 
+    PRIMARY KEY (project_no)
+);
+
+ALTER TABLE project_community COMMENT '프로젝트 이행 테이블';
+
+
