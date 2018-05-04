@@ -73,8 +73,7 @@ $(document).ready(function(){
 		</tr>
 	</table>
 	<div align="center" class="goList">
-		<input class="w3-button w3-white w3-border" type="button" value="목록보기"
-				onclick="location='ProjectList.do'">
+		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='ProjectList.do'">
 	</div>
 </div>
 </body>

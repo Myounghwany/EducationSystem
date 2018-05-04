@@ -90,22 +90,21 @@
 		<!-- paging -->
 		<div align="center" class="paging">
 			<c:if test="${startPage != 1}">
-			<a href='ProjectList.do?page=${startPage-1}' class="page_btn">이전</a>
-		</c:if>
-		
-		<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
-			<c:if test="${pageNum == spage}" >
-		              <span class="page_btn">${pageNum}</span>
-		          </c:if>
-			<c:if test="${pageNum != spage}">
-				<a href='ProjectList.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+				<a href='ProjectList.do?page=${startPage-1}' class="page_btn">이전</a>
 			</c:if>
-		</c:forEach>
-		
-		<c:if test="${endPage != maxPage }">
-			<a href='ProjectList.do?page=${endPage+1}' class="page_btn">다음</a>
-		</c:if>
-		
+			
+			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+				<c:if test="${pageNum == spage}" >
+			              <span class="page_btn">${pageNum}</span>
+			          </c:if>
+				<c:if test="${pageNum != spage}">
+					<a href='ProjectList.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+				</c:if>
+			</c:forEach>
+			
+			<c:if test="${endPage != maxPage }">
+				<a href='ProjectList.do?page=${endPage+1}' class="page_btn">다음</a>
+			</c:if>
 		</div>
 		
 		<!-- 검색결과 시 없을 때 -->

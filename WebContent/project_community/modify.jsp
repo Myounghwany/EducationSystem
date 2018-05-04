@@ -14,11 +14,14 @@
 
 		var tmp = $('[name="selected"]').val();
 
+		console.log('tmp : '+tmp);
+		
 		$("select option[value=" + tmp + "]").attr("selected", true);
 
 		$('#resultTransfer').css('display', "none");
 
-	}
+	});
+	
 	function checkValtext() {
 		var f = window.document.insertForm;
 

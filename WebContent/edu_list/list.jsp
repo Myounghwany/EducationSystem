@@ -13,7 +13,6 @@ $(document).ready(function() {
                  
 	var index = "";
 	var edu_target =  ${targetList}; 
-	var apCheck = ${apCheck};
 	var listCount = ${listCount};
 	
 
@@ -133,20 +132,21 @@ function listBtn(no){
 <h2>교육목록/신청</h2>
 	<br>
 	
+	<div align="center">
 	<div>
-<form action="EducationList.do" name="searchform" onsubmit="return searchCheck()">
-	<select name="opt">
-		<option value="0">교육명</option>
-		<option value="1">교육번호</option>
-		<option value="2">교육분야</option>
-		<option value="3">강사명</option>
-	</select> 
-	<input type="text" size="20" name="condition" />&nbsp; <input	type="submit" value="검색" />
-</form>
-</div>
+		<form action="EducationList.do" name="searchform" onsubmit="return searchCheck()">
+			<select name="opt">
+				<option value="0">교육명</option>
+				<option value="1">교육번호</option>
+				<option value="2">교육분야</option>
+				<option value="3">강사명</option>
+			</select> 
+			<input type="text" size="20" name="condition" />&nbsp; <input	type="submit" value="검색" />
+		</form>
+	</div>
 	
 	
-	
+	<br>
 	<span>*클릭하면 상세보기 페이지로 넘어갑니다.</span>
 	<table align="center" border="1" id="title">
 		<tr>
@@ -267,8 +267,8 @@ function listBtn(no){
 	</p>
 </c:if>
 
-</div>
-	
+		</div>
+	</div>
 	
 </body>
 </body>

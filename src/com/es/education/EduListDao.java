@@ -11,7 +11,6 @@ public interface EduListDao {
 	public EducationListDto EducationListDetail(int edu_no);
 	public int EducationApplicants(int edu_no);
 	public int EducationApplication(HashMap<String, Object> map);
-	public int EdApCheck(HashMap<String, Object> map);
 	
 	
 }

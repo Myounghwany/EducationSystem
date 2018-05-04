@@ -62,9 +62,5 @@ public class EduListDBBean implements EduListDao{
 		return SqlMapClient.getSession().insert("Education.EducationApplication", map);
 	}
 	
-	@Override
-	public int EdApCheck(HashMap<String, Object> map) {
-		return SqlMapClient.getSession().insert("Education.EdApCheck", map);
-	}
 	
 }

@@ -43,11 +43,6 @@
 		insert into education_history(emp_no, instructor_no, edu_no) values(#{emp_no},#{instructor_no},#{edu_no})
 	</insert>
 
-	<!-- 신청 검사 -->
-	<select id="EdApCheck" parameterType="hashmap" resultType="int">
-		select count(*) from education_history where edu_no=#{edu_no} and emp_no=#{emp_no}
-	</select>
-	
 	<!-- 교육명으로 검색-->
 	<select id="selectTitleList" parameterType="hashmap" resultType="com.es.education.EducationListDto">
 		select l.edu_no edu_no, l.belong_no belong_no, l.edu_field edu_field, l.edu_code edu_code, l.edu_name edu_name,
