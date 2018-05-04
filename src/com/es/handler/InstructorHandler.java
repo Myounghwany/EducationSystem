@@ -483,7 +483,26 @@ public class InstructorHandler {
 	
 	@RequestMapping(value = "/inst_eval", method = RequestMethod.GET)
 	public String InstEval(@RequestParam("edu_no") String edu_no, Model model) throws Exception{
-		System.out.println("/inst_eval");
+		List<InstructorDto> edu_history = instructorDao.selectEduHistory(edu_no);
+		model.addAttribute("edu_history", edu_history);
+		model.addAttribute("edu_no", edu_no);
+		
 		return "inst_req/instEval";
+	}
+	
+	@RequestMapping(value = "/inst_eval", method = RequestMethod.POST)
+	public void InstEvalPro(HttpServletRequest request, HttpServletResponse response, Model model, int[] no, String[] edu_state, String[] instructor_eval) throws Exception{
+		String edu_no = request.getParameter("edu_no");
+		for (int i=0 ; i<instructor_eval.length ; i++) {
+			no[i] = no[i];
+			instructor_eval[i] = instructor_eval[i];
+			edu_state[i] = edu_state[i];
+			System.out.println("no: "+no[i] + " / " + "instructor_eval: "+instructor_eval[i] + " / " + "edu_state: "+edu_state[i]);
+			InstructorDto instructorDto = new InstructorDto();
+			instructorDto.setNo(no[i]);
+			instructorDto.setInstructor_eval(instructor_eval[i]);
+			instructorDto.setEdu_state(edu_state[i]);
+			instructorDao.updateInstEval(instructorDto);
+		}
 	}
 }

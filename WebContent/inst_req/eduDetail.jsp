@@ -58,7 +58,8 @@
 	<h3>강사 페이지</h3>
 					
 		<h4>강의계획서</h4>
-		<button id="eduModify" onclick="eduModify('${edu_no}')">강의계획서 수정</button>
+		<input type="button" id="eduModify" onclick="eduModify('${edu_no}')" value="강의계획서 수정"/>
+		<br/>
 		<br/>
 		<table class="table1" border = "1">
 			<tr>

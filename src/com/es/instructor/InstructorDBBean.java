@@ -105,4 +105,9 @@ public class InstructorDBBean implements InstructorDao{
 		return SqlMapClient.getSession().update("Instructor.updateEduDetail", instructorDto);
 	}
 
+	@Override
+	public int updateInstEval(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().update("Instructor.updateInstEval", instructorDto);
+	}
+
 }

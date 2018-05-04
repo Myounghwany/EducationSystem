@@ -22,4 +22,5 @@ public interface InstructorDao {
 	public List<InstructorDto> selectEduHistory(String edu_no);
 	public int modifyEdu(InstructorDto instructorDto);
 	public int modifyEduDetail(InstructorDto instructorDto);
+	public int updateInstEval(InstructorDto instructorDto);
 }

@@ -60,5 +60,8 @@
 	<update id="updateEduDetail" parameterType = "com.es.instructor.InstructorDto">
 		update education_detail set start_date = STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), end_date = STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), input_time = #{input_time}, file_path = #{file_path}, file_ori_name = #{file_ori_name}, file_save_name = #{file_save_name} where edu_no = #{edu_no}
 	</update>
+	<update id="updateInstEval" parameterType="com.es.instructor.InstructorDto">
+		update education_history set edu_state = #{edu_state}, instructor_eval = #{instructor_eval} where no = #{no}
+	</update>
 	
 </mapper>

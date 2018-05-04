@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath}" scope="application" />
 <title>강사 - Education System</title>
 <style>
 #isntRegBtn{
@@ -40,7 +41,7 @@
 	}
 	function isntEvalBtn(edu_no){
 		window.name = "parentForm";
-		window.open = ("/EducationSystem/instructor/inst_eval.do?edu_no=" + edu_no, "evalForm", "width=570, height=350, resizable = no, scrollbars = no");
+		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
 	}
 </script>
 <jsp:include page="../common/header.jsp" />
@@ -107,7 +108,7 @@
 								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
 								<td>${item.applicants_limit } 명</td>
-								<td><button onclick="isntEvalBtn('${item.edu_no }');">평가하기</button></td>
+								<td><input type="button" onclick="isntEvalBtn('${item.edu_no }');" value="평가하기"></td>
 							</tr>
 						</c:forEach>
 					</table>
