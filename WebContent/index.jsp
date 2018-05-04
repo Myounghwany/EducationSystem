@@ -4,5 +4,5 @@
 <title>메인 페이지 - Education System</title>
 <jsp:include page="common/header.jsp" />
 <body>
-
+index 페이지 입니다.
 </body>

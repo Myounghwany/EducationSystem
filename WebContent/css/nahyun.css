@@ -1,0 +1,137 @@
+@charset "UTF-8";
+/*
+ edu_history 폴더 & project_community css속성 
+*/
+
+/* history - main.jsp */
+table {
+	width: 80%;
+}
+
+a:link {
+	text-decoration: none;
+	color: black;
+}
+
+a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #FF5E00;
+}
+
+.button {
+	background-color: #4CAF50; /* Green */
+	border: none;
+	color: white;
+	padding: 3px 12px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	-webkit-transition-duration: 0.4s; /* Safari */
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.button2 {
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+.button2:hover {
+	background-color: #008CBA;
+	color: white;
+}
+
+/* history - detail.jsp */
+select {
+	width: 70%;
+	height: 50px;
+}
+
+b {
+	color: orange;
+	font-size: 1.3em;
+}
+
+#wrapper {
+	margin-top: 5%;
+}
+
+option:hover {
+	background-color: #FAF4C0;
+}
+
+th {
+	background-color: #EAEAEA;
+}
+
+td, th {
+	vertical-align: middle;
+}
+
+table tr td pre {
+	background-color: white;
+	border: none;
+}
+
+/* project community - list.jsp  */
+.selectDefault {
+	width: 10%;
+	height: 25px;
+}
+
+#writeBtn {
+	float: right;
+}
+
+.title:link {
+	text-decoration: none;
+	color: black;
+}
+
+.title:visited {
+	color: black;
+	text-decoration: none;
+}
+
+table tr td .title:hover {
+	text-decoration: none;
+	color: #FF5E00;
+}
+
+.paging {
+	font-size: 1.5em;
+}
+
+.page_btn:link {
+	color: #FF5E00;
+	text-decoration: none;
+	margin: 0 5px;
+	border: 1px;
+}
+
+.page_btn:visited {
+	color: brown;
+	text-decoration: none;
+}
+
+.page_btn:hover {
+	text-decoration: none;
+	color: aqua;
+	background-color: white;
+}
+
+/* project community - detail, write, modify */
+.goList {
+	margin-top: 3%;
+}
+
+
+

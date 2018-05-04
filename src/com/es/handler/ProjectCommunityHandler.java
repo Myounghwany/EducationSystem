@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -256,10 +255,9 @@ public class ProjectCommunityHandler {
 	
 	@RequestMapping("/ProjectFileDownload")
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
-		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
+		//파일
 		String path = result.getFile_path();
 		String file_ori_name= new String(result.getFile_ori_name().getBytes("UTF-8"), "ISO-8859-1"); 
 		
