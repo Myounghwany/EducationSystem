@@ -9,7 +9,7 @@ import com.es.employees.PositionDto;
 
 public interface ManagerDao {
 
-	List<EmpListDto> getEmpList(int pageNum);
+	List<EmpListDto> getEmpList(int start);
 
 	List<BelongDto> getBelongList();
 
@@ -22,5 +22,9 @@ public interface ManagerDao {
 	List<InstListDto> getInstList(int start);
 
 	int getInstCount();
+
+	int getEmpCount(String category, String word);
+
+	List<EmpListDto> getEmpList(int start, String category, String word);
 
 }

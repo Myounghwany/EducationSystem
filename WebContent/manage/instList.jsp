@@ -10,10 +10,10 @@
 			var title_value = $(this).attr('title_value');
 			switch(title_value) {
 			case 'emp':
-				location.href='manageEmpList.do';
+				location.href='empList.do';
 				break;
 			case 'edu':
-				location.href='manageEduList.do';
+				location.href='eduList.do';
 				break;
 			}
 		});
@@ -21,22 +21,22 @@
 			var menu_value = $(this).attr('menu_value');
 			switch(menu_value) {
 			case 'emp':
-				location.href='manageEmpList.do';
+				location.href='empList.do';
 				break;
 			case 'inst':
-				location.href='manageInstList.do';
+				location.href='instList.do';
 				break;
 			case 'ex_inst':
-				location.href='manageExInstList.do';
+				location.href='exInstList.do';
 				break;
 			case 'req_inst':
-				location.href='manageReqInstList.do';
+				location.href='reqInstList.do';
 				break;			
 			}
 		});
-		$('#instNum').click(function() {
-			var instructor_no = $(this).html();
-			location.href='manageInstDetail.do?inst_no='+instructor_no;
+		$('.inst').click(function() {
+			var instructor_no = $(this).find('.instNum').html();
+			location.href='instDetail.do?inst_no='+instructor_no;
 		});
 	});
 </script>
@@ -87,8 +87,8 @@
 						</thead>
 						<tbody>
 							<c:forEach items="${instList}" var="instList">
-								<tr>
-									<td id="instNum">${instList.instructor_no}</td>
+								<tr class="inst">
+									<td class="instNum">${instList.instructor_no}</td>
 									<td>
 										<c:choose>
 											<c:when test="${null == instList.emp_no}">
@@ -105,19 +105,30 @@
 							<tr>
 								<td colspan="4" style="text-align: center">
 									<c:if test="${pageStart > 5}">
-										<a href="manageInstList.do?pageNum=${pageStart-1}">[이전]</a>
+										<a href="instList.do?pageNum=${pageStart-1}">[이전]</a>
 										&nbsp;|
 									</c:if>
 									<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
-										&nbsp;<a href="manageInstList.do?pageNum=${page}">${page}</a>
+										&nbsp;<a href="instList.do?pageNum=${page}">${page}</a>
 										<c:if test="${page != pageEnd}">
 											&nbsp;|
 										</c:if>
 									</c:forEach>
 									<c:if test="${next == 1}">
 										&nbsp;|
-										<a href="manageInstList.do?pageNum=${pageEnd+1}">[다음]</a>
+										<a href="instList.do?pageNum=${pageEnd+1}">[다음]</a>
 									</c:if>
+									<br />
+									<select name="srchType">
+										<option value="internal">내부강사</option>
+										<option value="external">외부강사</option>
+									</select>
+									<select name="srchCat" id="srchCat">
+										<option value="number">강사번호</option>
+										<option value="name">이름</option>
+									</select>
+									<input type="text" id="srchWord" style="width: 110px;"/>
+									<button id="srch">검색</button>
 								</td>
 							</tr>
 						</tbody>

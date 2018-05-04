@@ -6,14 +6,21 @@
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$('document').ready(function() {
+		//alert($(location).attr('host')); //localhost:8080
+		//alert($(location).attr('hostname')); //localhost
+		//alert($(location).attr('path')); //undefined
+		alert($(location).attr('href')); //http://localhost:8080/EducationSystem/manageEmpList.do
+		//alert($(location).attr('port')); //8080
+		//alert($(location).attr('protocol')); //http:
+		
 		$('#title tr th').click(function() {
 			var title_value = $(this).attr('title_value');
 			switch(title_value) {
 			case 'emp':
-				location.href='manageEmpList.do';
+				location.href='empList.do';
 				break;
 			case 'edu':
-				location.href='manageEduList.do';
+				location.href='eduList.do';
 				break;
 			}
 		});
@@ -21,24 +28,37 @@
 			var menu_value = $(this).attr('menu_value');
 			switch(menu_value) {
 			case 'emp':
-				location.href='manageEmpList.do';
+				location.href='empList.do';
 				break;
 			case 'inst':
-				location.href='manageInstList.do';
+				location.href='instList.do';
 				break;
 			case 'ex_inst':
-				location.href='manageExInstList.do';
+				location.href='exInstList.do';
 				break;
 			case 'req_inst':
-				location.href='manageReqInstList.do';
+				location.href='reqInstList.do';
 				break;			
 			}
 		});
-		$('#empNum').click(function() {
-			var emp_no = $(this).html();
-			location.href='manageEmpDetail.do?emp_no='+emp_no;
+		$('.emp').click(function() {
+			var emp_no = $(this).find('.empNum').html();
+			location.href='empDetail.do?emp_no='+emp_no;
 		});
 	});
+	
+	function checkSubmit() {
+		if(srchWord.value == '') {
+			alert('검색어를 입력해주세요.');
+			return false;
+		}
+		var dept = $('#srchDept').val();
+		var pos = $('#srchPos').val();
+		var cat = $('#srchCat').val();
+		var word = $('#srchWord').val();
+		location.href='empList.do?';
+		return true;		
+	}
 </script>
 <style>
 	table {
@@ -61,6 +81,10 @@
 		margin: 3px;
 		width: 20%;
 		height: 25%;
+	}
+	a {
+		color: black;
+		text-decoration: none;
 	}
 </style>
 <body>
@@ -88,8 +112,8 @@
 						</thead>
 						<tbody>
 							<c:forEach items="${empList}" var="empList">
-								<tr>
-									<td id="empNum">${empList.emp_no}</td>
+								<tr class="emp">
+									<td class="empNum">${empList.emp_no}</td>
 									<td>${empList.name}</td>
 									<td>${empList.dept_name}</td>
 									<td>${empList.position_name}</td>
@@ -98,19 +122,40 @@
 							<tr>
 								<td colspan="4" style="text-align: center">
 									<c:if test="${pageStart > 5}">
-										<a href="manageEmpList.do?pageNum=${pageStart-1}">[이전]</a>
+										<a href="empList.do?pageNum=${pageStart-1}">[이전]</a>
 										&nbsp;|
 									</c:if>
 									<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
-										&nbsp;<a href="manageEmpList.do?pageNum=${page}">${page}</a>
+										&nbsp;<a href="empList.do?pageNum=${page}">${page}</a>
 										<c:if test="${page != pageEnd}">
 											&nbsp;|
 										</c:if>
 									</c:forEach>
 									<c:if test="${next == 1}">
-										&nbsp;|
-										<a href="manageEmpList.do?pageNum=${pageEnd+1}">[다음]</a>
+										&nbsp;|&nbsp;
+										<a href="empList.do?pageNum=${pageEnd+1}">[다음]</a>
 									</c:if>
+									<br />
+									<form action="empList.do" method="post" onsubmit="checkSubmit()">
+									<select name="srchDept" id="srchDept">
+										<option value="nothing">---부서---</option>
+										<c:forEach items="${deptList}" var="deptList">
+											<option value="${deptList.dept_no}">${deptList.dept_name}</option>
+										</c:forEach>
+									</select>
+									<select name="srchPos" id="srchPos">
+										<option value="nothing">---직책---</option>
+										<c:forEach items="${posList}" var="posList">
+											<option value="${posList.position_no}">${posList.position_name}</option>
+										</c:forEach>
+									</select>
+									<select name="srchCat" id="srchCat">
+										<option value="number">사원번호</option>
+										<option value="name">이름</option>
+									</select>
+									<input type="text" id="srchWord" style="width: 110px;"/>
+									<input id="srch" type="submit" value="검색"/>
+									</form>
 								</td>
 							</tr>
 						</tbody>

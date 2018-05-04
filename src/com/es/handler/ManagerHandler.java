@@ -24,20 +24,47 @@ public class ManagerHandler {
 	@Resource
 	ManagerDao managerDao;
 	
-	@RequestMapping("manageEmpList")
+	@RequestMapping("manage/empList")
 	public ModelAndView empList(HttpServletRequest request, HttpServletResponse response) {
 		int pageNum;
-		if(request.getParameter("pageNum") == null) {
+		String srchDept, srchPos, srchCat, srchWord;
+		if(null != request.getParameter("srchDept")
+				|| null != request.getParameter("srchPos")
+				|| null != request.getParameter("srchCat")) {
+			srchDept = request.getParameter("srchDept");
+			srchPos = request.getParameter("srchPos");
+			srchCat = request.getParameter("srchCat");
+			srchWord = request.getParameter("srchWord");
+			request.setAttribute("srchDept", srchDept);
+			request.setAttribute("srchDept", srchDept);
+			request.setAttribute("srchDept", srchDept);
+			request.setAttribute("srchDept", srchDept);
+		}
+		if(null == request.getParameter("pageNum")) {
 			pageNum = 1;
 		} else {
 			pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		}
 		int start = (pageNum - 1) * 10;
-		int count = managerDao.getEmpCount();
+		int count;
+		String category = null;
+		String word = null;
+		if(null != request.getParameter("category") && null != request.getParameter("word")) {
+			category = request.getParameter("category");
+			word = request.getParameter("word");
+			count = managerDao.getEmpCount(category, word);
+		} else {
+			count = managerDao.getEmpCount();			
+		}
 		if(start > count) {
 			start = (count / 10) * 10;
 		}
-		List<EmpListDto> empList = managerDao.getEmpList(start);
+		List<EmpListDto> empList;
+		if(null != request.getParameter("category") && null != request.getParameter("word")) {
+			empList = managerDao.getEmpList(start, category, word);
+		} else {
+			empList = managerDao.getEmpList(start);
+		}
 		int pageStart = (((start / 10) / 5) * 5) + 1;
 		int pageEnd, next;
 		if((pageStart + 4) * 10 >= count) {
@@ -53,15 +80,20 @@ public class ManagerHandler {
 			next = 1;
 		}
 		
+		List<DepartmentDto> deptList = managerDao.getDepartmentList();
+		List<PositionDto> posList = managerDao.getPositionList();
+		
 		
 		request.setAttribute("empList", empList);
 		request.setAttribute("pageStart", pageStart);
 		request.setAttribute("pageEnd", pageEnd);
 		request.setAttribute("next", next);
+		request.setAttribute("deptList", deptList);
+		request.setAttribute("posList", posList);
 		return new ModelAndView("manage/empList");
 	}
 	
-	@RequestMapping("manageInstList")
+	@RequestMapping("manage/instList")
 	public ModelAndView instList(HttpServletRequest request, HttpServletResponse response) {
 		int pageNum;
 		if(request.getParameter("pageNum") == null) {
@@ -89,12 +121,16 @@ public class ManagerHandler {
 			pageEnd = pageStart + 4;
 			next = 1;
 		}
-		
+
+		List<DepartmentDto> deptList = managerDao.getDepartmentList();
+		List<PositionDto> posList = managerDao.getPositionList();
 		
 		request.setAttribute("instList", instList);
 		request.setAttribute("pageStart", pageStart);
 		request.setAttribute("pageEnd", pageEnd);
 		request.setAttribute("next", next);
+		request.setAttribute("deptList", deptList);
+		request.setAttribute("posList", posList);
 		return new ModelAndView("manage/instList");
 	}
 }
