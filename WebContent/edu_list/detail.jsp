@@ -156,8 +156,9 @@ $(document).ready(function() {
 				<td></td>
 			</tr>
 		</table>
-		
 		<input type="hidden" value="${detail.edu_no}" id="edu_no">
+		
+		
 	</div>
 </body>
 </html>

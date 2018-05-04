@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.es.projectCommunity.ProjectCommunityDao;
 import com.es.projectCommunity.ProjectCommunityDto;
+import com.es.projectCommunity.ProjectReplyDto;
 
 @Controller
 public class ProjectCommunityHandler {
@@ -218,6 +219,7 @@ public class ProjectCommunityHandler {
 		
 	}
 
+
 	public static String getUuid() {
 		return UUID.randomUUID().toString().replaceAll("-","");
 	}
@@ -400,5 +402,37 @@ public class ProjectCommunityHandler {
 		
 		return "redirect:ProjectDetail.do?project_no="+project_no;
 	}
+	
+	
+	
+	
+	/*comment*/
+	@RequestMapping(value="/CommentWrite.do", method=RequestMethod.POST)
+	public void CommentWrite(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
+		System.out.println("Controller ProjectWriteForm POST");
+		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
+		ProjectReplyDto replyDto = new ProjectReplyDto();
+		
+		
+		String content = request.getParameter("content");
+		String writer = emp_no;
+		
+		
+		replyDto.setContent(content);
+		replyDto.setWrite_time(writer);
+		
+		
+		// write내용 넣기
+		
+		int result = projectDao.CommentWrite(replyDto);
+		
+		
+	}
+
 	
 }

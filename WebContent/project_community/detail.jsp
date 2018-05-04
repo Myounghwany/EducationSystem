@@ -20,6 +20,40 @@ $(document).ready(function(){
 		location="ProjectWrite.do";
 	});	
 		
+	/* $('#commentInsertBtn').click(function(){
+
+		var content = $('#content').text();
+		
+		console.log('content : '+content);
+		
+		/* $.ajax({
+			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+			url : 'EducationList/application.do',
+			type : 'get',
+			data : {
+				edu_no : edu_no
+			},
+			dataType:"text",  
+			success : function(data){
+
+				if(data != 0){
+					alert("신청이 정상적으로 되었습니다.");
+				}else{
+					alert("신청 불가");
+				}
+
+				location.href="${path}/EducationList.do";
+				
+			},
+			error : function(request,status,error){
+				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+			}
+		});	 */
+	});	 */
+		
+	
+	
 	});
 </script>
 <link rel= "stylesheet" type="text/css" href="${path}/css/nahyun.css">
@@ -30,8 +64,7 @@ $(document).ready(function(){
 <h1>Project Community Detail</h1>
 <div style="width: 70%; margin: 20px auto">
 
-	<span style="color: #FF5E00;"> <b>분류 : 	${result.classification}</b>
-	</span> <br>
+	<span style="color: #FF5E00;"> <b>분류 : 	${result.classification}</b></span> <br>
 	<table class="w3-table w3-bordered">
 		<tr>
 			<th colspan="4" style="background-color: #EAEAEA;"> Project Coummunity 상세보기 </th>
@@ -64,17 +97,36 @@ $(document).ready(function(){
 		<tr>
 			<td colspan="4">
 			<div align="right">
-				<input class="w3-button w3-white w3-border" type="button" value="글수정"
-						onclick="location='ProjectModify.do?project_no=${result.project_no}'">
-				<input class="w3-button w3-white w3-border" type="button" value="글삭제"
-						onclick="location='ProjectDelete.do?project_no=${result.project_no}'">
+				<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='ProjectModify.do?project_no=${result.project_no}'">
+				<input class="w3-button w3-white w3-border" type="button" value="글삭제" onclick="location='ProjectDelete.do?project_no=${result.project_no}'">
 			</div>
 			</td>
 		</tr>
+		
+		
+		
 	</table>
+	
 	<div align="center" class="goList">
 		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='ProjectList.do'">
+	</div><br>
+	
+  <!--  댓글  -->
+     <label for="content">comment</label>
+     
+     <form name="commentInsertForm" method="post" action="CommentWrite.do">
+         <div class="input-group">
+            <input type="hidden" name="project_no" value="${result.project_no}"/>
+            <input type="text" class="form-control" id="content" name="content" placeholder="내용을 입력하세요.">
+            <span class="input-group-btn">
+                 <button class="btn btn-default" type="submit" name="commentInsertBtn">등록</button>
+            </span>
+           </div>
+     </form>
+ 
+     <div class="commentList"></div>
+
+
 	</div>
-</div>
 </body>
 </html>
