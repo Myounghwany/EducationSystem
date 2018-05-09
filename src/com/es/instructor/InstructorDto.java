@@ -43,6 +43,10 @@ public class InstructorDto {
 	private String instructor_eval;
 	private String edu_code_name;
 	private String instructor_name;
+	private String deadLine;
+	private int student;
+	private int page;
+	private int eduListNum;
 	public String getId() {
 		return id;
 	}
@@ -282,6 +286,30 @@ public class InstructorDto {
 	}
 	public void setInstructor_name(String instructor_name) {
 		this.instructor_name = instructor_name;
+	}
+	public String getDeadLine() {
+		return deadLine;
+	}
+	public void setDeadLine(String deadLine) {
+		this.deadLine = deadLine;
+	}
+	public int getStudent() {
+		return student;
+	}
+	public void setStudent(int student) {
+		this.student = student;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getEduListNum() {
+		return eduListNum;
+	}
+	public void setEduListNum(int eduListNum) {
+		this.eduListNum = eduListNum;
 	}
 	
 }

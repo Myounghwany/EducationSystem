@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<jsp:useBean id="now" class="java.util.Date" />
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application" />
 <title>강사 - Education System</title>
 <style>
@@ -26,6 +28,9 @@
 	margin-left:auto; 
     margin-right:auto;
 }
+#pageForm{
+	text-align: center;
+}
 </style>
 <script type="text/javascript">
 	function isntRegBtn(account_no){
@@ -39,9 +44,9 @@
 	function eduRegBtn(instructor_no){
 		location.href="/EducationSystem/instructor/edu_req.do?instructor_no=" + instructor_no;
 	}
-	function isntEvalBtn(edu_no){
+	function isntEvalBtn(edu_no, deadLine){
 		window.name = "parentForm";
-		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
+		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no + "&deadLine=" + deadLine, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
 	}
 </script>
 <jsp:include page="../common/header.jsp" />
@@ -103,13 +108,30 @@
 							<td>평가</td>
 						</tr>
 						<c:forEach items = "${result2 }" var = "item">
+						<fmt:formatDate value="${now}" pattern="yyyy-MM-dd HH:mm:ss" var="now_date" /> 
+						<fmt:parseDate value="${item.end_date }" pattern="yyyy-MM-dd HH:mm:ss" var="end_date" /> 
+						<fmt:formatDate value="${end_date }" pattern="yyyy-MM-dd HH:mm:ss" var="end" /> 
+						<fmt:parseDate value="${item.deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="deadLine" /> 
+						<fmt:formatDate value="${deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="dead" /> 
 							<tr>
 								<td>${item.edu_field }</td>
 								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
-								<td>${item.applicants_limit } 명</td>
-								<td><input type="button" onclick="isntEvalBtn('${item.edu_no }');" value="평가하기"></td>
+								<td>${item.student } / ${item.applicants_limit }</td>
+								<td>
+									<c:if test="${now_date < dead && now_date > end}">
+										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가하기">
+									</c:if>
+									<c:if test="${dead < now_date}">
+										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료">
+									</c:if>
+									<c:if test="${end > now_date}">
+										강의진행중
+									</c:if>
+									
+								</td>
 							</tr>
+						
 						</c:forEach>
 					</table>
 				</c:when>
@@ -120,8 +142,25 @@
 		</c:otherwise>
 	</c:choose>
 	
-	
-	${target }
+	<br>
+	<div id="pageForm">
+		<c:if test="${startPage != 1 }">
+			<a href ="${path}/instructor/main.do?page=${page -1}">[ 이전 ]</a> 
+		</c:if>
+		<c:forEach var="pageNum" begin="${startPage }" end="${endPage }">
+			<c:if test="${pageNum == page }">
+				${pageNum }&nbsp;
+			</c:if>
+			<c:if test="${pageNum != page }">
+				<a href="${path}/instructor/main.do?page=${pageNum}">${pageNum}&nbsp;</a>
+			</c:if>
+			
+		</c:forEach>
+		
+		<c:if test="${endPage != maxPage }">
+			<a href='${path}/instructor/main.do?page=${endPage+1 }'>[다음]</a>
+	    </c:if>
+	</div>
 	
 	
 </body>

@@ -106,12 +106,39 @@
 		o.selectedIndex = idx - 1;
 		if(idx - 1 < 0) o.selectedIndex = 0;
 	}
+	function inputCheck(){
+		if(!document.eduForm.edu_code.value || document.eduForm.edu_code.value == ""){
+			alert('교육코드를 선택하세요');
+			document.eduForm.edu_code.focus();
+			return false;
+		}else if(!document.eduForm.belong_no.value || document.eduForm.belong_no.value == ""){
+			alert('소속을 선택하세요');
+			document.eduForm.belong_no.focus();
+			return false;
+		}else if(!document.eduForm.edu_field.value){
+			alert('교육분야를 입력하세요');
+			document.eduForm.belong_no.focus();
+			return false;
+		}else if(!document.eduForm.edu_name.value){
+			alert('교육명을 입력하세요');
+			document.eduForm.edu_name.focus();
+			return false;
+		}else if(!document.eduForm.edu_way.value){
+			alert('교육방법을 입력하세요');
+			document.eduForm.edu_way.focus();
+			return false;
+		}else if(!document.eduForm.startDate.value || !document.eduForm.endDate.value){
+			alert('교육일정을 입력하세요');
+			document.eduForm.edu_way.focus();
+			return false;
+		}
+	}
 </script>
 <body>
 	<h3>교육신청 페이지</h3>
 	강사번호 : ${instructor_no }
 	<br/>
-	<form name= "eduForm" method="post" action = "eduReq.do" enctype="multipart/form-data">
+	<form name= "eduForm" method="post" action = "eduReq.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
 		<table class="table1" border = "1">
 			<tr>
 				<td width="130px">교육코드</td>
@@ -170,7 +197,8 @@
 				<td>교육장소</td>
 				<td><input type="text" name="edu_location"/></td>
 			</tr>
-			<tr>
+			<input type="hidden" name="instructor_no" value="${instructor_no }"/>
+			<%-- <tr>
 				<td>강사</td>
 				<td>
 					<select name = "instructor_no">
@@ -180,7 +208,7 @@
 						</c:forEach>
 					</select>
 				</td>
-			</tr>
+			</tr> --%>
 			<tr>
 				<td>담당자</td>
 				<td><input type="text" name = "manager"/></td>

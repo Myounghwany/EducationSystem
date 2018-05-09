@@ -8,7 +8,7 @@ public interface InstructorDao {
 	public List selectInstructorNo(String account_no);
 	public int insertInstReq(InstructorDto InstructorDto);
 	public List selectEduReq(String account_no);
-	public List selectEduList(String account_no);
+	public List selectEduList(InstructorDto eduList);
 	public List selectEduCode();
 	public List selectBelongNo();
 	public String selectEmployeesName(String account_no);
@@ -23,4 +23,5 @@ public interface InstructorDao {
 	public int modifyEdu(InstructorDto instructorDto);
 	public int modifyEduDetail(InstructorDto instructorDto);
 	public int updateInstEval(InstructorDto instructorDto);
+	public int selectEduListCnt(String account_no);
 }

@@ -19,7 +19,7 @@
 		select * from education_list where instructor_no = #{account_no} and approval_state != 3
 	</select>
 	<select id="selectEduList" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
-		select * from education_list where instructor_no = #{account_no} and approval_state = 3
+		select *, (select count(*) from education_history where edu_no = A.edu_no) as student from education_list A join education_detail B on A.edu_no = B.edu_no where instructor_no = #{account_no} and approval_state = 3 limit ${page}, 10
 	</select>
 	<select id = "selectEduCode" resultType = "com.es.instructor.InstructorDto">
 		select * from education_code
@@ -63,5 +63,8 @@
 	<update id="updateInstEval" parameterType="com.es.instructor.InstructorDto">
 		update education_history set edu_state = #{edu_state}, instructor_eval = #{instructor_eval} where no = #{no}
 	</update>
+	<select id="selectEduListCnt" parameterType = "String" resultType = "int">
+		select count(*) as eduListNum from education_list where instructor_no = #{account_no} and approval_state = 3
+	</select>
 	
 </mapper>

@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -46,12 +50,11 @@ public class InstructorHandler {
 	
 	
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) throws Exception {
+	public String home(HttpServletRequest request, Locale locale, Model model) throws Exception {
+		String page = request.getParameter("page");
+		if(page == null) page = "1"; 
+		System.out.println("page : " + page);
 		System.out.println("instructor/main");
-		/*String id = "test1234";
-		String account_no = instructorDao.selectAccountNo(id);
-		System.out.println("account_no : " + account_no);
-		System.out.println(account_no.substring(0, 1));*/
 		
 		String account_no = "E2018040001";
 		//직원일 경우
@@ -76,7 +79,7 @@ public class InstructorHandler {
 					model.addAttribute("inproval_state", inproval_state);
 					System.out.println("instructor_no : " + instructor_no + "강사권한 O");
 					System.out.println("inproval_state : " + inproval_state);
-					EduList(instructor_no, model);
+					EduList(instructor_no, model, page);
 				//강사 승인 X
 				}else {
 					model.addAttribute("instructor_no", instructor_no);
@@ -87,20 +90,20 @@ public class InstructorHandler {
 		}else {
 			model.addAttribute("inproval_state", "3");
 			model.addAttribute("instructor_no", account_no);
-			System.out.println("�������");
-			EduList(account_no, model);
+			EduList(account_no, model, page);
 			
 			/*for(int i = 0; i<InstructorDto.size(); i++) {
 				InstructorDto instructor= InstructorDto.get(i);
 				System.out.println(instructor.getEdu_no() + " / " + instructor.getEdu_field() + " / " + instructor.getEdu_name());
 			}*/
 		}
+		/*
 		List<InstructorDto> InstructorDto2 = instructorDao.selectEduList(account_no);
-		String encode_result = null;
+		
 		for(int i = 0; i<InstructorDto2.size(); i++) {
 			InstructorDto instructor= InstructorDto2.get(i);
 			String target = instructor.getEdu_target();
-			/*JSONArray arr = new JSONArray(target);*/
+			JSONArray arr = new JSONArray(target);
 			
 			String b = null;
 			try {
@@ -113,16 +116,45 @@ public class InstructorHandler {
 			model.addAttribute("target", b);
 			
 		}
-		return "inst_req/main";
+	*/	return "inst_req/main";
 	}
 	
-	private void EduList(String account_no, Model model) {
+	private void EduList(String account_no, Model model, String page) {
+		InstructorDto eduList = new InstructorDto();
+		eduList.setAccount_no(account_no);
+		eduList.setPage((Integer.parseInt(page)*10-9)-1);
 		List<InstructorDto> InstructorDto1 = instructorDao.selectEduReq(account_no);
-		List<InstructorDto> InstructorDto2 = instructorDao.selectEduList(account_no);
+		List<InstructorDto> InstructorDto2 = instructorDao.selectEduList(eduList);
+		int listCount = instructorDao.selectEduListCnt(account_no);
+		System.out.println("listCount : " + listCount);
+		int maxPage = (int)(listCount/10.0 + 0.9);
+		int startPage = (int)(Integer.parseInt(page)/5.0 + 0.8)* 5-4;
+		int endPage = startPage + 4;
+		if(endPage > maxPage) endPage = maxPage;
 		System.out.println("EduList");
+		InstructorDto date = new InstructorDto();
+		for(int i = 0; i<InstructorDto2.size(); i++) {
+			InstructorDto instructorDto = InstructorDto2.get(i);
+			String end_date = instructorDto.getEnd_date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				Date deadLine = formatter.parse(end_date);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(deadLine);
+				cal.add(Calendar.DATE, 7);
+				InstructorDto2.get(i).setDeadLine(formatter.format(cal.getTime()));
+				System.out.println(formatter.format(cal.getTime()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		model.addAttribute("result1", InstructorDto1);
 		model.addAttribute("result2", InstructorDto2);
+		model.addAttribute("page", page);
+		model.addAttribute("maxPage", maxPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		
 	}
 
@@ -155,7 +187,7 @@ public class InstructorHandler {
 		model.addAttribute("instructor", instructor);
 		model.addAttribute("position", position);
 		
-		return "inst_req/eduReqFrom";
+		return "inst_req/eduReqForm";
 	}
 	
 	@ResponseBody
@@ -491,10 +523,11 @@ public class InstructorHandler {
 	}
 	
 	@RequestMapping(value = "/inst_eval", method = RequestMethod.GET)
-	public String InstEval(@RequestParam("edu_no") String edu_no, Model model) throws Exception{
+	public String InstEval(@RequestParam("edu_no") String edu_no, @RequestParam("deadLine") String deadLine, Model model) throws Exception{
 		List<InstructorDto> edu_history = instructorDao.selectEduHistory(edu_no);
 		model.addAttribute("edu_history", edu_history);
 		model.addAttribute("edu_no", edu_no);
+		model.addAttribute("deadLine", deadLine);
 		
 		return "inst_req/instEval";
 	}
