@@ -143,10 +143,10 @@ public class InstructorHandler {
 				cal.setTime(deadLine);
 				cal.add(Calendar.DATE, 7);
 				InstructorDto2.get(i).setDeadLine(formatter.format(cal.getTime()));
-				System.out.println(formatter.format(cal.getTime()));
+				/*System.out.println(formatter.format(cal.getTime()));*/
 			} catch (ParseException e) {
 				e.printStackTrace();
-			}
+			}	
 		}
 		
 		model.addAttribute("result1", InstructorDto1);
@@ -206,15 +206,20 @@ public class InstructorHandler {
 	@RequestMapping(value = "/eduReq", method = RequestMethod.POST)
 	public String EduReg(HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
 		String file_ori_name = file.getOriginalFilename();
-		String file_path = request.getServletContext().getRealPath("/save");
-		String file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
-		File dir = new File(file_path);
-		if(!dir.isDirectory()) {
-			dir.mkdirs();
+		String file_path = null;
+		String file_save_name = null;
+		
+		if(file_ori_name.length() != 0) {
+			file_path = request.getServletContext().getRealPath("/save");
+			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+			File dir = new File(file_path);
+			if(!dir.isDirectory()) {
+				dir.mkdirs();
+			}
+			File f = new File(file_path+file.getOriginalFilename());
+			file.transferTo(f);			
+			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
 		}
-		File f = new File(file_path+file.getOriginalFilename());
-	    file.transferTo(f);
-	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
 		
 		String edu_code = request.getParameter("edu_code");
 		String belong_no = request.getParameter("belong_no");

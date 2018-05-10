@@ -5,6 +5,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="now" class="java.util.Date" />
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 <title>강사 - Education System</title>
 <style>
 #isntRegBtn{
@@ -16,20 +20,11 @@
 #eduRegBtn{
 	float: right;
 }
-.table1{
-	width: 100%;
-	text-align: center;
-	margin-left:auto; 
-    margin-right:auto;
-}
-.table2{
-	width: 100%;
-	text-align: center;
-	margin-left:auto; 
-    margin-right:auto;
-}
 #pageForm{
 	text-align: center;
+}
+.studentNum{
+	color : red;
 }
 </style>
 <script type="text/javascript">
@@ -55,7 +50,13 @@
 	<c:choose>
 		<c:when test='${instructor_no=="null"}'>
 			<div id="info">${result }</div>
-			<button id="isntRegBtn" onclick="isntRegBtn('${account_no}');">강사신청</button>
+			<table class="w3-table w3-bordered">
+				<tr>
+					<th>
+						<input type="button" id="eduRegBtn" onclick="isntRegBtn('${account_no}');" value="교육신청" class="w3-button w3-green w3-border">
+					</th>
+				</tr>
+			</table>
 		</c:when>
 		<c:otherwise>
 			<c:choose>
@@ -64,21 +65,28 @@
 					강사번호 : ${instructor_no}
 						<c:choose>
 							<c:when test='${account_no!=null}'>
-								<button id="eduRegBtn" onclick="eduRegBtn('${instructor_no}');">교육신청</button>
+							<table class="w3-table w3-bordered">
+								<tr>
+									<th>
+										<input type="button" id="eduRegBtn" onclick="eduRegBtn('${instructor_no}');" value="교육신청" class="w3-button w3-green w3-border">
+									</th>
+								</tr>
+							</table>
 							</c:when>	
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
-					<br/>
-					<br/>
-					<h4>신청현황</h4>
-					<table class="table1" border = "1">
+					
+					<table class="w3-table w3-bordered">
 						<tr>
-							<td>교육분야</td>
-							<td>교육명</td>
-							<td>시간표</td>
-							<td>수강제한 수</td>
-							<td>신청현황</td>
+							<th colspan="5" style="background-color: #CCCCCC;">신청현황</th>
+						</tr>
+						<tr>
+							<td style="background-color: #EAEAEA;">교육분야</td>
+							<td style="background-color: #EAEAEA;">교육명</td>
+							<td style="background-color: #EAEAEA;">시간표</td>
+							<td style="background-color: #EAEAEA;">수강제한 수</td>
+							<td style="background-color: #EAEAEA;">신청현황</td>
 						</tr>
 						<c:forEach items = "${result1 }" var = "item">
 							<tr>
@@ -98,14 +106,16 @@
 					<br/>
 					<hr/>
 					<br/>
-					<h4>강의목록</h4>
-					<table class="table2" border = "1">
+					<table class="w3-table w3-bordered">
 						<tr>
-							<td>교육분야</td>
-							<td>교육명</td>
-							<td>시간표</td>
-							<td>수강자 수</td>
-							<td>평가</td>
+							<th colspan="5" style="background-color: #CCCCCC;">강의목록</th>
+						</tr>
+						<tr>
+							<td style="background-color: #EAEAEA;">교육분야</td>
+							<td style="background-color: #EAEAEA;">교육명</td>
+							<td style="background-color: #EAEAEA;">시간표</td>
+							<td style="background-color: #EAEAEA;">수강자 수</td>
+							<td style="background-color: #EAEAEA;">평가</td>
 						</tr>
 						<c:forEach items = "${result2 }" var = "item">
 						<fmt:formatDate value="${now}" pattern="yyyy-MM-dd HH:mm:ss" var="now_date" /> 
@@ -117,13 +127,13 @@
 								<td>${item.edu_field }</td>
 								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
-								<td>${item.student } / ${item.applicants_limit }</td>
+								<td><span class="studentNum">${item.student } </span>/ ${item.applicants_limit }</td>
 								<td>
 									<c:if test="${now_date < dead && now_date > end}">
-										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가하기">
+										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가하기" class="w3-button w3-blue w3-border">
 									</c:if>
 									<c:if test="${dead < now_date}">
-										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료">
+										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료" class="w3-button w3-white w3-border">
 									</c:if>
 									<c:if test="${end > now_date}">
 										강의진행중

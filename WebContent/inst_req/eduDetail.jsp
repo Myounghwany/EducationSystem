@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>강사 - Education System</title>
 <style>
 #isntRegBtn{
@@ -12,18 +14,6 @@
 }
 #eduRegBtn{
 	float: right;
-}
-.table1{
-	width: 100%;
-	text-align: center;
-	margin-left:auto; 
-    margin-right:auto;
-}
-.table2{
-	width: 100%;
-	text-align: center;
-	margin-left:auto; 
-    margin-right:auto;
 }
 #eduModify{
 	float: right;
@@ -57,65 +47,91 @@
 <body>
 	<h3>강사 페이지</h3>
 					
-		<h4>강의계획서</h4>
-		<input type="button" id="eduModify" onclick="eduModify('${edu_no}')" value="강의계획서 수정"/>
-		<br/>
-		<br/>
-		<table class="table1" border = "1">
+		<table class="w3-table w3-bordered">
 			<tr>
-				<td>교육분야</td>
-				<td>교육명</td>
-				<td>담당자</td>
-				<td>강사번호</td>
-				<td>교육대상</td>
-				<td>교육일정</td>
-				<td>교육일시</td>
-				<td>교육장소</td>
-				<td>소요예산</td>
-				<td>비고</td>
-				<td>강의자료</td>
+				<th>
+					<input type="button" id="eduModify" onclick="eduModify('${edu_no}')" value="강의계획서 수정" class="w3-button w3-green w3-border"/>
+				</th>
+			</tr>
+		</table>
+		<table class="w3-table w3-bordered">
+			<tr>
+				<th colspan="2" style="background-color: #CCCCCC;">강의계획서</th>
 			</tr>
 			<c:forEach items = "${edu_list }" var = "item">
-				<tr>
-					<td>${item.edu_field }</td>
-					<td>${item.edu_name }</td>
-					<td>${item.manager }</td>
-					<td>${item.instructor_no }</td>
-					<td>
-						<c:forEach items = "${belong_name }" var = "item1">
-							<c:forEach items = "${dept_name }" var = "item2">
-								<c:forEach items = "${position_name }" var = "item3">
-							${item1 } - 
-							${item2 } 
-							직급 : 
-							${item3 }
-								</c:forEach>
+			<tr>
+				<th width="140px" >교육분야</th>
+				<td>${item.edu_field }</td>
+			</tr>
+			<tr>
+				<th>교육명</th>
+				<td>${item.edu_name }</td>
+			</tr>
+			<tr>
+				<th>담당자</th>
+				<td>${item.manager }</td>
+			</tr>
+			<tr>
+				<th>강사번호</th>
+				<td>${item.instructor_no }</td>
+			</tr>
+			<tr>
+				<th>교육대상</th>
+				<td>
+					<c:forEach items = "${belong_name }" var = "item1">
+						<c:forEach items = "${dept_name }" var = "item2">
+							<c:forEach items = "${position_name }" var = "item3">
+						${item1 } - 
+						${item2 } 
+						직급 : 
+						${item3 }
 							</c:forEach>
 						</c:forEach>
-					</td>
-					<td>${item.edu_schedule }</td>
-					<td>${item.edu_date }</td>
-					<td>${item.edu_location }</td>
-					<td>${item.budget }</td>
-					<td>${item.note }</td>
-					<c:forEach items = "${edu_detail }" var = "item">
-					<td><a href="${path}/instructor/fileDown.do?edu_no=${item.edu_no}">${item.file_ori_name}</a>
-					</td>
 					</c:forEach>
-					
-				</tr>
+				</td>	
+			</tr>
+			<tr>
+				<th>교육일정</th>
+				<td>${item.edu_schedule }</td>
+			</tr>
+			<tr>
+				<th>교육일시</th>
+				<td>${item.edu_date }</td>
+			</tr>
+			<tr>
+				<th>교육장소</th>
+				<td>${item.edu_location }</td>
+			</tr>
+			<tr>
+				<th>소요예산</th>
+				<td>${item.budget }</td>
+			</tr>
+			<tr>
+				<th>비고</th>
+				<td>${item.note }</td>
+			</tr>
+			<tr>
+				<th>강의자료</th>
+				<c:forEach items = "${edu_detail }" var = "item">
+				<td><a href="${path}/instructor/fileDown.do?edu_no=${item.edu_no}">${item.file_ori_name}</a>
+				</td>
+				</c:forEach>
+			</tr>
+				
 			</c:forEach>
 		</table>
 		<br/>
 		<hr/>
 		<br/>
-		<h4>수강자</h4>
-		<table class="table2" border = "1">
+		<table class="w3-table w3-bordered">
 			<tr>
-				<td>사원번호</td>
-				<td>부서</td>
-				<td>이름</td>
-				<td>이수여부</td>
+				<th colspan="5" style="background-color: #CCCCCC;">수강자</th>
+			</tr>
+			<tr>
+				<td style="background-color: #EAEAEA;">사원번호</td>
+				<td style="background-color: #EAEAEA;">부서</td>
+				<td style="background-color: #EAEAEA;">이름</td>
+				<td style="background-color: #EAEAEA;">이수여부</td>
 			</tr>
 			<c:forEach items = "${edu_history }" var = "item">
 				<tr>
