@@ -16,4 +16,25 @@
 		order by instructor_no asc
 		limit #{start}, 10
 	</select>
+	<select id="EmpSearchList" parameterType="hashmap" resultType="com.es.manager.EmpListDto">
+		select e.emp_no emp_no, e.name name, d.dept_name dept_name, p.position_name position_name
+		from employees e, department d, position p
+		where e.dept_no = d.dept_no and e.position_no = p.position_no and
+		<if test='dept != "nothing"'>
+			e.dept_no = #{dept} and
+		</if>
+		<if test='pos != "nothing"'>
+			e.position_no = #{pos} and
+		</if>
+		<choose>
+			<when test='cat == "number"'>
+				e.emp_no like concat('%', #{word}, '%')
+			</when>
+			<when test='cat == "name"'>
+				e.name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+		order by e.emp_no asc
+		limit #{start}, 10
+	</select>
 </mapper>

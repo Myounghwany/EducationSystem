@@ -50,17 +50,13 @@ public class ManagerDBBean implements ManagerDao {
 	}
 
 	@Override
-	public int getEmpCount(String category, String word) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("category", category);
-		map.put("word", word);
-		return SqlMapClient.getSession().selectOne("Employees.EmployeesSearchCount", map);
+	public int getEmpCount(Map<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectOne("Employees.EmployeesCategoryCount", srchMap);
 	}
 
 	@Override
-	public List<EmpListDto> getEmpList(int start, String category, String word) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EmpListDto> getEmpList(Map<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectList("Manager.EmpSearchList", srchMap);
 	}
 	
 }

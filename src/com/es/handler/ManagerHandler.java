@@ -1,5 +1,6 @@
 package com.es.handler;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
-import com.es.employees.EmployeesDto;
 import com.es.employees.PositionDto;
 import com.es.manager.EmpListDto;
 import com.es.manager.InstListDto;
@@ -27,7 +26,7 @@ public class ManagerHandler {
 	@RequestMapping("manage/empList")
 	public ModelAndView empList(HttpServletRequest request, HttpServletResponse response) {
 		int pageNum;
-		String srchDept, srchPos, srchCat, srchWord;
+		String srchDept = null, srchPos = null, srchCat = null, srchWord = null;
 		if(null != request.getParameter("srchDept")
 				|| null != request.getParameter("srchPos")
 				|| null != request.getParameter("srchCat")) {
@@ -36,9 +35,9 @@ public class ManagerHandler {
 			srchCat = request.getParameter("srchCat");
 			srchWord = request.getParameter("srchWord");
 			request.setAttribute("srchDept", srchDept);
-			request.setAttribute("srchDept", srchDept);
-			request.setAttribute("srchDept", srchDept);
-			request.setAttribute("srchDept", srchDept);
+			request.setAttribute("srchPos", srchPos);
+			request.setAttribute("srchCat", srchCat);
+			request.setAttribute("srchWord", srchWord);
 		}
 		if(null == request.getParameter("pageNum")) {
 			pageNum = 1;
@@ -46,13 +45,14 @@ public class ManagerHandler {
 			pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		}
 		int start = (pageNum - 1) * 10;
-		int count;
-		String category = null;
-		String word = null;
-		if(null != request.getParameter("category") && null != request.getParameter("word")) {
-			category = request.getParameter("category");
-			word = request.getParameter("word");
-			count = managerDao.getEmpCount(category, word);
+		int count = 0;
+		HashMap<String, Object> srchMap = new HashMap<String, Object>();
+		if(null != srchDept && null != srchPos && null != srchCat && null != srchWord) {
+			srchMap.put("dept", srchDept);
+			srchMap.put("pos", srchPos);
+			srchMap.put("cat", srchCat);
+			srchMap.put("word", srchWord);
+			count = managerDao.getEmpCount(srchMap);
 		} else {
 			count = managerDao.getEmpCount();			
 		}
@@ -60,8 +60,10 @@ public class ManagerHandler {
 			start = (count / 10) * 10;
 		}
 		List<EmpListDto> empList;
-		if(null != request.getParameter("category") && null != request.getParameter("word")) {
-			empList = managerDao.getEmpList(start, category, word);
+		if(null != srchDept && null != srchPos && null != srchCat && null != srchWord) {
+			srchMap.put("start", start);
+			empList = managerDao.getEmpList(srchMap);
+			System.out.println(empList.size());
 		} else {
 			empList = managerDao.getEmpList(start);
 		}
