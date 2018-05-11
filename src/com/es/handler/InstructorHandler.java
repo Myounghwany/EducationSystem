@@ -187,7 +187,7 @@ public class InstructorHandler {
 		model.addAttribute("instructor", instructor);
 		model.addAttribute("position", position);
 		
-		return "inst_req/eduReqForm";
+		return "edu_reg/eduReqForm";
 	}
 	
 	@ResponseBody
@@ -316,8 +316,11 @@ public class InstructorHandler {
     }
 	
 	@RequestMapping(value = "/eduDetail", method = RequestMethod.GET)
-	public String eduDatil(@RequestParam("edu_no") String edu_no, Model model) throws Exception{
+	public String eduDatil(@RequestParam("edu_no") String edu_no, @RequestParam("instructor_no") String instructor_no, Model model) throws Exception{
 		System.out.println("edu_no : " + edu_no);
+		System.out.println("instructor_no : " + instructor_no);
+		//다른 강의로 상세페이지 이동
+		List<InstructorDto> edu_name = instructorDao.selectEduNameList(instructor_no);
 		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
 		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
 		
@@ -352,6 +355,8 @@ public class InstructorHandler {
 			InstructorDto edu_list2 = edu_detail.get(i);
 			System.out.println( "education_detail : " + edu_list2.getFile_path() + " / " + edu_list2.getFile_ori_name() + " / " + edu_list2.getFile_save_name() + " / ");
 		}*/
+		model.addAttribute("edu_name", edu_name);
+		model.addAttribute("instructor_no", instructor_no);
 		model.addAttribute("edu_list", edu_list);
 		model.addAttribute("edu_detail", edu_detail);
 		model.addAttribute("edu_no", edu_no);
@@ -360,7 +365,7 @@ public class InstructorHandler {
 		//수강자목록 조회
 		List<InstructorDto> edu_history = instructorDao.selectEduHistory(edu_no);
 		model.addAttribute("edu_history", edu_history);
-		return "inst_req/eduDetail";
+		return "edu_reg/eduDetail";
 	}
 	
 	@RequestMapping(value = "/fileDown", method = RequestMethod.GET)
@@ -414,7 +419,7 @@ public class InstructorHandler {
 	}
 	
 	@RequestMapping(value = "/eduModify", method = RequestMethod.GET)
-	public String eduModify(@RequestParam("edu_no") String edu_no, Model model) throws Exception{
+	public String eduModify(@RequestParam("edu_no") String edu_no, @RequestParam("instructor_no") String instructor_no, Model model) throws Exception{
 		model.addAttribute("edu_no", edu_no);
 		List<InstructorDto> edu_code = instructorDao.selectEduCode();
 		List<InstructorDto> belong_no = instructorDao.selectBelongNo();
@@ -439,19 +444,28 @@ public class InstructorHandler {
 		model.addAttribute("position", position);
 		model.addAttribute("edu_list", edu_list);
 		model.addAttribute("edu_detail", edu_detail);
+		model.addAttribute("instructor_no", instructor_no);
 		
-		return "inst_req/eduModify";
+		return "edu_reg/eduModify";
 	}
 	
 	@RequestMapping(value = "/eduModify", method = RequestMethod.POST)
 	public String EduModify(HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
-		String file_path = request.getServletContext().getRealPath("/save");
-		File dir = new File(file_path);
-		if(!dir.isDirectory()) {
-			dir.mkdirs();
-		}
 		String file_ori_name = file.getOriginalFilename();
-		String file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+		String file_path = null;
+		String file_save_name = null;
+		
+		if(file_ori_name.length() != 0) {
+			file_path = request.getServletContext().getRealPath("/save");
+			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+			File dir = new File(file_path);
+			if(!dir.isDirectory()) {
+				dir.mkdirs();
+			}
+			File f = new File(file_path+file.getOriginalFilename());
+			file.transferTo(f);			
+			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+		}
 		File f = new File(file_path+file.getOriginalFilename());
 	    file.transferTo(f);
 	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
@@ -523,7 +537,7 @@ public class InstructorHandler {
 		int result = instructorDao.modifyEdu(instructorDto);
 		int result2 = instructorDao.modifyEduDetail(instructorDto);
 		
-		return "redirect:/instructor/eduDetail.do?edu_no="+request.getParameter("edu_no");
+		return "redirect:/instructor/eduDetail.do?edu_no="+request.getParameter("edu_no")+"&instructor_no=" + request.getParameter("instructor_no");
 		
 	}
 	

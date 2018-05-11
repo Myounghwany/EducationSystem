@@ -9,6 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
 <title>강사 - Education System</title>
 <style>
 #isntRegBtn{
@@ -47,6 +49,7 @@
 <jsp:include page="../common/header.jsp" />
 <body>
 	<h3>강사 페이지</h3>
+	<div style="padding-bottom: 80px;">
 	<c:choose>
 		<c:when test='${instructor_no=="null"}'>
 			<div id="info">${result }</div>
@@ -79,7 +82,7 @@
 					
 					<table class="w3-table w3-bordered">
 						<tr>
-							<th colspan="5" style="background-color: #CCCCCC;">신청현황</th>
+							<th colspan="6" style="background-color: #CCCCCC;">신청현황</th>
 						</tr>
 						<tr>
 							<td style="background-color: #EAEAEA;">교육분야</td>
@@ -87,6 +90,7 @@
 							<td style="background-color: #EAEAEA;">시간표</td>
 							<td style="background-color: #EAEAEA;">수강제한 수</td>
 							<td style="background-color: #EAEAEA;">신청현황</td>
+							<td style="background-color: #EAEAEA;">신청취소</td>
 						</tr>
 						<c:forEach items = "${result1 }" var = "item">
 							<tr>
@@ -96,10 +100,11 @@
 								<td>${item.applicants_limit } 명</td>
 								<td>
 									<c:choose>
-										<c:when test="${item.approval_state == 1}">심사중</c:when>
+										<c:when test="${item.approval_state == 1}">신청완료</c:when>
 										<c:otherwise>승인거부</c:otherwise>
 									</c:choose>
 								</td>
+								<td></td>
 							</tr>
 						</c:forEach>
 					</table>
@@ -125,7 +130,7 @@
 						<fmt:formatDate value="${deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="dead" /> 
 							<tr>
 								<td>${item.edu_field }</td>
-								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
+								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }&instructor_no=${instructor_no}">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
 								<td><span class="studentNum">${item.student } </span>/ ${item.applicants_limit }</td>
 								<td>
@@ -171,6 +176,6 @@
 			<a href='${path}/instructor/main.do?page=${endPage+1 }'>[다음]</a>
 	    </c:if>
 	</div>
-	
+	</div>
 	
 </body>

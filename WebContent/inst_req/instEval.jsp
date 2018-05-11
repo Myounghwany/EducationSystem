@@ -85,8 +85,15 @@ function checkValue(){
 	        			<td>이수구분</td>
 	        			<td>평가</td>
 	        		</tr>
-	        		<c:forEach items = "${edu_history }" var = "item" varStatus="status">
-	        		<input type="hidden" value="${item.no }" name = "no" id="no"/>
+	        		<c:choose>
+						<c:when test="${empty edu_history}">
+						<tr>
+							<td colspan="4" style="text-align: center;"><br/><br/>수강자가 존재하지 않습니다</td>
+						</tr>
+						</c:when>
+						<c:otherwise>
+						<c:forEach items = "${edu_history }" var = "item" varStatus="status">
+	        			<input type="hidden" value="${item.no }" name = "no" id="no"/>
 	        			<tr>
 	        				<td>
 	        					${item.emp_no }
@@ -123,10 +130,11 @@ function checkValue(){
 				        				</td>
 									</c:otherwise>
 								</c:choose>
-								
-							
 	        			</tr>
 	        		</c:forEach>
+						</c:otherwise>
+					</c:choose>
+	        		
 	        	</table>
 	        	<br/>
 	        	<br/>

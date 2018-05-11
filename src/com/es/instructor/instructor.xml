@@ -66,5 +66,8 @@
 	<select id="selectEduListCnt" parameterType = "String" resultType = "int">
 		select count(*) as eduListNum from education_list where instructor_no = #{account_no} and approval_state = 3
 	</select>
+	<select id="selectEduNameList" parameterType="String" resultType="com.es.instructor.InstructorDto">
+		select * from education_list where instructor_no = #{instructor_no} and approval_state = 3
+	</select>
 	
 </mapper>

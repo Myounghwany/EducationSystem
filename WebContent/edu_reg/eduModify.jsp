@@ -114,9 +114,7 @@
 		var department_no = department.options[department.selectedIndex].value;
 		var position_no  = position.options[position.selectedIndex].value;
 		form.elements['select1'].options.add(new Option(belong.options[belong.selectedIndex].text + '-' + department.options[department.selectedIndex].text + '-' + position.options[position.selectedIndex].text, belong_no + '!' + belong_name + '@' + department_no + '#' + department_name + '$' + position_no + '%' + position_name));
-		alert(belong.options[belong.selectedIndex].value + '-' + department.options[department.selectedIndex].value + '-' + position.options[position.selectedIndex].value);
 		$('#select1 option').prop('selected', true);
-		/* $('.table1').append('<input type = "hidden" value = "">'); */
 	}
 	function removeTarget(){
 		var form = document.eduModifyForm;
@@ -128,41 +126,41 @@
 		if(idx - 1 < 0) o.selectedIndex = 0;
 	}
 	function inputCheck(){
-		if(!document.eduForm.edu_way.value){
+		if(!document.eduModifyForm.edu_way.value){
 			alert('교육방법을 입력하세요');
-			document.eduForm.edu_way.focus();
+			document.eduModifyForm.edu_way.focus();
 			return false;
-		}else if(!document.eduForm.startDate.value){
+		}else if(!document.eduModifyForm.startDate.value){
 			alert('교육일정을 입력하세요');
-			document.eduForm.startDate.focus();
+			document.eduModifyForm.startDate.focus();
 			return false;
-		}else if(!document.eduForm.endDate.value){
+		}else if(!document.eduModifyForm.endDate.value){
 			alert('교육일정을 입력하세요');
-			document.eduForm.endDate.focus();
+			document.eduModifyForm.endDate.focus();
 			return false;
-		}else if(!document.eduForm.edu_date.value){
+		}else if(!document.eduModifyForm.edu_date.value){
 			alert('교육일시를 입력하세요');
-			document.eduForm.edu_date.focus();
+			document.eduModifyForm.edu_date.focus();
 			return false;
-		}else if(!document.eduForm.input_time.value){
+		}else if(!document.eduModifyForm.input_time.value){
 			alert('소요시간을 입력하세요');
-			document.eduForm.input_time.focus();
+			document.eduModifyForm.input_time.focus();
 			return false;
-		}else if(!document.eduForm.closing_date.value){
+		}else if(!document.eduModifyForm.closing_date.value){
 			alert('신청마감일을 입력하세요');
-			document.eduForm.input_time.focus();
+			document.eduModifyForm.input_time.focus();
 			return false;
-		}else if(!document.eduForm.edu_location.value){
+		}else if(!document.eduModifyForm.edu_location.value){
 			alert('교육장소를 입력하세요');
-			document.eduForm.edu_location.focus();
+			document.eduModifyForm.edu_location.focus();
 			return false;
-		}else if(!document.eduForm.select1.value){
+		}else if(!document.eduModifyForm.select1.value){
 			alert('교육대상을 선택하세요');
-			document.eduForm.select1.focus();
+			document.eduModifyForm.select1.focus();
 			return false;
-		}else if(!document.eduForm.applicants_limit.value){
+		}else if(!document.eduModifyForm.applicants_limit.value){
 			alert('신청자제한수를 입력하세요');
-			document.eduForm.applicants_limit.focus();
+			document.eduModifyForm.applicants_limit.focus();
 			return false;
 		}
 			
@@ -174,6 +172,7 @@
 	<br/>
 	<form name= "eduModifyForm" method="post" action = "eduModify.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
 		<input type="hidden" name="edu_no" value="${edu_no }">
+		<input type="hidden" name="instructor_no" value="${instructor_no }">
 		<table class="w3-table w3-bordered">
 			<tr>
 				<th colspan="2" style="background-color: #EAEAEA;">강의계획서 수정</th>
@@ -314,7 +313,7 @@
 		<br/>
 		<br/>
 		<div align="center" class="goList">
-			<input type="button" class="w3-button w3-white w3-border" value="목록보기" onclick="location='eduDetail.do?edu_no=${edu_no }'">
+			<input type="button" class="w3-button w3-white w3-border" value="이전" onclick="location='eduDetail.do?edu_no=${edu_no }&instructor_no=${instructor_no }'">
 		</div>
 	</form>
 	</div>

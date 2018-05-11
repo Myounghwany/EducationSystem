@@ -115,4 +115,9 @@ public class InstructorDBBean implements InstructorDao{
 		return SqlMapClient.getSession().selectOne("Instructor.selectEduListCnt", account_no);
 	}
 
+	@Override
+	public List<InstructorDto> selectEduNameList(String instructor_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduNameList", instructor_no);
+	}
+
 }

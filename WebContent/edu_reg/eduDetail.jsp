@@ -4,6 +4,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
+<script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
 <title>강사 - Education System</title>
 <style>
 #isntRegBtn{
@@ -18,8 +23,30 @@
 #eduModify{
 	float: right;
 }
+select {
+    width: 500px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 30px;
+    color: #006fff;
+    border: 1px solid #006fff;
+    border-radius: 3px;
+}
+option {
+    width: 200px;
+    height: 30px;
+    padding-left: 15px;
+    font-size: 15px;
+    border: 1px solid #006fff;
+    border-radius: 3px;
+}
 </style>
 <script type="text/javascript">
+$(document).ready(function(){
+	$("#edu_no").change(function(){
+		location.href="/EducationSystem/instructor/eduDetail.do?edu_no=" + $(this).val()+"&instructor_no=${instructor_no}";
+	});
+});
 	function isntRegBtn(account_no){
 		if(confirm("사원번호 : " + account_no + "\n"+"강사를 신청하시겠습니까?")==true){
 			location.href="/EducationSystem/instructor/inst_req.do?account_no=" + account_no;
@@ -35,9 +62,9 @@
 		alert('sfsfs');
 		alert(file_path);
 	}
-	function eduModify(edu_no){
+	function eduModify(edu_no, instructor_no){
 		if(confirm("강의계획서 수정페이지로 이동하시겠습니까?")==true){
-			location.href="/EducationSystem/instructor/eduModify.do?edu_no=" + edu_no;
+			location.href="/EducationSystem/instructor/eduModify.do?edu_no=" + edu_no + "&instructor_no="+instructor_no;
 		}else{
 			return;
 		}
@@ -46,11 +73,16 @@
 <jsp:include page="../common/header.jsp" />
 <body>
 	<h3>강사 페이지</h3>
-					
+	<div style="padding-bottom: 80px;">
+		강의계획서 > &nbsp;<select name="edu_no" id="edu_no">
+		<c:forEach items = "${edu_name }" var = "item">
+			<option value="${item.edu_no }" <c:if test="${edu_no == item.edu_no}">selected</c:if>>${item.edu_name }</option> 
+		</c:forEach>
+		</select>
 		<table class="w3-table w3-bordered">
 			<tr>
 				<th>
-					<input type="button" id="eduModify" onclick="eduModify('${edu_no}')" value="강의계획서 수정" class="w3-button w3-green w3-border"/>
+					<input type="button" id="eduModify" onclick="eduModify('${edu_no}', '${instructor_no }')" value="강의계획서 수정" class="w3-button w3-green w3-border"/>
 				</th>
 			</tr>
 		</table>
@@ -104,11 +136,11 @@
 			</tr>
 			<tr>
 				<th>소요예산</th>
-				<td>${item.budget }</td>
+				<td><pre>${item.budget }</pre></td>
 			</tr>
 			<tr>
 				<th>비고</th>
-				<td>${item.note }</td>
+				<td><pre>${item.note }</pre></td>
 			</tr>
 			<tr>
 				<th>강의자료</th>
@@ -133,15 +165,25 @@
 				<td style="background-color: #EAEAEA;">이름</td>
 				<td style="background-color: #EAEAEA;">이수여부</td>
 			</tr>
-			<c:forEach items = "${edu_history }" var = "item">
-				<tr>
-					<td>${item.emp_no }</td>
-					<td>${item.dept_name }</td>
-					<td>${item.name }</td>
-					<td>${item.edu_state }</td>
-				</tr>
-			</c:forEach>
+			
+			<c:choose>
+				<c:when test="${empty edu_history}">
+					<tr>
+						<td colspan="4" style="text-align: center;">수강자가 존재하지 않습니다</td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+				<c:forEach items = "${edu_history }" var = "item">
+					<tr>
+						<td>${item.emp_no }</td>
+						<td>${item.dept_name }</td>
+						<td>${item.name }</td>
+						<td>${item.edu_state }</td>
+					</tr>
+				</c:forEach>
+				</c:otherwise>
+			</c:choose>
 		</table>
 	
-	
+	</div>
 </body>
