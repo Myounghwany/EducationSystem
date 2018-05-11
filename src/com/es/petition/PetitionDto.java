@@ -13,7 +13,14 @@ public class PetitionDto {
 	private String file_save_name;
 	private String file_ori_name;
 	private int approval_state; // 청원진행상태 0 - 진행 중, 1 - 심사시작, 2 - 청원수용, 3 - 청원거부, 4 - 기간만료 
-	 
+	private int agree;
+	
+	public int getAgree() {
+		return agree;
+	}
+	public void setAgree(int agree) {
+		this.agree = agree;
+	}
 	public int getPetition_no() {
 		return petition_no;
 	}

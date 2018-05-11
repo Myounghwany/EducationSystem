@@ -1,55 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application"/>
+<link href="${path}/petition/petition.css" rel="stylesheet" type="text/css">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title> 청원 작성 </title>
-<style> 
-.petition_text {
-	border: 3px solid #D9E5FF; 
-	background-color: #EBF7FF;
-	margin: 30 auto;
-	padding: 20px;
-	width: 70%;
-}
-table {	
-	border: 3px solid #D9E5FF; 
-	margin: auto;
-}   
-.input {
-	background-color: #FFFFFF;
-	border: 1px solid #D9E5FF;
-	width: 90%;
-}
-.inputbutton {
-	background-color: #FFFFFF; 
-	border: 3px solid #D9E5FF;
-	font-size:12px;
-	font-weight: bold; 
-	width: 80px;  
-	height: 25px;   
- 	text-align: center;  
-}
-
-th {
-	background-color: #EBF7FF; 
-	font-size : 11px;
-	border : 1px solid #E5FFFF;	 
-	padding : 3px;
-	height: 35px; 
-}
-td {
-	background-color: #EBF7FF;  
-	font-size : 11px;
-	border : 1px solid #E5FFFF;	 
-	padding : 3px;
-	height: 35px; 
-}
-</style>
+<title> 청원 작성 </title> 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
+$(document).ready(function(){
+	
+	$('textarea[name=content]').keyup(function(){ 
+		
+		var contentength = $(this).val().length; 
+		
+		if(contentength>1000){
+			$(this).val($(this).val().substr(0, 1000));
+			alert('1000자까지 작성 가능합니다.');
+		}
+	});
+	$('input[name=title]').keyup(function(){ 
+		
+		var titletength = $(this).val().length; 
+		
+		if(titletength>20){
+			$(this).val($(this).val().substr(0, 20));
+			alert('20자까지 작성 가능합니다.');
+		}
+	});
+});
+
 function writecheck() {
+	
 	var w = window.document.writeForm;
 	
 	 if(w.classification.value == ""){
@@ -70,8 +52,9 @@ function writecheck() {
 		return true; 
 }
 </script>
+ 
 </head>
-<jsp:include page="../common/header.jsp" />
+<jsp:include page="pheader.jsp" />
 
 <body>
 
@@ -80,12 +63,12 @@ function writecheck() {
 		한번 작성된 청원은 수정및 삭제가 불가능하며  <br>
 		관련되지 않은 글은 삭제될 수 있습니다. <br> 
 	</div>
-	
-<form name="writeForm" action="PetitionWrite.do" method="post" enctype="multipart/form-data" onsubmit="return writecheck()"> 
-	<table style="width: 70%">
+ 
+<form name="writeForm"  action="PetitionWrite.do" method="post" enctype="multipart/form-data" onsubmit="return writecheck()"> 
+	<table style="width: 70%" >
 		<tr>
 		  <th> 청원제목 </th>
-		  <td><input class="input" type="text" name="title" maxlength="20"></td>
+		  <td><input class="input" type="text" name="title"></td>
 		</tr>
 		<tr>
 		  <th> 분류 </th>
@@ -102,7 +85,7 @@ function writecheck() {
 		</tr>
 		<tr>
 		  <th> 청원개요 </th>
-		  <td><textarea class="input" name="content" rows="20"></textarea></td>
+		  <td><textarea class="input" name="content" rows="15"></textarea></td>
 		</tr>
 		<tr>
 		  <td> 파일첨부: </td>
@@ -116,6 +99,6 @@ function writecheck() {
 		</tr>			
 	</table>
  
- </form>
+ </form> 
 </body>
 </html>

@@ -4,16 +4,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Petition">
 	<insert id="petitionWrite" parameterType="com.es.petition.PetitionDto">
-		insert into petition(title, classification, content, writer, file_path, file_save_name, file_ori_name) 
-		 values(#{title},#{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name}) 
+		insert into petition(title, write_time, classification, content, writer, file_path, file_save_name, file_ori_name,approval_state) 
+		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0) 
 	</insert>
  
- 	<select id="petitionDetail" parameterType="int" resultType="com.es.petition.PetitionDto">
+ 	<select id="petitionDetail" parameterType="Integer" resultType="com.es.petition.PetitionDto">
 		select * from petition where petition_no=#{petition_no}
 	</select>
+	
+	<select id="evaluateList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where approval_state=1 or approval_state=2 order by write_time desc limit #{start}, 10
+	</select>  
+	<select id="expireList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where approval_state=4 or approval_state=2 order by write_time desc limit #{start}, 10
+	</select>  
+	
+	<select id="allList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition order by write_time desc limit #{start}, 10
+	</select>  
   
  	<select id="petitionList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition order by write_time desc limit #{start}, 10
+		select * from petition where approval_state=0 order by write_time desc limit #{start}, 10
 	</select>  
 	<select id="searchTitleList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where title like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
@@ -22,11 +33,26 @@
 		select * from petition where content like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
 	</select>
 	<select id="searchTCList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-			select * from petition where content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%')
-			 order by write_time desc limit #{start}, 10
+			select * from petition where content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
 	</select>
 	<select id="searchWriterList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where writer like CONCAT('%',#{search},'%') order by write_time desc limit #{start}, 10
+	</select> 
+	
+	<select id="petitionListCount" resultType="int" >
+		select count(*) from petition
+	</select> 
+	<select id="selectTitleListCount" parameterType="hashmap" resultType="int">
+		select count(*) from petition where title like CONCAT('%',#{search},'%')
+	</select>
+	<select id="selectContentListCount" parameterType="hashmap" resultType="int">
+		select count(*) from petition where content like CONCAT('%',#{search},'%') 
+	</select>
+	<select id="selectTCListCount" parameterType="hashmap" resultType="int">
+		select count(*) from petition where content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%')
+	</select>
+	<select id="selectWriterListCount" parameterType="hashmap" resultType="int">
+		select count(*) from petition where writer like CONCAT('%',#{search},'%')
 	</select> 
 	
 	<select id="agreeCheck" parameterType="com.es.petition.PetitionLikeDto" resultType="Integer">
@@ -37,16 +63,26 @@
 		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
 	</insert>
 	
-	<select id="agreeCountList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-			select count(*) from petition_like where petition_no=#{petition_no}
-	</select>
-	
-	<select id="agreeCount" parameterType="Integer" resultType="Integer">
+ 
+	<select id="countCheck" parameterType="Integer" resultType="Integer">
 		select count(*) from petition_like where petition_no=#{petition_no}
 	</select>
 	
 	<update id="approvalUpdate" parameterType="Integer"> 
 		update petition set approval_state=1 where petition_no=#{petition_no}
+	</update>
+  	 
+  	<select id="petitionState" parameterType="Integer" resultType="Integer">
+		select approval_state from petition where petition_no=#{petition_no}
+	</select>
+ 
+  	<update id="agreeUpdate" parameterType="com.es.petition.PetitionDto" > 
+        update petition set agree=#{agree}+1  where petition_no = #{petition_no}
+    </update> 
+  	 
+ 
+  	<update id="closingEvaluate" > 
+		update petition set approval_state=2 where agree>2 and approval_state = 4 ;
 	</update>
 	  
 </mapper>

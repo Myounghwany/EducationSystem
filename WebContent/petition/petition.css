@@ -1,0 +1,43 @@
+
+.petition_text {
+	border: 3px solid #D9E5FF; 
+	background-color: #EBF7FF;
+	margin: 30 auto;
+	padding: 20px;
+	width: 70%;
+}
+table {	
+	border: 3px solid #D9E5FF; 
+	margin: auto;
+}   
+.input {
+	background-color: #FFFFFF;
+	border: 1px solid #D9E5FF;
+	width: 90%;
+}
+.inputbutton {
+	background-color: #FFFFFF; 
+	border: 3px solid #D9E5FF;
+	font-size:12px;
+	font-weight: bold; 
+	width: 80px;  
+	height: 25px;   
+ 	text-align: center;  
+}
+td, th {
+	vertical-align: middle;
+}
+th {
+	background-color: #EBF7FF; 
+	font-size : 11px;
+	border : 1px solid #E5FFFF;	 
+	padding : 3px;
+	height: 35px; 
+}
+td {
+	background-color: #EBF7FF;  
+	font-size : 11px;
+	border : 1px solid #E5FFFF;	 
+	padding : 3px;
+	height: 35px; 
+}
