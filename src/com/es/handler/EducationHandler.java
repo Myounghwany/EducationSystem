@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +55,7 @@ public class EducationHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+//		httpSession.setAttribute("emp_no", "E2018040001");
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		List<EduHistoryDto> edu_history = eduhistoryDao.eduHistoryList(emp_no);
@@ -142,7 +141,7 @@ public class EducationHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+//		httpSession.setAttribute("emp_no", "E2018040001");
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 
 		/* 수강신청했는지 알려고*/
@@ -211,7 +210,7 @@ public class EducationHandler {
 		
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+//		httpSession.setAttribute("emp_no", "E2018040001");
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		String instructor_no = edu_detail.getInstructor_no();
@@ -227,64 +226,92 @@ public class EducationHandler {
 		if(appCheck != 0) return 800;*/
 		
 		
-		
 		int application = edDao.EducationApplication(map);
 		return application;
 		
 	}
-
 	
 	/*나현 - 수강목록*/
 	@RequestMapping("/eduhistory")
-	public String eduHistory(Model model, HttpSession session) throws IOException {
-		/* 세션 테스트 */
-		session.setAttribute("account", "E2018040001");
-		String account = (String) session.getAttribute("account");
-
-		/* 직원의 전체 수강내역 리스트 */
-		List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(account);
-		
-		for(EduHistoryDto dto : eduhistory_list) {
-			Date tempDate = dto.getEnd_date();	// end date 가져온다
+	public String eduHistory(Model model, HttpSession session, HttpServletResponse response) throws IOException {
+		/* 세션 없을 시*/
+		String emp_no = (String) session.getAttribute("emp_no");
+		if(emp_no == null) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('권한이 없습니다.'); history.go(-1); </script>");
+			out.flush();
 			
-			// end date에 7일 더한다
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(tempDate);
-			cal.add(Calendar.DATE, 15);
-			
-			System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
-			
-			// 현재 날짜 가져 온다
-			Date curDate = new Date();
-			Calendar c = Calendar.getInstance();
-			c.setTime(curDate);
-			System.out.println("현재 시각 : " + c.getTime());
-			
-			// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
-			if( c.getTime().before(cal.getTime()) ) { //현재 날짜 < 평가마감일 (버튼 생성)
-				// 비교해서 현재 날짜가 더 전이면
-				dto.setButtonFlag(1);
-				System.out.println("Flag 1 전송");
-			} else {
-				// 비교해서 현재 날짜가 이 후면
-				dto.setButtonFlag(0);
-				System.out.println("Flag 0 전송");
+		} else {
+			/* 직원의 전체 수강내역 리스트 */
+			List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(emp_no);
+			for(EduHistoryDto dto : eduhistory_list) {
+				Date tempDate = dto.getEnd_date();	// end date 가져온다
+				
+				// end date에 7일 더한다
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(tempDate);
+				cal.add(Calendar.DATE, 15);
+				
+				System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
+				
+				// 현재 날짜 가져 온다
+				Date curDate = new Date();
+				Calendar c = Calendar.getInstance();
+				c.setTime(curDate);
+				
+				// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
+				if( c.getTime().before(cal.getTime()) ) { //c:현재 날짜 < cal:평가마감일 (버튼 생성)
+					// 비교해서 현재 날짜가 더 전이면
+					dto.setButtonFlag(1); 
+					System.out.println("Flag 1 전송"); //flag 1 : 강의평가 할 수 있는 것
+				} else {
+					// 비교해서 현재 날짜가 이 후면
+					dto.setButtonFlag(0);
+					System.out.println("Flag 0 전송"); //flag 0 : 강의평가 기간이 지나 제출할 수 없음
+				}
 			}
+	
+			System.out.println(eduhistory_list.get(7));
+			
+			Date date = new Date();//현재날짜 보내기
+			model.addAttribute("date", date);
+			model.addAttribute("eduhistory_list", eduhistory_list);
 		}
-		System.out.println(eduhistory_list.get(7));
-		model.addAttribute("eduhistory_list", eduhistory_list);
-		
 		return "edu_history/main";
 	}
 	/* 나현 - 수강목록 끝 */
+	
+	/* 나현 - 강의평가 제출내역 보기 */
+	@RequestMapping(value="/eduhistory/show_eval", method = RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public Map<String, Object> eduHistoryShowEval(Model model, HttpSession session, @RequestParam("edu_no") int edu_no) {
+		System.out.println("해당 edu_no : " + edu_no);
+		
+		String emp_no = (String) session.getAttribute("emp_no");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		EduHistoryDto show_eval = eduhistoryDao.EduHistoryShowEval(edu_no, emp_no); //어떤 직원인지 emp_no를 넣어줌
+		
+		System.out.println("가져온 교육명 : " + show_eval.getEdu_name());
+		System.out.println("가져온 교육일정 : " + show_eval.getEdu_schedule());
+		System.out.println("가져온  강의평가: " + show_eval.getEmp_eval());
+
+		resultMap.put("edu_no", show_eval.getEdu_no());
+		resultMap.put("edu_name", show_eval.getEdu_name());
+		resultMap.put("edu_state", show_eval.getEdu_state());
+		resultMap.put("edu_schedule", show_eval.getEdu_schedule());
+		resultMap.put("emp_eval", show_eval.getEmp_eval());
+		return resultMap;
+	}
+	
 	
 	/* 나현 - 수강목록 中 한 강의 선택했을 시 (해당 강의 상세정보) */
 	@RequestMapping(value = "/eduhistory/detail")
 	public String eduHistoryDetail(Model model, HttpSession session, @RequestParam("edu_no") int no ) 
 			throws ParseException, UnsupportedEncodingException{
 		//select box로 보여줄 직원의 수강목록
-		String account = (String) session.getAttribute("account");
-		List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(account);
+		String emp_no = (String) session.getAttribute("emp_no");
+		List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(emp_no);
 		model.addAttribute("eduhistory_list", eduhistory_list);
 		
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
@@ -389,6 +416,5 @@ public class EducationHandler {
 		
 		return command;
 	}
-	
 	
 }

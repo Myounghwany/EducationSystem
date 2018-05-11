@@ -5,37 +5,27 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
-<script language='javascript'>
-	function paycheck() {
-		var gsWin = window.open('about:blank', 'payviewer',
-				'width=500,height=500');
-		var frm = document.pay;
-		frm.action = '/payment/payreq.php';
-		frm.target = "payviewer";
-		frm.method = "post";
-		frm.submit();
-	}
-</script>
-</head>
-<body>
-	<form name='pay' action='' method="post">
-		<input type='hidden' name='LGD_PRODUCTINFO'
-			value='{$oDocument->getTitle()}' title='강좌명'> <input
-			type='hidden' name='LGD_BUYER' value='{$logged_info->user_name}'
-			title='이름'> <input type='hidden' name='LGD_BUYERID'
-			value='{$logged_info->user_id}' title='아이디'> <input
-			type='hidden' name='LGD_AMOUNT'
-			value='{$oDocument->getExtraValueHTML(5)}' title='금액'> <input
-			type='hidden' name='LGD_BUYERIP' value='{$oDocument->getIpaddress()}'
-			title='아이피'> <input type='hidden' name='LGD_DOCUMENT_SRL'
-			value='{$document_srl}' title='문서번호'> <input type='hidden'
-			name='LGD_BUYERIP' value='{$oDocument->getIpaddress()}' title='아이피'>
-		<input type='hidden' name='LGD_BUYEREMAIL'
-			value='{$logged_info->email_address}' title='이메일주소'> <input
-			type='hidden' name='LGD_OID' value='{$keynum}_{$document_srl}'
-			title='이메일주소'>
-	</form>
-	<input type='button' value='결제하기' onclick='paycheck()'>
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+	aa = '';
+	$(function() {
+		setTimeout("window.self.focus();", 1000);
 
+		$('#dd').focus(function() {
+			aa = $(this).val();
+		}).change(function() {
+			$('#dd').trigger("blur");
+			$('#test').append("before value : " + aa + "<br>");
+		});
+	});
+</script>
+<body>
+	<select id='dd'>
+		<option value=1>1</option>
+		<option value=2>2</option>
+		<option value=3>3</option>
+	</select>
+
+	<div id='test'></div>
 </body>
-</html>

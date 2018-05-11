@@ -11,9 +11,9 @@ import com.es.db.SqlMapClient;
 public class EduHistoryDBBean implements EduHistoryDao{
 	
 	@Override
-	public List<EduHistoryDto> eduHistoryList(String account) {
+	public List<EduHistoryDto> eduHistoryList(String emp_no) {
 		System.out.println("eduHistory ");
-		return SqlMapClient.getSession().selectList("Education.EduHistory", account);
+		return SqlMapClient.getSession().selectList("Education.EduHistory", emp_no);
 	}
 	
 	@Override
@@ -29,4 +29,11 @@ public class EduHistoryDBBean implements EduHistoryDao{
 		return SqlMapClient.getSession().update("Education.insertEmpEval", eval);
 	}
 	
+	@Override
+	public EduHistoryDto EduHistoryShowEval(int edu_no, String emp_no) {
+		HashMap<Object, Object> eval = new HashMap<>();
+		eval.put("no", edu_no);
+		eval.put("emp_no", emp_no);
+		return SqlMapClient.getSession().selectOne("Education.showEval", eval);
+	}
 }
