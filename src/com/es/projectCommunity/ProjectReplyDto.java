@@ -10,6 +10,22 @@ public class ProjectReplyDto {
 	private String content;
 	private String writer;
 	private String write_time;
+	private int parents_no;
+	private int iqgrno;
+	
+	
+	public int getParents_no() {
+		return parents_no;
+	}
+	public void setParents_no(int parents_no) {
+		this.parents_no = parents_no;
+	}
+	public int getIqgrno() {
+		return iqgrno;
+	}
+	public void setIqgrno(int iqgrno) {
+		this.iqgrno = iqgrno;
+	}
 	public int getReply_no() {
 		return reply_no;
 	}

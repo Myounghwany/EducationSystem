@@ -52,4 +52,33 @@
   	<delete id="projectDelete" parameterType="int">
   		delete from project_community where project_no=#{project_no}
   	</delete>	
+  	
+  	<!-- comment -->
+  	<insert id="commentWrite" parameterType="com.es.projectCommunity.ProjectCommunityDto">
+		<selectKey resultType="int" keyProperty="iqgrno" order="BEFORE">
+			select ifnull(max(reply_no)+1,1) from project_community_reply
+		</selectKey>
+  		<![CDATA[
+		insert into project_community_reply(grno, seq, dep, project_no, content, writer, write_time, parents_no) 
+		values(if( #{grno}=0, #{iqgrno}, #{grno}),#{seq},#{dep},#{project_no},#{content},#{writer},now(),#{parents_no}) 
+		]]>
+	</insert>
+	<update id="updateReq" parameterType="com.es.projectCommunity.ProjectReplyDto">
+  		<![CDATA[
+  		update project_community_reply set seq=seq+1 where grno=#{grno} and seq >= #{seq}
+  		]]>
+  	</update>
+  	<select id="commentList" parameterType="int" resultType="com.es.projectCommunity.ProjectReplyDto">
+  		select * from project_community_reply where project_no=#{project_no} order by grno desc, seq desc
+  	</select>
+  	<update id="updateComment" parameterType="hashmap">
+  		<![CDATA[
+  		update project_community_reply set content=#{content} where reply_no=#{reply_no}
+  		]]>
+  	</update>
+  	<delete id="deleteComment" parameterType="hashmap">
+  		<![CDATA[
+  		delete from project_community_reply where reply_no=#{delete_no}
+  		]]>
+  	</delete>
 </mapper>

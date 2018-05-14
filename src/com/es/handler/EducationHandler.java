@@ -50,6 +50,7 @@ public class EducationHandler {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<EducationListDto> edu_list = null;
 		List eduTargetList = new ArrayList();
+		List applicantsList = new ArrayList();
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
@@ -110,6 +111,7 @@ public class EducationHandler {
 		
 		for(int i=0; edu_list.size() > i ;i++) {
 			String eduTarget = null; 
+			int tmp_edu_no = edu_list.get(i).getEdu_no();
 			
 	        try {
 	        	eduTarget = new String(edu_list.get(i).getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
@@ -117,8 +119,18 @@ public class EducationHandler {
 	        } catch (UnsupportedEncodingException e) {
 	           e.printStackTrace();
 	        }
+	        
+	        int applicants = edDao.EducationApplicants(tmp_edu_no);
+	        
+	        if(applicants >= edu_list.get(i).getApplicants_limit()) {
+	        	applicantsList.add(i, tmp_edu_no);
+	        }
 			
 		}
+		
+        
+		request.setAttribute("applicantsList", applicantsList);
+		
 		
 		request.setAttribute("targetList", eduTargetList);
 		request.setAttribute("list", edu_list);
@@ -219,15 +231,27 @@ public class EducationHandler {
 		map.put("emp_no", emp_no);
 		map.put("instructor_no", instructor_no);
 		
-		//유효성 검사 --> 이 사번이 신청을 했는지
-		/*int appCheck = edDao.EdApCheck(map);
-		if(appCheck != 0) return 800;*/
-		
-		
-		
 		int application = edDao.EducationApplication(map);
 		return application;
 		
+	}
+
+	/*주현- 교육신청 취소*/
+	@RequestMapping("/EducationList/applicationDelete")
+	@ResponseBody
+	public void applicationDelete(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		System.out.println("handler applicationDelete ");
+		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
+		
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
+		map.put("edu_no", edu_no);
+		map.put("emp_no", emp_no);
+		
+		edDao.EducationApplicationDelete(map);
 	}
 
 	

@@ -69,4 +69,31 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 		}
 		
 	}
+	
+	
+	@Override
+	public int CommentWrite(ProjectReplyDto replyDto) {
+		return SqlMapClient.getSession().insert("ProjectCommunity.commentWrite", replyDto);
+	}
+	
+	@Override
+	public List<ProjectReplyDto> commentList(int project_no) {
+		return SqlMapClient.getSession().selectList("ProjectCommunity.commentList",project_no);
+	}
+	
+	@Override
+	public int updateReq(ProjectReplyDto replyDto) {
+		return SqlMapClient.getSession().update("ProjectCommunity.updateReq",replyDto);
+	}
+	
+	@Override
+	public int CommentUpdate(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().update("ProjectCommunity.updateComment",map);
+	}
+	
+	@Override
+	public int CommentDelete(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().delete("ProjectCommunity.deleteComment",map);
+	}
+	
 }

@@ -144,7 +144,9 @@
 		]]>		
 	</select>
 	
-	
+	<delete id="EducationApplicationDelete" parameterType="hashmap" >
+		delete from education_history where edu_no=#{edu_no} and emp_no=#{emp_no}
+	</delete>
 	
 	
 	

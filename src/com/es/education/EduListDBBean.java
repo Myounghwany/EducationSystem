@@ -58,9 +58,12 @@ public class EduListDBBean implements EduListDao{
 	
 	@Override
 	public int EducationApplication(HashMap<String, Object> map) {
-		System.out.println("EducationApplication");
 		return SqlMapClient.getSession().insert("Education.EducationApplication", map);
 	}
 	
+	@Override
+	public int EducationApplicationDelete(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().delete("Education.EducationApplicationDelete", map);
+	}
 	
 }

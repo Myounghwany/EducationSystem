@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,18 +48,6 @@ public class ProjectCommunityHandler {
 			spage = Integer.parseInt(request.getParameter("page")); //현재페이지
 		int start =spage*10-9; // 현재페이지 시작 페이징번호
 		
-		/*1페이지
-		1 1~10
-		2 11~20
-		
-		pageNum =  1
-		
-		1~10
-		
-		(pageNum - 1) * 10 + 1 = 1
-		(1 - 1) * 10 + 1 = 1
-		(2 - 1) * 10 + 1 = 11
-		*/
 		map.put("start",start-1);
 		
 		list = projectDao.projectList(map);
@@ -113,7 +102,8 @@ public class ProjectCommunityHandler {
 		
 		int result = projectDao.deleteProject(project_no);
 		System.out.println("result : "+result);
-
+		
+		
 		return "redirect:ProjectList.do";
 	}
 
@@ -407,29 +397,141 @@ public class ProjectCommunityHandler {
 	
 	
 	/*comment*/
-	@RequestMapping(value="/CommentWrite.do", method=RequestMethod.POST)
+	
+	/*댓글 쓰기*/
+	@RequestMapping(value="EducationList/CommentWrite", method=RequestMethod.GET)
 	public void CommentWrite(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
-		System.out.println("Controller ProjectWriteForm POST");
+		System.out.println("Controller CommentWrite GET");
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
 		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String writer =  (String) httpSession.getAttribute("emp_no");
+		String content = request.getParameter("content");
+		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		int reply_no = -1;
+		
 		
 		ProjectReplyDto replyDto = new ProjectReplyDto();
 		
-		
-		String content = request.getParameter("content");
-		String writer = emp_no;
-		
+		replyDto.setProject_no(project_no);
+		replyDto.setSeq(1);
+		replyDto.setGrno(0);
+		replyDto.setDep(0);
 		
 		replyDto.setContent(content);
-		replyDto.setWrite_time(writer);
+		replyDto.setWriter(writer);
 		
+
+		//답글의 댓글이라면 
+		if(request.getParameter("reply_no") != null) {
+			reply_no = Integer.parseInt(request.getParameter("reply_no"));
+			List<ProjectReplyDto> list = projectDao.commentList(project_no);
+			int i=0; 	// list의 인덱스 
+			
+			for(i=0; list.size() > i; i++) {
+				System.out.println("list.get(i).getReply_no() : "+list.get(i).getReply_no());
+			
+				if(reply_no == list.get(i).getReply_no())
+					break;
+			}
+			
+			replyDto.setGrno(list.get(i).getGrno()); //부모의 그룹번호
+			replyDto.setSeq(list.get(i).getSeq());
+			replyDto.setDep(list.get(i).getDep()+1);
+			replyDto.setParents_no(list.get(i).getReply_no());
+			
+			int updateReq = projectDao.updateReq(replyDto);
+			System.out.println(" 답글 updateReq "+updateReq);
+			
+		}
+
+		System.out.println("content : "+content+" writer : "+writer+" project_no : "+project_no+" reply_no : "+reply_no);
 		
 		// write내용 넣기
-		
 		int result = projectDao.CommentWrite(replyDto);
+		System.out.println("result : "+result);
+	}
+	
+	
+	/* 댓글 목록 띄우기 */
+	@RequestMapping("/EducationList/CommentList")
+	@ResponseBody
+	public List<ProjectReplyDto> Commentlist(HttpServletRequest request, HttpServletResponse response) {
+		
+		System.out.println("Controller CommentList");
+		
+		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		List<ProjectReplyDto> list = projectDao.commentList(project_no);
+		System.out.println(list);
+		request.setAttribute("list", list);
+		
+		return list;
+	}
+
+	/* 댓글 수정 */
+	@RequestMapping("/EducationList/CommentUpdate")
+	public void CommentUpdate(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		System.out.println("Controller CommentUpdate");
+		
+		int reply_no = Integer.parseInt(request.getParameter("reply_no"));
+		String content = request.getParameter("content");
+		
+		map.put("content", content);
+		map.put("reply_no", reply_no);
+		
+		projectDao.CommentUpdate(map);
+		
+		System.out.println("reply_no : "+reply_no+" content : "+content);
+		
+	}
+
+	@RequestMapping("/EducationList/CommentDelete")
+	public void CommentDelete(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Controller CommentDelete");
+		int reply_no = Integer.parseInt(request.getParameter("reply_no"));
+		HashMap<String, Object> map = new HashMap<String, Object>(); 
+		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		
+		int tmp = reply_no;
+		
+		
+		/*답글 삭제 클릭시 자식  모두 삭제*/
+		while(true) {
+			List<ProjectReplyDto> list = projectDao.commentList(project_no);
+			
+			int sum =0;
+			int parents_no =0;
+			
+			for(int k=0; list.size() > k; k++) {
+				
+				parents_no =list.get(k).getParents_no();
+
+				if(tmp == list.get(k).getParents_no()) {
+					tmp = list.get(k).getReply_no();
+					break;
+				}
+				
+			}
+			
+			
+			for(int j=0; list.size() >j; j++) {
+				if(tmp == list.get(j).getParents_no()) sum += 1;
+			}
+
+			if(sum == 0) {
+				
+				map.put("delete_no", tmp);
+				
+				projectDao.CommentDelete(map);
+				if(reply_no == tmp ) break;
+
+				tmp = parents_no;
+				
+			}
+					
+		}
 		
 		
 	}
