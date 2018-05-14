@@ -52,6 +52,9 @@
   	<delete id="projectDelete" parameterType="int">
   		delete from project_community where project_no=#{project_no}
   	</delete>	
+  	<select id="userName" resultType="string">
+  		select name from employees where emp_no=#{emp_no}
+  	</select>
   	
   	<!-- comment -->
   	<insert id="commentWrite" parameterType="com.es.projectCommunity.ProjectCommunityDto">
@@ -59,8 +62,8 @@
 			select ifnull(max(reply_no)+1,1) from project_community_reply
 		</selectKey>
   		<![CDATA[
-		insert into project_community_reply(grno, seq, dep, project_no, content, writer, write_time, parents_no) 
-		values(if( #{grno}=0, #{iqgrno}, #{grno}),#{seq},#{dep},#{project_no},#{content},#{writer},now(),#{parents_no}) 
+		insert into project_community_reply(grno, seq, dep, project_no, content, writer, writer_name, write_time, parents_no) 
+		values(if( #{grno}=0, #{iqgrno}, #{grno}),#{seq},#{dep},#{project_no},#{content},#{writer},#{writer_name},now(),#{parents_no}) 
 		]]>
 	</insert>
 	<update id="updateReq" parameterType="com.es.projectCommunity.ProjectReplyDto">

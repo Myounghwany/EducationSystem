@@ -41,6 +41,7 @@ public class ProjectCommunityHandler {
 		System.out.println("Controller list");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<ProjectCommunityDto> list;
+		List<String> write_name = null;
 		int totalList = 0;
 		
 		int spage = 1;
@@ -62,6 +63,7 @@ public class ProjectCommunityHandler {
 			list = projectDao.projectList(map);
 			
 		}
+		
 		
 		totalList = projectDao.projectListCount(map);
 		request.setAttribute("listCount", totalList); 
@@ -87,6 +89,12 @@ public class ProjectCommunityHandler {
 	@RequestMapping("/ProjectDelete")
 	public String ProjectDelte(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller ProjectDelete");
+		
+		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		System.out.println(project_no);
@@ -116,15 +124,17 @@ public class ProjectCommunityHandler {
 	@RequestMapping(value="/ProjectWrite", method=RequestMethod.POST)
 	public String ProjectWriteForm(HttpServletRequest req, HttpServletResponse rep) throws IllegalStateException, IOException {
 		System.out.println("Controller ProjectWriteForm POST");
+		/*세션*/
 		HttpSession httpSession = req.getSession();
-		/*String writer = (String) httpSession.getAttribute("userId");*/
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
 		
 		String classification = req.getParameter("selectType");
 		String title = req.getParameter("title");
 		String content = req.getParameter("text");
-		String writer = "juhyun";
+		String writer = emp_no;
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";
@@ -219,15 +229,15 @@ public class ProjectCommunityHandler {
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Controller ProjectDetail ");
 		
-		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		
 		System.out.println(project_no);
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
 		int hit = projectDao.updateHit(result);
+		String user_name = projectDao.userName(result.getWriter());
 		
-		
+		request.setAttribute("user_name", user_name);
 		request.setAttribute("result", result);
 		request.setAttribute("hit", hit);
 		
@@ -287,19 +297,19 @@ public class ProjectCommunityHandler {
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		ProjectCommunityDto detail = projectDao.detailProject(project_no);
 		
-		/*String writer = (String) httpSession.getAttribute("userId");*/
 		
 		/*세션등록*/
+		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("name", "juhyun");
-		String name =  (String) httpSession.getAttribute("name");
+		httpSession.setAttribute("emp_no", "E2018040001");
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
 		
 		String classification = request.getParameter("selectType");
 		String title = request.getParameter("title");
 		String content = request.getParameter("text");
-		String writer = name;
+		String writer = emp_no;
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";
@@ -408,7 +418,11 @@ public class ProjectCommunityHandler {
 		/*세션*/
 		HttpSession httpSession = request.getSession();
 		httpSession.setAttribute("emp_no", "E2018040001");
+		httpSession.setAttribute("name", "juhyun");
+		
+		
 		String writer =  (String) httpSession.getAttribute("emp_no");
+		String writer_name =  (String) httpSession.getAttribute("name");
 		String content = request.getParameter("content");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		int reply_no = -1;
@@ -423,7 +437,7 @@ public class ProjectCommunityHandler {
 		
 		replyDto.setContent(content);
 		replyDto.setWriter(writer);
-		
+		replyDto.setWriter_name(writer_name);
 
 		//답글의 댓글이라면 
 		if(request.getParameter("reply_no") != null) {
@@ -462,10 +476,15 @@ public class ProjectCommunityHandler {
 	public List<ProjectReplyDto> Commentlist(HttpServletRequest request, HttpServletResponse response) {
 		
 		System.out.println("Controller CommentList");
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+		httpSession.setAttribute("name", "juhyun");
+		
 		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		List<ProjectReplyDto> list = projectDao.commentList(project_no);
-		System.out.println(list);
+
 		request.setAttribute("list", list);
 		
 		return list;

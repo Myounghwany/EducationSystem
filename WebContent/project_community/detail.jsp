@@ -14,6 +14,8 @@
 $(document).ready(function(){
 
 	var project_no=${result.project_no};
+	var emp_no = '<c:out value="${sessionScope.emp_no}"/>';
+	console.log('emp_no : '+emp_no);
 	
 	$('#resultTransfer').css('display',"none");
 	
@@ -34,34 +36,33 @@ $(document).ready(function(){
 			success : function(data){
 					console.log('data : '+data);
 					console.log('=================================');
-					
 					var a =''; 
 					$.each(data, function(key, value){ 
 						console.log('key : '+key+' value : '+value+'\n'+' data : '+data+'\n'+value.reply_no+' value.dep :'+value.dep);
 						
 						if(value.dep == 0){
 							a += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;">';
-			                a += '<div class="commentInfo'+value.reply_no+'">'+'<strong>'+value.writer+'</strong>&nbsp; '+value.write_time ;
+			                a += '<div class="commentInfo'+value.reply_no+'">'+'<strong>'+value.writer_name+'('+value.writer+')</strong>&nbsp; '+value.write_time ;
 			                a += '<div class="commentContent'+value.reply_no+'"><span id="replyContent'+value.reply_no+'"> '+value.content+'</span>' ;
 			                a += '<div align="right"><button style="font-size: 12px;" class="btn btn-default commentWriteRBtn" value='+value.reply_no+' >답글</button>';
-			                a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
-			                a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button></div>';
-			                /* a += '<a onclick="commentUpdate('+value.reply_no+',\''+value.content+'\');"> 수정 </a>';
-			                a += '<a onclick="commentDelete('+value.reply_no+');"> 삭제 </a>'; */
-			                a += '</div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
+			                if(value.writer == emp_no){
+				                a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
+				                a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
+			                }
+			                a += '</div></div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
 						}else{
 							a += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;"><div class="commentInfo'+value.reply_no+'">';
 			                for(var i=0; i<value.dep;i++) a+= '&nbsp;&nbsp;&nbsp;&nbsp;';
-						  	a += '<img src="${path}/img/reply_icon.gif">&nbsp;<strong>'+value.writer+'</strong>&nbsp;'+value.write_time+'<br>';
+						  	a += '<img src="${path}/img/reply_icon.gif">&nbsp;<strong>'+value.writer_name+'('+value.writer+')</strong>&nbsp;'+value.write_time+'<br>';
 						  	a += '<div class="commentContent'+value.reply_no+'">';
 						  	for(var i=0; i<value.dep;i++) a+= '&nbsp;&nbsp;&nbsp;&nbsp;';
 						  	a += '<span id="replyContent'+value.reply_no+'"> '+value.content+'</span>' ;
 			                a += '<div align="right"><button style="font-size: 12px;" class="btn btn-default commentWriteRBtn" value='+value.reply_no+' >답글</button>';
-			                a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
-			                a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button></div>';
-			              /*   a += '<a onclick="commentUpdate('+value.reply_no+',\''+value.content+'\');"> 수정 </a>';
-			                a += '<a onclick="commentDelete('+value.reply_no+');"> 삭제 </a></div>'; */
-			                a += '</div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
+			                if(value.writer == emp_no){
+			               		 a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
+			               	 	 a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
+			                }
+			                a += '</div></div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
 						}
 						
 		            }); 
@@ -236,7 +237,9 @@ $(document).ready(function(){
 <h1>Project Community Detail</h1>
 <div style="width: 70%; margin: 20px auto">
 
+
 	<span style="color: #FF5E00;"> <b>분류 : 	${result.classification}</b></span> <br>
+	<c:out value="${sessionScope.emp_no}"/>
 	<table class="w3-table w3-bordered">
 		<tr>
 			<th colspan="4" style="background-color: #EAEAEA;"> Project Coummunity 상세보기 </th>
@@ -249,7 +252,7 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td width="15%">작성자</td>
-			<td width="15%">${result.writer}</td>
+			<td width="15%">${user_name}(${result.writer})</td>
 			<td width="15%">작성일</td>
 			<td width="15%">${result.write_time}</td>
 		</tr>
@@ -267,13 +270,15 @@ $(document).ready(function(){
 				href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
-			<td colspan="4">
-			<div align="right">
-				<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='ProjectModify.do?project_no=${result.project_no}'">
-				<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
-				onclick="if(confirm('정말 삭제 하시겠습니까?')){location='ProjectDelete.do?project_no=${result.project_no}'}">
-			</div>
-			</td>
+			<c:if test="result.writer eq sessionScope.emp_no">
+					<td colspan="4">
+					<div align="right">
+						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='ProjectModify.do?project_no=${result.project_no}'">
+						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
+						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='ProjectDelete.do?project_no=${result.project_no}'}">
+					</div>
+				</td>
+			</c:if>
 		</tr>
 		
 		

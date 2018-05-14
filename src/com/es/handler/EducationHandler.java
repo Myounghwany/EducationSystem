@@ -198,8 +198,11 @@ public class EducationHandler {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
+		int applicants = edDao.EducationApplicants(edu_no);
 		
+		resultMap.put("applicants", applicants);
 		resultMap.put("belong_name", edu_detail.getBelong_name());
+		resultMap.put("applicants_limit", edu_detail.getApplicants_limit());
 		resultMap.put("edu_field", edu_detail.getEdu_field());
 		resultMap.put("edu_name", edu_detail.getEdu_name());
 		resultMap.put("edu_schedule", edu_detail.getEdu_schedule());

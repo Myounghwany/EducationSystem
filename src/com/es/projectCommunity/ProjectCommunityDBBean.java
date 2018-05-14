@@ -70,7 +70,13 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 		
 	}
 	
+	@Override
+	public String userName(String emp_no) {
+		return SqlMapClient.getSession().selectOne("ProjectCommunity.userName",emp_no);
+	}
 	
+	
+	/*comment*/
 	@Override
 	public int CommentWrite(ProjectReplyDto replyDto) {
 		return SqlMapClient.getSession().insert("ProjectCommunity.commentWrite", replyDto);

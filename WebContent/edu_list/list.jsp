@@ -120,6 +120,7 @@ function listBtn(no){
 			$('#edu_name').html(data.edu_name);
 			$('#edu_schedule').html(data.edu_schedule);
 			$('#instructor_name').html(data.instructor_name);
+			$('#app_limit').html(data.applicants+'/'+data.applicants_limit);
 			
 		},
 		error : function(request,status,error){
@@ -272,7 +273,7 @@ function deleteBtn(no){
         
         <table border="1">
         	<tr>
-        		<td>교육코드</td><td><span id="edu_no"> </span></td> 
+        		<td width="35%">교육코드</td><td><span id="edu_no"> </span></td> 
         	</tr>
         	<tr>
         		<td>소속명</td><td><span id="belong_name"> </span></td> 
@@ -288,6 +289,9 @@ function deleteBtn(no){
         	</tr>
         	<tr>
         		<td>강사명</td><td><span id="instructor_name" ></span></td> 
+        	</tr>
+        	<tr>
+        		<td>신청자 수</td><td><span id="app_limit" ></span></td> 
         	</tr>
         </table><br/>
         <span>신청하시겠습니까?</span><br>
