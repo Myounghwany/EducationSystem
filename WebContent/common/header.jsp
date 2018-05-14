@@ -1,7 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,33 +7,48 @@
 <title>Education System</title>
 
 <link rel="StyleSheet" href="/EducationSystem/css/bootstrap.min.css">
+<!-- 드롭다운(비밀번호 변경) -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- 로그인모달 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script>
-	
-	function check(){
-		alert("click");
-		
+	window.onload = function() {
+		var result = "${msg}";
+		console.log(result);
+		if(result == "fail") {
+			alert("비밀번호 틀림");
+		}
 	}
 </script>
 </head>
 <body style="width: 70%; margin: 0 auto;">
-	<div style="text-align: right">
+	<div style="text-align: right" class="container">
 		<c:choose>
 		  <c:when test="${ sessionScope.emp_no == null }">
 				<button type="button" class="dynamic-button" data-toggle="modal" data-target="#login" tabindex="0"
 					style="width: 117px; height: 40px;">로그인</button>
 		  </c:when>
 		  <c:otherwise>
-		  	안녕하세요 ${sessionScope.name}님
-			<button type="button" class="dynamic-button" 
-					onclick="location.href='${path}/user/logout.do'"
-					 tabindex="0" style="width: 117px; height: 40px;">로그아웃</button>
+		  	<div>
+			  <div class="dropdown">
+			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+			    	${sessionScope.name}님  <span class="caret"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="${path}/user/password.do?emp_no=${sessionScope.emp_no}">비민번호 변경</a></li>
+			      <li><a href="${path}/user/logout.do">로그아웃</a></li>
+			    </ul>
+			  </div>
+			</div>
+
 		  </c:otherwise>
 		</c:choose>
 	</div>
 	<div class="navbar navbar-default">
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target=".navbar-responsive-collapse">
+			<button type="button" class="navbar-toggle">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
@@ -73,14 +86,15 @@
 							src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" />
 						<p id="profile-name" class="profile-name-card"></p>
 
-						<!-- form -->
+						<!------- form ------->
 						<form id="loginForm" name="loginForm" class="form-signin"
-							method="post" action="${path}/user/login.do" onsubmit="check();">
+							method="post" action="${path}/user/login.do">
 							<span id="reauth-email" class="reauth-email"></span>
 							
 							<input type="text" name="emp_no" id="emp_no" class="form-control" placeholder="ID" required autofocus value=""> 
 							
-							<input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+							<input type="password" name="passwd" id="passwd" class="form-control" 
+									placeholder="Password" required >
 							<br>
 							<button class="btn btn-lg btn-primary btn-block btn-signin"
 								type="submit">Sign in</button>
