@@ -17,18 +17,12 @@ $(document).ready(function(){
 	var emp_no = '<c:out value="${sessionScope.emp_no}"/>';
 	console.log('emp_no : '+emp_no);
 	
-	$('#resultTransfer').css('display',"none");
-	
-	$('#writeBtn').click(function(){
-		location="ProjectWrite.do";
-	});	
-	
 	
 	
 	/* 댓글 목록 */
 		 $.ajax({
 			contentType : 'application/text; charset=utf-8',
-			url : 'EducationList/CommentList.do',
+			url : '${path}/ProjectCommunity/CommentList.do',
 			type : 'get',
 			data : {
 				'project_no':project_no
@@ -88,7 +82,7 @@ $(document).ready(function(){
 
 		 $.ajax({
 			contentType : 'application/text; charset=utf-8',
-			url : 'EducationList/CommentWrite.do',
+			url : '${path}/ProjectCommunity/CommentWrite.do',
 			type : 'get',
 			data : $('#commentInsertForm').serialize(),
 			dataType:"text",  
@@ -136,7 +130,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 				contentType : 'application/text; charset=utf-8',
-				url : 'EducationList/CommentWrite.do',
+				url : '${path}/ProjectCommunity/CommentWrite.do',
 				type : 'get',
 				data : {
 					'project_no':project_no,
@@ -165,7 +159,7 @@ $(document).ready(function(){
 	    a += '<div class="input-group">';
 	    a += '<input type="text" class="form-control" name="content_'+reply_no+'" value="'+content+'"/>';
 	    a += '<span class="input-group-btn"><button class="btn btn-default commentUpdateProc" type="button" value='+reply_no+'>수정</button> </span>';
-	    a += '<span class="input-group-btn"><button class="btn btn-default" type="button" onclick="location.href=ProjectDetail.do?project_no='+project_no+'">취소</button> </span>';
+	    a += '<span class="input-group-btn"><button class="btn btn-default" type="button" onclick="location.href=${path}/ProjectCommunity/detail.do?project_no='+project_no+'">취소</button> </span>';
 	    a += '</div>';
 	    $('.commentContent'+reply_no).html(a);
 		
@@ -185,12 +179,12 @@ $(document).ready(function(){
 		console.log('content : '+content);
 		
 		$.ajax({
-	        url : 'EducationList/CommentUpdate.do',
+	        url : '${path}/ProjectCommunity/CommentUpdate.do',
 	        type : 'get',
 	        data : {'content' : content, 'reply_no' : reply_no},
 	        success : function(data){
 	        	alert('댓글이 수정되었습니다.');
-	        	location.href="${path}/ProjectDetail.do?project_no="+project_no;
+	        	location.href="${path}/ProjectCommunity/detail.do?project_no="+project_no;
 	        }
 	    });
 		
@@ -206,7 +200,7 @@ $(document).ready(function(){
 		if(confirm('정말 삭제 하시겠습니까?')){
 
 			$.ajax({
-		        url : 'EducationList/CommentDelete.do',
+		        url : '${path}/ProjectCommunity/CommentDelete.do',
 		        type : 'get',
 		        data : {
 		        	'reply_no' : reply_no,
@@ -214,7 +208,7 @@ $(document).ready(function(){
 		        	},
 		        success : function(data){
 		        	alert('댓글이 삭제되었습니다.');
-		        	location.href="${path}/ProjectDetail.do?project_no="+project_no;
+		        	location.href="${path}/ProjectCommunity/detail.do?project_no="+project_no;
 		        }
 		    });
 					
@@ -252,7 +246,7 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td width="15%">작성자</td>
-			<td width="15%">${user_name}(${result.writer})</td>
+			<td width="15%">${result.writer_name}(${result.writer})</td>
 			<td width="15%">작성일</td>
 			<td width="15%">${result.write_time}</td>
 		</tr>
@@ -267,15 +261,15 @@ $(document).ready(function(){
 		<tr>
 			<td>첨부파일</td>
 			<td colspan="3"><a
-				href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
+				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
-			<c:if test="result.writer eq sessionScope.emp_no">
+			<c:if test="${result.writer eq sessionScope.emp_no}">
 					<td colspan="4">
 					<div align="right">
-						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='ProjectModify.do?project_no=${result.project_no}'">
+						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/ProjectCommunity/modify.do?project_no=${result.project_no}'">
 						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
-						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='ProjectDelete.do?project_no=${result.project_no}'}">
+						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/ProjectCommunity/delete.do?project_no=${result.project_no}'}">
 					</div>
 				</td>
 			</c:if>
@@ -286,7 +280,7 @@ $(document).ready(function(){
 	</table>
 	
 	<div align="center" class="goList">
-		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='ProjectList.do'">
+		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/ProjectCommunity.do'">
 	</div><br>
 	
   <!--  댓글  -->

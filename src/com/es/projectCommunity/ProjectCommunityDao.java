@@ -14,7 +14,6 @@ public interface ProjectCommunityDao {
 	public int modifyProject(ProjectCommunityDto boardDto);
 	public int deleteProject(int project_no);
 	public int projectListCount(HashMap<String, Object> map);
-	public String userName(String emp_no);
 	
 	public int CommentWrite(ProjectReplyDto replyDto);
 	public int updateReq(ProjectReplyDto replyDto);

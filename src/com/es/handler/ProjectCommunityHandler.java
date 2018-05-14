@@ -36,7 +36,7 @@ public class ProjectCommunityHandler {
 	@Resource
 	private ProjectCommunityDao projectDao;
 	
-	@RequestMapping("/ProjectList")
+	@RequestMapping("/ProjectCommunity")
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller list");
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -86,7 +86,7 @@ public class ProjectCommunityHandler {
 		return new ModelAndView("project_community/list");
 	}
 	
-	@RequestMapping("/ProjectDelete")
+	@RequestMapping("/ProjectCommunity/delete")
 	public String ProjectDelte(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller ProjectDelete");
 		
@@ -112,22 +112,24 @@ public class ProjectCommunityHandler {
 		System.out.println("result : "+result);
 		
 		
-		return "redirect:ProjectList.do";
+		return "redirect:/ProjectCommunity.do";
 	}
 
-	@RequestMapping(value="/ProjectWrite", method=RequestMethod.GET)
+	@RequestMapping(value="/ProjectCommunity/write", method=RequestMethod.GET)
 	public ModelAndView ProjectWrite(HttpServletRequest req, HttpServletResponse rep) {
 		System.out.println("Controller ProjectWrite GET");
 		return new ModelAndView("project_community/write");
 	}
 
-	@RequestMapping(value="/ProjectWrite", method=RequestMethod.POST)
+	@RequestMapping(value="/ProjectCommunity/write", method=RequestMethod.POST)
 	public String ProjectWriteForm(HttpServletRequest req, HttpServletResponse rep) throws IllegalStateException, IOException {
 		System.out.println("Controller ProjectWriteForm POST");
 		/*세션*/
 		HttpSession httpSession = req.getSession();
 		httpSession.setAttribute("emp_no", "E2018040001");
+	    httpSession.setAttribute("name", "유창연");
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String writer_name =  (String) httpSession.getAttribute("name");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
 		
@@ -143,6 +145,7 @@ public class ProjectCommunityHandler {
 		projectDto.setTitle(title);
 		projectDto.setContent(content);
 		projectDto.setWriter(writer);
+		projectDto.setWriter_name(writer_name);
 		projectDto.setFile_path(file_path);
 		projectDto.setFile_save_name(file_save_name);
 		projectDto.setFile_ori_name(file_ori_name);
@@ -215,7 +218,7 @@ public class ProjectCommunityHandler {
 		
 		int result = projectDao.writeProject(projectDto);
 		
-		return "redirect:ProjectList.do";
+		return "redirect:/ProjectCommunity.do";
 		
 	}
 
@@ -225,7 +228,7 @@ public class ProjectCommunityHandler {
 	}
 	
 	
-	@RequestMapping("/ProjectDetail")
+	@RequestMapping("/ProjectCommunity/detail")
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Controller ProjectDetail ");
 		
@@ -235,16 +238,14 @@ public class ProjectCommunityHandler {
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
 		int hit = projectDao.updateHit(result);
-		String user_name = projectDao.userName(result.getWriter());
 		
-		request.setAttribute("user_name", user_name);
 		request.setAttribute("result", result);
 		request.setAttribute("hit", hit);
 		
 		return new ModelAndView("project_community/detail");  
 	}
 	
-	@RequestMapping("/ProjectFileDownload")
+	@RequestMapping("/ProjectCommunity/fileDownload")
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
@@ -279,7 +280,7 @@ public class ProjectCommunityHandler {
 		
 	}
 	
-	@RequestMapping(value="/ProjectModify", method=RequestMethod.GET)
+	@RequestMapping(value="/ProjectCommunity/modify", method=RequestMethod.GET)
 	public ModelAndView ProjectModify(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller ProjectModify GET");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
@@ -291,7 +292,7 @@ public class ProjectCommunityHandler {
 		return new ModelAndView("project_community/modify");
 	}
 
-	@RequestMapping(value="/ProjectModify", method=RequestMethod.POST)
+	@RequestMapping(value="/ProjectCommunity/modify", method=RequestMethod.POST)
 	public String ProjectModifyForm(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
 		System.out.println("Controller ProjectModify POST");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
@@ -402,7 +403,7 @@ public class ProjectCommunityHandler {
 		
 		System.out.println("result : " +result);
 		
-		return "redirect:ProjectDetail.do?project_no="+project_no;
+		return "redirect:/ProjectCommunity/detail.do?project_no="+project_no;
 	}
 	
 	
@@ -411,7 +412,7 @@ public class ProjectCommunityHandler {
 	/*comment*/
 	
 	/*댓글 쓰기*/
-	@RequestMapping(value="EducationList/CommentWrite", method=RequestMethod.GET)
+	@RequestMapping(value="/ProjectCommunity/CommentWrite", method=RequestMethod.GET)
 	public void CommentWrite(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
 		System.out.println("Controller CommentWrite GET");
 		
@@ -471,7 +472,7 @@ public class ProjectCommunityHandler {
 	
 	
 	/* 댓글 목록 띄우기 */
-	@RequestMapping("/EducationList/CommentList")
+	@RequestMapping("/ProjectCommunity/CommentList")
 	@ResponseBody
 	public List<ProjectReplyDto> Commentlist(HttpServletRequest request, HttpServletResponse response) {
 		
@@ -491,7 +492,7 @@ public class ProjectCommunityHandler {
 	}
 
 	/* 댓글 수정 */
-	@RequestMapping("/EducationList/CommentUpdate")
+	@RequestMapping("/ProjectCommunity/CommentUpdate")
 	public void CommentUpdate(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		System.out.println("Controller CommentUpdate");
@@ -508,7 +509,7 @@ public class ProjectCommunityHandler {
 		
 	}
 
-	@RequestMapping("/EducationList/CommentDelete")
+	@RequestMapping("/ProjectCommunity/CommentDelete")
 	public void CommentDelete(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller CommentDelete");
 		int reply_no = Integer.parseInt(request.getParameter("reply_no"));

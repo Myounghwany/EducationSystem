@@ -7,6 +7,7 @@ public class ProjectCommunityDto {
 	private String title;
 	private String content;
 	private String writer;
+	private String writer_name;
 	private String write_time;
 	private String file_path;
 	private String file_save_name;
@@ -14,6 +15,13 @@ public class ProjectCommunityDto {
 	private int hit;
 	
 	
+	
+	public String getWriter_name() {
+		return writer_name;
+	}
+	public void setWriter_name(String writer_name) {
+		this.writer_name = writer_name;
+	}
 	public String getFile_save_name() {
 		return file_save_name;
 	}
