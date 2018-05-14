@@ -316,6 +316,8 @@ public class ProjectCommunityHandler {
 		
 		// -- 파일 저장하기
 		
+		
+		
 		String path = request.getServletContext().getRealPath("/save");
 		
 		MultipartHttpServletRequest mhsr = (MultipartHttpServletRequest) request;
@@ -373,8 +375,8 @@ public class ProjectCommunityHandler {
 		
 		if(file_ori_name.equals("")) {
 			projectDto.setFile_path(detail.getFile_path());
-			projectDto.setFile_ori_name(file_ori_name);
-			projectDto.setFile_save_name(file_save_name);
+			projectDto.setFile_ori_name(detail.getFile_ori_name());
+			projectDto.setFile_save_name(detail.getFile_save_name());
 		}
 		
 		System.out.println("projectDto.getClassification() : "+projectDto.getClassification());
