@@ -59,7 +59,7 @@
 		</div>
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="${path}/#">공지사항</a></li>
+				<li><a href="${path}/notice.do">공지사항</a></li>
 				<li><a href="${path}/EducationList.do">교육목록/신청</a></li>
 				<li><a href="${path}/PetitionList.do">청원</a></li>
 				<li><a href="${path}/eduhistory.do">수강목록</a></li>

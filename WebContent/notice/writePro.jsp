@@ -7,10 +7,10 @@
 
 
 <c:if test="${result == 0}">
-	회원가입에 실패했습니다 <br>
-	잠시 후 다시 시도하세요 <br>
-	<meta http-equiv="refresh" content="2; url=inputForm.do">
+	접근에 실패했습니다 <br>
+	로그인 후 다시 시도하세요 <br>
+	<meta http-equiv="refresh" content="2; url=notice.do">
 </c:if>
 <c:if test="${result == 1}">
-	<c:redirect url="main.do"/>
+	<c:redirect url="notice.do"/>
 </c:if>
