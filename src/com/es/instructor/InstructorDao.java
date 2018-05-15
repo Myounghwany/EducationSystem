@@ -25,4 +25,5 @@ public interface InstructorDao {
 	public int updateInstEval(InstructorDto instructorDto);
 	public int selectEduListCnt(String account_no);
 	public List<InstructorDto> selectEduNameList(String instructor_no);
+	public int deleteEduReq(String edu_no);
 }

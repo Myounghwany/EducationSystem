@@ -120,4 +120,9 @@ public class InstructorDBBean implements InstructorDao{
 		return SqlMapClient.getSession().selectList("Instructor.selectEduNameList", instructor_no);
 	}
 
+	@Override
+	public int deleteEduReq(String edu_no) {
+		return SqlMapClient.getSession().delete("Instructor.deleteEduReq", edu_no);
+	}
+
 }

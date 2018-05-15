@@ -14,8 +14,12 @@
 #info{
 	text-align: center;
 }
-#eduModify{
+#ModDelBtn{
 	float: right;
+}
+#msg{
+	font-size: 12px;
+	color: red;
 }
 select {
     width: 500px;
@@ -36,18 +40,16 @@ option {
 }
 </style>
 <script type="text/javascript">
-$(document).ready(function(){
-	$("#edu_no").change(function(){
-		location.href="/EducationSystem/instructor/eduDetail.do?edu_no=" + $(this).val()+"&instructor_no=${instructor_no}";
-	});
-});
-	function fileDown(file_path){
-		alert('sfsfs');
-		alert(file_path);
+	function eduReqModify(edu_no){
+		if(confirm("교육신청 수정페이지로 이동하시겠습니까?")==true){
+			location.href="/EducationSystem/instructor/eduReqModify.do?edu_no=" + edu_no;
+		}else{
+			return;
+		}
 	}
-	function eduModify(edu_no, instructor_no){
-		if(confirm("강의계획서 수정페이지로 이동하시겠습니까?")==true){
-			location.href="/EducationSystem/instructor/eduModify.do?edu_no=" + edu_no + "&instructor_no="+instructor_no;
+	function eduReqDelete(edu_no){
+		if(confirm("교육신청을 취소하시겠습니까?")==true){
+			location.href="/EducationSystem/instructor/eduReqDelete.do?edu_no=" + edu_no;
 		}else{
 			return;
 		}
@@ -56,30 +58,42 @@ $(document).ready(function(){
 <jsp:include page="../common/header.jsp" />
 <body>
 	<h3>강사 페이지</h3>
-	<div style="padding-bottom: 80px;">
-		강의계획서 > &nbsp;<select name="edu_no" id="edu_no">
-		<c:forEach items = "${edu_name }" var = "item">
-			<option value="${item.edu_no }" <c:if test="${edu_no == item.edu_no}">selected</c:if>>${item.edu_name }</option> 
-		</c:forEach>
-		</select>
+	<div style="padding-bottom: 80px; width: 100%;">
+		
+		<c:forEach items = "${edu_list }" var = "item">
 		<table class="w3-table w3-bordered">
 			<tr>
-				<th>
-					<input type="button" id="eduModify" onclick="eduModify('${edu_no}', '${instructor_no }')" value="강의계획서 수정" class="w3-button w3-green w3-border"/>
+				<th>신청현황 : 
+					<c:if test="${item.approval_state == 1}">
+					신청완료
+					</c:if>
+					<c:if test="${item.approval_state == 2}">
+					심사진행중
+					</c:if>
+					<c:if test="${item.approval_state == 4}">
+					승인거부
+					</c:if>
+					<br/>
+					<span id="msg">※ 심사중일 경우 수정이 불가합니다</span>
+					<div id="ModDelBtn">
+						<c:if test="${item.approval_state == 1}">
+						<input type="button" onclick="eduReqModify('${edu_no}')" value="교육신청 수정" class="w3-button w3-green w3-border"/>
+						</c:if>
+						<input type="button" onclick="eduReqDelete('${edu_no}')" value="교육신청 취소" class="w3-button w3-green w3-border"/>
+					</div>
 				</th>
 			</tr>
 		</table>
-		<table class="w3-table w3-bordered">
+		<table class="w3-table w3-bordered" style="width: 100%;">
 			<tr>
 				<th colspan="2" style="background-color: #CCCCCC;">강의계획서</th>
 			</tr>
-			<c:forEach items = "${edu_list }" var = "item">
 			<tr>
 				<th>소속</th>
 				<td>${item.belong_name }</td>
 			</tr>
 			<tr>
-				<th width="140px" >교육분야</th>
+				<th style="width: 10%;">교육분야</th>
 				<td>${item.edu_field }</td>
 			</tr>
 			<tr>
@@ -102,7 +116,16 @@ $(document).ready(function(){
 				<th>교육대상</th>
 				<td>
 					<c:forEach items = "${edu_target }" var = "item1">
+						<%-- <c:forEach items = "${dept_name }" var = "item2"> --%>
+						<%-- <c:forEach items = "${dept_name }" var = "item2">
+							<c:forEach items = "${position_name }" var = "item3"> --%>
 						${item1 } <br/>
+						<%-- ${item2 } 
+						직급 : 
+						${item3 } --%>
+							<%-- </c:forEach>
+						</c:forEach> --%>
+						<%-- </c:forEach> --%>
 					</c:forEach>
 				</td>	
 			</tr>
@@ -132,11 +155,11 @@ $(document).ready(function(){
 			</tr>
 			<tr>
 				<th>소요예산</th>
-				<td><pre>${item.budget }</pre></td>
+				<td><pre style="white-space: pre-wrap;">${item.budget }</pre></td>
 			</tr>
 			<tr>
 				<th>비고</th>
-				<td><pre>${item.note }</pre></td>
+				<td><pre style="white-space: pre-wrap;">${item.note }</pre></td>
 			</tr>
 			<tr>
 				<th>강의자료</th>
@@ -146,47 +169,9 @@ $(document).ready(function(){
 				</c:forEach>
 			</tr>
 				
-			</c:forEach>
 		</table>
-		<br/>
-		<hr/>
-		<br/>
-		<table class="w3-table w3-bordered">
-			<tr>
-				<th colspan="6" style="background-color: #CCCCCC;">수강자</th>
-			</tr>
-			<tr>
-				<td style="background-color: #EAEAEA;">사원번호</td>
-				<td style="background-color: #EAEAEA;">부서</td>
-				<td style="background-color: #EAEAEA;">직급</td>
-				<td style="background-color: #EAEAEA;">이름</td>
-				<td style="background-color: #EAEAEA;">이수여부</td>
-			</tr>
-			
-			<c:choose>
-				<c:when test="${empty edu_history}">
-					<tr>
-						<td colspan="4" style="text-align: center;">수강자가 존재하지 않습니다</td>
-					</tr>
-				</c:when>
-				<c:otherwise>
-				<c:forEach items = "${edu_history }" var = "item">
-					<tr>
-						<td>${item.emp_no }</td>
-						<td>${item.dept_name }</td>
-						<td>${item.position_name }</td>
-						<td>${item.name }</td>
-						<td>
-							<c:choose>
-								<c:when test="${item.edu_state == 'I'}">강의진행중</c:when>			
-								<c:otherwise>${item.edu_state }</c:otherwise>
-							</c:choose>
-						</td>
-					</tr>
-				</c:forEach>
-				</c:otherwise>
-			</c:choose>
-		</table>
+		</c:forEach>
+		
 	
 	</div>
 </body>

@@ -56,14 +56,14 @@
 			<table class="w3-table w3-bordered">
 				<tr>
 					<th>
-						<input type="button" id="eduRegBtn" onclick="isntRegBtn('${account_no}');" value="교육신청" class="w3-button w3-green w3-border">
+						<input type="button" id="eduRegBtn" onclick="isntRegBtn('${account_no}');" value="강사신청" class="w3-button w3-green w3-border">
 					</th>
 				</tr>
 			</table>
 		</c:when>
 		<c:otherwise>
 			<c:choose>
-				<c:when test='${inproval_state == 3}'>
+				<c:when test='${approval_state == 3}'>
 				
 					강사번호 : ${instructor_no}
 						<c:choose>
@@ -75,50 +75,65 @@
 									</th>
 								</tr>
 							</table>
+							
+							<table class="w3-table w3-bordered">
+								<tr>
+									<th colspan="7" style="background-color: #CCCCCC;">신청현황</th>
+								</tr>
+								<tr>
+									<td style="background-color: #EAEAEA;">소속</td>
+									<td style="background-color: #EAEAEA;">교육분야</td>
+									<td style="background-color: #EAEAEA;">교육코드</td>
+									<td style="background-color: #EAEAEA;">교육명</td>
+									<td style="background-color: #EAEAEA;">교육기간</td>
+									<td style="background-color: #EAEAEA;">수강제한 수</td>
+									<td style="background-color: #EAEAEA;">신청현황</td>
+								</tr>
+								<c:choose>
+								<c:when test="${empty result1}">
+									<tr>
+										<td colspan="7" style="text-align: center;">신청하신 교육내역이 없습니다.</td>
+									</tr>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items = "${result1 }" var = "item">
+										<tr>
+											<td>${item.belong_name }</td>
+											<td>${item.edu_field }</td>
+											<td>${item.edu_code_name }</td>
+											<td><a href="${path}/instructor/eduReqDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
+											<td>${item.edu_schedule }</td>
+											<td>${item.applicants_limit } 명</td>
+											<td>
+												<c:if test="${item.approval_state == 1}">신청완료</c:if>
+												<c:if test="${item.approval_state == 2}">심사중</c:if>
+												<c:if test="${item.approval_state == 4}">승인거부</c:if>
+											</td>
+										</tr>
+									</c:forEach>
+								</c:otherwise>
+								</c:choose>
+							</table>
+					
 							</c:when>	
 							<c:otherwise>
+							(외부강사)
 							</c:otherwise>
 						</c:choose>
 					
-					<table class="w3-table w3-bordered">
-						<tr>
-							<th colspan="6" style="background-color: #CCCCCC;">신청현황</th>
-						</tr>
-						<tr>
-							<td style="background-color: #EAEAEA;">교육분야</td>
-							<td style="background-color: #EAEAEA;">교육명</td>
-							<td style="background-color: #EAEAEA;">시간표</td>
-							<td style="background-color: #EAEAEA;">수강제한 수</td>
-							<td style="background-color: #EAEAEA;">신청현황</td>
-							<td style="background-color: #EAEAEA;">신청취소</td>
-						</tr>
-						<c:forEach items = "${result1 }" var = "item">
-							<tr>
-								<td>${item.edu_field }</td>
-								<td>${item.edu_name }</td>
-								<td>${item.edu_schedule }</td>
-								<td>${item.applicants_limit } 명</td>
-								<td>
-									<c:choose>
-										<c:when test="${item.approval_state == 1}">신청완료</c:when>
-										<c:otherwise>승인거부</c:otherwise>
-									</c:choose>
-								</td>
-								<td></td>
-							</tr>
-						</c:forEach>
-					</table>
 					<br/>
 					<hr/>
 					<br/>
 					<table class="w3-table w3-bordered">
 						<tr>
-							<th colspan="5" style="background-color: #CCCCCC;">강의목록</th>
+							<th colspan="7" style="background-color: #CCCCCC;">강의목록</th>
 						</tr>
 						<tr>
+							<td style="background-color: #EAEAEA;">소속</td>
 							<td style="background-color: #EAEAEA;">교육분야</td>
+							<td style="background-color: #EAEAEA;">교육코드</td>
 							<td style="background-color: #EAEAEA;">교육명</td>
-							<td style="background-color: #EAEAEA;">시간표</td>
+							<td style="background-color: #EAEAEA;">교육기간</td>
 							<td style="background-color: #EAEAEA;">수강자 수</td>
 							<td style="background-color: #EAEAEA;">평가</td>
 						</tr>
@@ -129,7 +144,9 @@
 						<fmt:parseDate value="${item.deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="deadLine" /> 
 						<fmt:formatDate value="${deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="dead" /> 
 							<tr>
+								<td>${item.belong_name }</td>
 								<td>${item.edu_field }</td>
+								<td>${item.edu_code_name }</td>
 								<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }&instructor_no=${instructor_no}">${item.edu_name }</a></td>
 								<td>${item.edu_schedule }</td>
 								<td><span class="studentNum">${item.student } </span>/ ${item.applicants_limit }</td>
@@ -149,33 +166,45 @@
 						
 						</c:forEach>
 					</table>
+					
+					<br>
+					<div id="pageForm">
+						<c:if test="${startPage != 1 }">
+							<a href ="${path}/instructor/main.do?page=${page -1}">[ 이전 ]</a> 
+						</c:if>
+						<c:forEach var="pageNum" begin="${startPage }" end="${endPage }">
+							<c:if test="${pageNum == page }">
+								${pageNum }&nbsp;
+							</c:if>
+							<c:if test="${pageNum != page }">
+								<a href="${path}/instructor/main.do?page=${pageNum}">${pageNum}&nbsp;</a>
+							</c:if>
+							
+						</c:forEach>
+						
+						<c:if test="${endPage != maxPage }">
+							<a href='${path}/instructor/main.do?page=${endPage+1 }'>[다음]</a>
+					    </c:if>
+					</div>
+	
+				</c:when>
+				<c:when test='${approval_state == 1}'>
+					강사신청 상태 : 신청완료 <br/>
+					강사신청일 : ${approval_date }
+				</c:when>
+				<c:when test='${approval_state == 2}'>
+					강사신청 상태 : 심사진행중 <br/>
+					강사신청일 : ${approval_date }
 				</c:when>
 				<c:otherwise>
-					강사신청 심사중입니다.
+					강사신청 상태 : 승인거부 <br/>
+					강사신청일 : ${approval_date }
 				</c:otherwise> 
 			</c:choose>
 		</c:otherwise>
 	</c:choose>
 	
-	<br>
-	<div id="pageForm">
-		<c:if test="${startPage != 1 }">
-			<a href ="${path}/instructor/main.do?page=${page -1}">[ 이전 ]</a> 
-		</c:if>
-		<c:forEach var="pageNum" begin="${startPage }" end="${endPage }">
-			<c:if test="${pageNum == page }">
-				${pageNum }&nbsp;
-			</c:if>
-			<c:if test="${pageNum != page }">
-				<a href="${path}/instructor/main.do?page=${pageNum}">${pageNum}&nbsp;</a>
-			</c:if>
-			
-		</c:forEach>
-		
-		<c:if test="${endPage != maxPage }">
-			<a href='${path}/instructor/main.do?page=${endPage+1 }'>[다음]</a>
-	    </c:if>
-	</div>
+	
 	</div>
 	
 </body>

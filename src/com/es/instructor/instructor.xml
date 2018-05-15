@@ -10,16 +10,16 @@
 		select count(instructor_no) instructor_check from instructor where emp_no = #{account_no} 
 	</select>
 	<select id="selectInstructorNo" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
-		select ifnull(instructor_no, 0) instructor_no, approval_state from instructor where emp_no = #{account_no} 
+		select ifnull(instructor_no, 0) instructor_no, approval_state, hire_date, approval_date from instructor where emp_no = #{account_no} 
 	</select>
 	<insert id="insertInstructorRequest" parameterType = "com.es.instructor.InstructorDto">
 		insert into instructor select concat('I', (select date_format(now(), '%Y%m')), (select lpad(count(*)+1, 4, '0') from instructor)), #{emp_no}, null, 1, now(), #{name};
 	</insert>
 	<select id="selectEduReq" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
-		select * from education_list where instructor_no = #{account_no} and approval_state != 3
+		select *, B.name belong_name, C.edu_name edu_code_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code where instructor_no = #{account_no} and approval_state != 3
 	</select>
 	<select id="selectEduList" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
-		select *, (select count(*) from education_history where edu_no = A.edu_no) as student from education_list A join education_detail B on A.edu_no = B.edu_no where instructor_no = #{account_no} and approval_state = 3 limit ${page}, 10
+		select *, C.name belong_name, D.edu_name edu_code_name, (select count(*) from education_history where edu_no = A.edu_no) as student from education_list A join education_detail B on A.edu_no = B.edu_no left join belong C on A.belong_no = C.belong_no left join education_code D on A.edu_code = D.edu_code where instructor_no = #{account_no} and approval_state = 3 limit ${page}, 10
 	</select>
 	<select id = "selectEduCode" resultType = "com.es.instructor.InstructorDto">
 		select * from education_code
@@ -46,13 +46,13 @@
 		insert into education_detail values(NULL, LAST_INSERT_ID(), STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), #{input_time}, NULL, #{file_path}, #{file_ori_name}, #{file_save_name})
 	</insert>
 	<select id = "selectEduList2" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
-		select *, C.edu_name edu_code_name, D.name instructor_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code left join instructor D on A.instructor_no = D.instructor_no where edu_no = #{edu_no}
+		select *, B.name belong_name, C.edu_name edu_code_name, D.name instructor_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code left join instructor D on A.instructor_no = D.instructor_no where edu_no = #{edu_no}
 	</select>
 	<select id = "selectEduDetail" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
 		select * from education_detail where edu_no = #{edu_no}
 	</select>
 	<select id = "selectEduHistory" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
-		select * from education_History A join employees B on A.emp_no = B.emp_no left join department C on B.dept_no = C.dept_no where edu_no = #{edu_no}
+		select * from education_History A join employees B on A.emp_no = B.emp_no left join department C on B.dept_no = C.dept_no left join position D on B.position_no = D.position_no where edu_no = #{edu_no}
 	</select>
 	<update id="updateEdu" parameterType = "com.es.instructor.InstructorDto">
 		update education_list set edu_target = #{edu_target}, edu_way = #{edu_way}, edu_schedule = #{edu_schedule}, edu_date = #{edu_date}, edu_location = #{edu_location}, budget = #{budget}, note = #{note}, applicants_limit = #{applicants_limit}, closing_date = STR_TO_DATE(concat(#{closing_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s') where edu_no = #{edu_no}
@@ -69,5 +69,8 @@
 	<select id="selectEduNameList" parameterType="String" resultType="com.es.instructor.InstructorDto">
 		select * from education_list where instructor_no = #{instructor_no} and approval_state = 3
 	</select>
-	
+	<delete id="deleteEduReq" parameterType="String">
+		delete from education_list where edu_no = #{edu_no};
+		delete from education_detail where edu_no = #{edu_no};
+	</delete>
 </mapper>

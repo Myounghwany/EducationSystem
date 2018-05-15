@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,10 +45,7 @@ import com.es.instructor.InstructorDto;
 public class InstructorHandler {
 
 	@Resource
-	private InstructorDao instructorDao;
-	
-	/*String file_path = "C:\\ExpressJava\\workspace\\EducationSystem\\WebContent\\inst_req\\img\\"; */
-	
+	private InstructorDao instructorDao;	
 	
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String home(HttpServletRequest request, Locale locale, Model model) throws Exception {
@@ -71,52 +69,33 @@ public class InstructorHandler {
 			}else {
 				List<InstructorDto> InstructorDto = instructorDao.selectInstructorNo(account_no);
 				String instructor_no = InstructorDto.get(0).getInstructor_no();
-				String inproval_state = String.valueOf(InstructorDto.get(0).getApproval_state());
+				String approval_state = String.valueOf(InstructorDto.get(0).getApproval_state());
+				String hire_date = InstructorDto.get(0).getHire_date();
+				String approval_date = InstructorDto.get(0).getApproval_date();
+				
 				//강사 승인 O
-				if(inproval_state.equals("3")) {
+				if(approval_state.equals("3")) {
 					model.addAttribute("account_no", account_no);
 					model.addAttribute("instructor_no", instructor_no);
-					model.addAttribute("inproval_state", inproval_state);
+					model.addAttribute("approval_state", approval_state);
+					model.addAttribute("hire_date", hire_date);
 					System.out.println("instructor_no : " + instructor_no + "강사권한 O");
-					System.out.println("inproval_state : " + inproval_state);
+					System.out.println("approval_state : " + approval_state);
 					EduList(instructor_no, model, page);
 				//강사 승인 X
 				}else {
 					model.addAttribute("instructor_no", instructor_no);
-					model.addAttribute("inproval_state", inproval_state);
+					model.addAttribute("approval_state", approval_state);
+					model.addAttribute("approval_date", approval_date);
 				}
 			}
 		//직원이 아닐 경우(외부강사일 경우)
 		}else {
-			model.addAttribute("inproval_state", "3");
+			model.addAttribute("approval_state", "3");
 			model.addAttribute("instructor_no", account_no);
 			EduList(account_no, model, page);
-			
-			/*for(int i = 0; i<InstructorDto.size(); i++) {
-				InstructorDto instructor= InstructorDto.get(i);
-				System.out.println(instructor.getEdu_no() + " / " + instructor.getEdu_field() + " / " + instructor.getEdu_name());
-			}*/
 		}
-		/*
-		List<InstructorDto> InstructorDto2 = instructorDao.selectEduList(account_no);
-		
-		for(int i = 0; i<InstructorDto2.size(); i++) {
-			InstructorDto instructor= InstructorDto2.get(i);
-			String target = instructor.getEdu_target();
-			JSONArray arr = new JSONArray(target);
-			
-			String b = null;
-			try {
-				b = new String(instructor.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("타겟 : " + b);
-			model.addAttribute("target", b);
-			
-		}
-	*/	return "inst_req/main";
+		return "inst_req/main";
 	}
 	
 	private void EduList(String account_no, Model model, String page) {
@@ -252,8 +231,8 @@ public class InstructorHandler {
 		String[] position_name = new String[length];
 		
 		JSONArray arr = new JSONArray();
-		JSONObject obj = new JSONObject();
 		for(int i=0; i<select1.length; i++) {
+			JSONObject obj = new JSONObject();
 			int idx1 = select1[i].indexOf("!");
 			int idx2 = select1[i].indexOf("@");
 			int idx3 = select1[i].indexOf("#");
@@ -319,8 +298,8 @@ public class InstructorHandler {
 	public String eduDatil(@RequestParam("edu_no") String edu_no, @RequestParam("instructor_no") String instructor_no, Model model) throws Exception{
 		System.out.println("edu_no : " + edu_no);
 		System.out.println("instructor_no : " + instructor_no);
-		//다른 강의로 상세페이지 이동
-		List<InstructorDto> edu_name = instructorDao.selectEduNameList(instructor_no);
+		
+		List<InstructorDto> edu_name = instructorDao.selectEduNameList(instructor_no);//다른 강의로 상세페이지 이동용 이름
 		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
 		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
 		
@@ -339,16 +318,20 @@ public class InstructorHandler {
 			String[] belong_name = new String[arr.length()];
 			String[] dept_name = new String[arr.length()];
 			String[] position_name = new String[arr.length()];
+			String[] edu_target = new String[arr.length()];
+			
 			for(int i1 = 0; i1 < arr.length(); i1++) {
 				JSONObject obj = arr.getJSONObject(i1);
 				belong_name[i1] = obj.getString("belong_name");
 				dept_name[i1] = obj.getString("dept_name");
 				position_name[i1] = obj.getString("position_name");
-				System.out.println(belong_name[i1] + " / " + dept_name[i1] + " / " + position_name[i1] );
+				edu_target[i1] = belong_name[i1] + " - " + dept_name[i1] + " - " + position_name[i1];
+				System.out.println("eduDetail : " + belong_name[i1] + " / " + dept_name[i1] + " / " + position_name[i1] );
 			}
-			model.addAttribute("belong_name", belong_name);
+			model.addAttribute("edu_target", edu_target);
+			/*model.addAttribute("belong_name", belong_name);
 			model.addAttribute("dept_name", dept_name);
-			model.addAttribute("position_name", position_name);
+			model.addAttribute("position_name", position_name);*/
 			
 		}
 		/*for(int i = 0; i<edu_detail.size(); i++) {
@@ -493,8 +476,8 @@ public class InstructorHandler {
 		String[] position_name = new String[length];
 		
 		JSONArray arr = new JSONArray();
-		JSONObject obj = new JSONObject();
 		for(int i=0; i<select1.length; i++) {
+			JSONObject obj = new JSONObject();
 			int idx1 = select1[i].indexOf("!");
 			int idx2 = select1[i].indexOf("@");
 			int idx3 = select1[i].indexOf("#");
@@ -567,5 +550,189 @@ public class InstructorHandler {
 			instructorDao.updateInstEval(instructorDto);
 		}
 		return "redirect:/instructor/main.do";
+	}
+	
+	@RequestMapping(value = "/eduReqDetail", method = RequestMethod.GET)
+	public String EduReqDetail(@RequestParam("edu_no") String edu_no, Model model) throws Exception {
+		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
+		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
+		InstructorDto instructorDto = new InstructorDto();
+		String[] belong_name = null;
+		String[] dept_name = null;
+		String[] position_name = null;
+		String[] edu_target = null;
+		for(int i = 0; i<edu_list.size(); i++) {
+			InstructorDto edu_list2 = edu_list.get(i);
+			String b = null;
+			try {
+				b = new String(edu_list2.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("교육대상 : " + b);
+			JSONArray arr = new JSONArray(b);
+			belong_name = new String[arr.length()];
+			dept_name = new String[arr.length()];
+			position_name = new String[arr.length()];
+			edu_target = new String[arr.length()];
+			for(int i1 = 0; i1 < arr.length(); i1++) {
+				JSONObject obj = arr.getJSONObject(i1);
+				belong_name[i1] = obj.getString("belong_name");
+				dept_name[i1] = obj.getString("dept_name");
+				position_name[i1] = obj.getString("position_name");
+				edu_target[i1] = belong_name[i1] + " - " + dept_name[i1] + " - " + position_name[i1];
+				/*System.out.println("eduReqDetail : " + belong_name[i1] + " / " + dept_name[i1] + " / " + position_name[i1] );*/
+				/*edu_list.get(i1).setEdu_target(belong_name[i1] +" : " + dept_name[i1] + " : " + position_name[i1]); */
+			}
+			/*for(int i2 = 0; i2<edu_list.size(); i2++) {
+				((List<InstructorDto>) instructorDto).get(i2).setEdu_target(belong_name[i2] +" : " + dept_name[i2] + " : " + position_name[i2]); 
+			}*/
+			
+			
+		}
+		for(int i = 0; i<belong_name.length; i++) {
+			System.out.println("eduReqDetail : " + belong_name[i] + " / " + dept_name[i] + " / " + position_name[i] );
+		}
+		/*
+		 * model.addAttribute("belong_name", belong_name);
+		 * model.addAttribute("dept_name", dept_name);
+		model.addAttribute("position_name", position_name);*/
+		
+		model.addAttribute("edu_target", edu_target);
+		
+		model.addAttribute("edu_list", edu_list);
+		model.addAttribute("edu_detail", edu_detail);
+		model.addAttribute("edu_no", edu_no);
+		
+		return "edu_reg/eduReqDetail";
+	}
+	@RequestMapping(value = "/eduReqModify", method = RequestMethod.GET)
+	public String eduReqModify(@RequestParam("edu_no") String edu_no, Model model) throws Exception{
+		model.addAttribute("edu_no", edu_no);
+		List<InstructorDto> edu_code = instructorDao.selectEduCode();
+		List<InstructorDto> belong_no = instructorDao.selectBelongNo();
+		List<InstructorDto> instructor = instructorDao.selectInstructor();
+		List<InstructorDto> position = instructorDao.selectPosition();
+		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
+		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
+		
+		for(int i = 0; i<edu_detail.size(); i++) {
+			InstructorDto edu_list2 = edu_detail.get(i);
+			edu_detail.get(0).setStart_date(edu_list2.getStart_date().substring(0, 10).replace("-", ".")); 
+			edu_detail.get(0).setEnd_date(edu_list2.getEnd_date().substring(0, 10).replace("-", ".")); 
+		}
+		for(int i = 0; i<edu_list.size(); i++) {
+			InstructorDto edu_list1 = edu_list.get(i);
+			edu_list.get(0).setClosing_date(edu_list1.getClosing_date().substring(0, 10).replace("-", ".")); 
+		}
+		
+		model.addAttribute("edu_code", edu_code);
+		model.addAttribute("belong_no", belong_no);
+		model.addAttribute("instructor", instructor);
+		model.addAttribute("position", position);
+		model.addAttribute("edu_list", edu_list);
+		model.addAttribute("edu_detail", edu_detail);
+		System.out.println("/eduReqModify GET");
+		return "edu_reg/eduReqModify";
+	}
+	
+	@RequestMapping(value = "/eduReqModify", method = RequestMethod.POST)
+	public String EduReqModify(HttpServletRequest request, HttpServletResponse response, Model model, @RequestParam("file_name") MultipartFile file) throws Exception{
+		System.out.println("/eduReqModify POST");
+		String file_ori_name = file.getOriginalFilename();
+		String file_path = null;
+		String file_save_name = null;
+		
+		if(file_ori_name.length() != 0) {
+			file_path = request.getServletContext().getRealPath("/save");
+			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+			File dir = new File(file_path);
+			if(!dir.isDirectory()) {
+				dir.mkdirs();
+			}
+			File f = new File(file_path+file.getOriginalFilename());
+			file.transferTo(f);			
+			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+		}
+		File f = new File(file_path+file.getOriginalFilename());
+	    file.transferTo(f);
+	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
+		String edu_way = request.getParameter("edu_way");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String edu_date = request.getParameter("edu_date");
+		String input_time = request.getParameter("input_time");
+		String closing_date = request.getParameter("closing_date");
+		String edu_location = request.getParameter("edu_location");
+		String budget = request.getParameter("budget");
+		String note = request.getParameter("note");
+		String applicants_limit = request.getParameter("applicants_limit");
+		/*String file_name = request.getParameter("file_name");*/
+		
+		System.out.println(edu_way + '/'+ startDate 
+				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ budget + '/'+ note + '/'+ applicants_limit );
+		String[] select1 = request.getParameterValues("select1");
+		int length = select1.length;
+		String[] belong_no1 = new String[length];
+		String[] belong_name = new String[length];
+		String[] dept_no = new String[length];
+		String[] dept_name = new String[length];
+		String[] position_no = new String[length];
+		String[] position_name = new String[length];
+		
+		JSONArray arr = new JSONArray();
+		for(int i=0; i<select1.length; i++) {
+			JSONObject obj = new JSONObject();
+			int idx1 = select1[i].indexOf("!");
+			int idx2 = select1[i].indexOf("@");
+			int idx3 = select1[i].indexOf("#");
+			int idx4 = select1[i].indexOf("$");
+			int idx5 = select1[i].indexOf("%");
+			belong_no1[i] = select1[i].substring(0, idx1);
+			belong_name[i] = select1[i].substring(idx1+1, idx2);
+			dept_no[i] = select1[i].substring(idx2+1, idx3);
+			dept_name[i] = select1[i].substring(idx3+1, idx4);
+			position_no[i] = select1[i].substring(idx4+1, idx5);
+			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
+			obj.put("belong_no", belong_no1[i]);
+			obj.put("belong_name", belong_name[i]);
+			obj.put("dept_no", dept_no[i]);
+			obj.put("dept_name", dept_name[i]);
+			obj.put("position_no", position_no[i]);
+			obj.put("position_name", position_name[i]);
+			arr.put(obj);
+			/*System.out.println("obj target "+i +" : " +obj.toString());
+			System.out.println("arr target "+i +" : " +arr.toString());*/
+		}
+		System.out.println("target : " + arr.toString());
+		InstructorDto instructorDto = new InstructorDto();
+		instructorDto.setEdu_no(Integer.parseInt(request.getParameter("edu_no")));
+		instructorDto.setEdu_way(edu_way);
+		instructorDto.setEdu_schedule(startDate+"~"+endDate);
+		instructorDto.setStart_date(startDate);
+		instructorDto.setEnd_date(endDate);
+		instructorDto.setEdu_date(edu_date);
+		instructorDto.setInput_time(Integer.parseInt(input_time));
+		instructorDto.setClosing_date(closing_date);
+		instructorDto.setEdu_location(edu_location);
+		instructorDto.setEdu_target(arr.toString());
+		instructorDto.setBudget(budget);
+		instructorDto.setNote(note);
+		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
+		instructorDto.setFile_ori_name(file_ori_name);
+		instructorDto.setFile_save_name(file_save_name);
+		instructorDto.setFile_path(file_path);;
+		
+		int result = instructorDao.modifyEdu(instructorDto);
+		int result2 = instructorDao.modifyEduDetail(instructorDto);
+		
+		return "redirect:/instructor/eduReqDetail.do?edu_no="+request.getParameter("edu_no");
+		
+	}
+	@RequestMapping("/eduReqDelete")
+	public String EduReqDelete(@RequestParam("edu_no") String edu_no, Model model)throws Exception{
+		instructorDao.deleteEduReq(edu_no);
+		return "redirect:/instructor/eduReqDetail.do?edu_no="+edu_no;
 	}
 }

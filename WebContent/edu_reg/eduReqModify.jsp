@@ -12,6 +12,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
 <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 
+<%-- <script src="${path}/inst_req/js/jquery-3.3.1.min.js"></script> --%>
 <style>
 .eduReqBtn{
 	text-align: center;
@@ -112,6 +113,7 @@
 		var department_no = department.options[department.selectedIndex].value;
 		var position_no  = position.options[position.selectedIndex].value;
 		form.elements['select1'].options.add(new Option(belong.options[belong.selectedIndex].text + '-' + department.options[department.selectedIndex].text + '-' + position.options[position.selectedIndex].text, belong_no + '!' + belong_name + '@' + department_no + '#' + department_name + '$' + position_no + '%' + position_name));
+		/* alert(belong.options[belong.selectedIndex].value + '-' + department.options[department.selectedIndex].value + '-' + position.options[position.selectedIndex].value); */
 		$('#select1 option').prop('selected', true);
 	}
 	function removeTarget(){
@@ -168,7 +170,7 @@
 	<h3>강의계획서 수정 페이지</h3>
 	<div style="width: 90%; margin: 20px auto">
 	<br/>
-	<form name= "eduModifyForm" method="post" action = "eduModify.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
+	<form name= "eduModifyForm" method="post" action = "eduReqModify.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
 		<input type="hidden" name="edu_no" value="${edu_no }">
 		<input type="hidden" name="instructor_no" value="${instructor_no }">
 		<table class="w3-table w3-bordered">
@@ -311,7 +313,7 @@
 		<br/>
 		<br/>
 			<div align="center" class="goList">
-				<input type="button" class="w3-button w3-white w3-border" value="이전" onclick="location='eduDetail.do?edu_no=${edu_no }&instructor_no=${instructor_no }'">
+				<input type="button" class="w3-button w3-white w3-border" value="이전" onclick="location='eduReqDetail.do?edu_no=${edu_no }'">
 			</div>
 	</form>
 	</div>
