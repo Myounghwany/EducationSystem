@@ -1,11 +1,57 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <title>관리자 페이지 - Education System</title>
 <jsp:include page="../common/header.jsp" />
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$('document').ready(function() {
+		
+		var pageStart = ${pageStart};
+		var pageEnd = ${pageEnd};
+		var next = ${next};
+		
+		if($('#srchType').val() == 'nothing' && $('#srchWord').val() == '') {
+			if(pageStart > 5) {
+				$('#pagePrev').attr('href', 'empList.do?pageNum='+$('#pagePrev').attr('page-value'));
+			}
+			
+			var length = 0;
+			for(var i=pageStart; i<=pageEnd; i++) {
+				var id = '#pageNumber' + i;
+				$(id).attr('href', 'empList.do?pageNum='+$(id).attr('page-value')); 
+			}
+			
+			if(next == 1) {
+				$('#pageNext').attr('href', 'empList.do?pageNum='+$('#pageNext').attr('page-value'));
+			}
+		} else {
+			var srchType = $('#srchType').val();
+			var srchCat = $('#srchCat').val();
+			var srchWord = $('#srchWord').val();
+			
+			if(pageStart > 5) {
+				$('#pagePrev').attr('href', 'empList.do?srchType=' + srchType +
+						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
+						'&pageNum=' + $('#pagePrev').attr('page-value'));
+			}
+			
+			var length = 0;
+			for(var i=pageStart; i<=pageEnd; i++) {
+				var id = '#pageNumber' + i;
+				$(id).attr('href', 'empList.do?srchType=' + srchType +
+						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
+						'&pageNum='+$(id).attr('page-value'));
+			}
+			
+			if(next == 1) {
+				$('#pageNext').attr('href', 'empList.do?srchType=' + srchType +
+						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
+						'&pageNum=' + $('#pagePrev').attr('page-value'));		
+			}
+		}
+		
 		$('#title tr th').click(function() {
 			var title_value = $(this).attr('title_value');
 			switch(title_value) {
@@ -39,6 +85,15 @@
 			location.href='instDetail.do?inst_no='+instructor_no;
 		});
 	});
+	
+	function checkSubmit() {
+		if(srchType.value == 'nothing' && srchWord.value == '') {
+			alert('검색조건을 갖춰주세요.\n부서, 구분을 선택하거나 검색어 입력중 하나라도 해야 합니다.');
+			return false;
+		} else {
+			return true;			
+		}
+	}
 </script>
 <style>
 	table {
@@ -86,49 +141,92 @@
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${instList}" var="instList">
-								<tr class="inst">
-									<td class="instNum">${instList.instructor_no}</td>
-									<td>
-										<c:choose>
-											<c:when test="${null == instList.emp_no}">
-												외부 강사
-											</c:when>
-											<c:otherwise>
-												내부 강사
-											</c:otherwise>
-										</c:choose>
-									</td>
-									<td>${instList.name}</td>
-								</tr>
-							</c:forEach>
+							<c:choose>
+								<c:when test="${fn:length(instList) > 0}">
+									<c:forEach items="${instList}" var="instList">
+										<tr class="inst">
+											<td class="instNum">${instList.instructor_no}</td>
+											<td>
+												<c:choose>
+													<c:when test="${null == instList.emp_no}">
+														외부 강사
+													</c:when>
+													<c:otherwise>
+														내부 강사
+													</c:otherwise>
+												</c:choose>
+											</td>
+											<td>${instList.name}</td>
+										</tr>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td colspan="4" style="text-align: center;"><b>해당하는 사원이 없습니다.</b></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
 							<tr>
-								<td colspan="4" style="text-align: center">
-									<c:if test="${pageStart > 5}">
-										<a href="instList.do?pageNum=${pageStart-1}">[이전]</a>
-										&nbsp;|
-									</c:if>
-									<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
-										&nbsp;<a href="instList.do?pageNum=${page}">${page}</a>
-										<c:if test="${page != pageEnd}">
+								<td colspan="4" style="text-align: center;">
+									<c:if test="${fn:length(instList) > 0}">
+										<c:if test="${pageStart > 5}">
+											<a id="pagePrev" page-value="${pageStart-1}" href="empList.do?pageNum=${pageStart-1}">[이전]</a>
 											&nbsp;|
 										</c:if>
-									</c:forEach>
-									<c:if test="${next == 1}">
-										&nbsp;|
-										<a href="instList.do?pageNum=${pageEnd+1}">[다음]</a>
+										<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
+											&nbsp;<a id="pageNumber${page}" page-value="${page}">${page}</a>
+											<c:if test="${page != pageEnd}">
+												&nbsp;|
+											</c:if>
+										</c:forEach>
+										<c:if test="${next == 1}">
+											&nbsp;|&nbsp;
+											<a id="pageNext" page-value="${pageEnd+1}" href="empList.do?pageNum=${pageEnd+1}">[다음]</a>
+										</c:if>
 									</c:if>
 									<br />
-									<select name="srchType">
-										<option value="internal">내부강사</option>
-										<option value="external">외부강사</option>
-									</select>
-									<select name="srchCat" id="srchCat">
-										<option value="number">강사번호</option>
-										<option value="name">이름</option>
-									</select>
-									<input type="text" id="srchWord" style="width: 110px;"/>
-									<button id="srch">검색</button>
+									<form action="instList.do" method="get" onsubmit="return checkSubmit();">
+										<select name="srchType" id="srchType">
+											<c:if test="${'nothing' == srchType}">
+												<option value="nothing" selected="selected">---구분---</option>
+											</c:if>
+											<c:if test="${'nothing' != srchType}">
+												<option value="nothing">---구분---</option>
+											</c:if>
+											<c:choose>
+												<c:when test="${'internal' == srchType}">
+													<option value="internal" selected="selected">내부강사</option>
+													<option value="external">외부강사</option>
+												</c:when>
+												<c:when test="${'external' == srchType}">
+													<option value="internal">내부강사</option>
+													<option value="external" selected="selected">외부강사</option>
+												</c:when>
+												<c:otherwise>
+													<option value="internal">내부강사</option>
+													<option value="external">외부강사</option>													
+												</c:otherwise>
+											</c:choose>
+										</select>
+										<select name="srchCat" id="srchCat">
+											<c:choose>
+												<c:when test="${'number' == srchCat}">
+													<option value="number" selected="selected">강사번호</option>
+													<option value="name">이름</option>
+												</c:when>
+												<c:when test="${'name' == srchCat}">
+													<option value="number">강사번호</option>
+													<option value="name" selected="selected">이름</option>
+												</c:when>
+												<c:otherwise>
+													<option value="number">강사번호</option>
+													<option value="name">이름</option>
+												</c:otherwise>
+											</c:choose>
+										</select>
+										<input type="text" name="srchWord" id="srchWord" value="${srchWord}" style="width: 110px;"/>
+										<input type="submit" id="srch" value="검색"/>
+									</form>
 								</td>
 							</tr>
 						</tbody>

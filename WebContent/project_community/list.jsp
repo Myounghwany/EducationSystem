@@ -7,6 +7,10 @@
 <!-- table css -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- 나현 로그인모달 & 드롭다운-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <title>Project Community List</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
@@ -15,7 +19,7 @@
 		$('#resultTransfer').css('display', "none");
 
 		$('#writeBtn').click(function() {
-			location = "ProjectWrite.do";
+			location = "ProjectCommunity/write.do";
 		});
 
 	});
@@ -38,11 +42,11 @@
 
 	<div align="center">
 		<c:if test="${startPage != 1}">
-			<a href='ProjectList.do?page=${startPage-1}'>[ 이전 ]</a>
+			<a href='ProjectCommunity.do?page=${startPage-1}'>[ 이전 ]</a>
 		</c:if>
 		<div style="width: 80%; margin: 20px auto">
 			<!-- 검색 기능 -->
-			<form action="ProjectList.do" name="searchform" onsubmit="return searchCheck()">
+			<form action="ProjectCommunity.do" name="searchform" onsubmit="return searchCheck()">
 				<select name="opt" class="selectDefault">
 					<option value="0">제목</option>
 					<option value="1">내용</option>
@@ -73,11 +77,11 @@
 					<c:otherwise>
 						<c:forEach items="${requestScope.list}" var="list" varStatus="state">
 							<tr>
-								<td>${list.project_no}</td>
+								<td>${listCount - (spage)*10 - state.count + 11}</td>
 								<td>${list.classification}</td>
-								<td><a href="ProjectDetail.do?project_no=${list.project_no}" 
+								<td><a href="ProjectCommunity/detail.do?project_no=${list.project_no}" 
 									 	class="title" >${list.title}</a></td>
-								<td>${list.writer}</td>
+								<td>${list.writer_name}(${list.writer})</td>
 								<td>${list.write_time}</td>
 								<td>${list.hit}</td>
 							</tr>
@@ -90,7 +94,7 @@
 		<!-- paging -->
 		<div align="center" class="paging">
 			<c:if test="${startPage != 1}">
-				<a href='ProjectList.do?page=${startPage-1}' class="page_btn">이전</a>
+				<a href='ProjectCommunity.do?page=${startPage-1}' class="page_btn">이전</a>
 			</c:if>
 			
 			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
@@ -98,19 +102,19 @@
 			              <span class="page_btn">${pageNum}</span>
 			          </c:if>
 				<c:if test="${pageNum != spage}">
-					<a href='ProjectList.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+					<a href='ProjectCommunity.do?page=${pageNum}' class="page_btn">${pageNum}</a>
 				</c:if>
 			</c:forEach>
 			
 			<c:if test="${endPage != maxPage }">
-				<a href='ProjectList.do?page=${endPage+1}' class="page_btn">다음</a>
+				<a href='ProjectCommunity.do?page=${endPage+1}' class="page_btn">다음</a>
 			</c:if>
 		</div>
 		
 		<!-- 검색결과 시 없을 때 -->
 		<div align="center">
 			<c:if test="${condition != null}">
-				<input type="button" class="w3-button w3-white w3-border" value="되돌아가기" onclick="location='ProjectList.do'">
+				<input type="button" class="w3-button w3-white w3-border" value="되돌아가기" onclick="location='ProjectCommunity.do'">
 			</c:if>
 		</div>
 	</div>

@@ -6,21 +6,24 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <jsp:include page="../common/header.jsp" />
 <title>edulist_detail Page</title>
-<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<!-- table css -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel= "stylesheet" type="text/css" href="${path}/css/nahyun.css">
 
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script type="text/javascript">
 function action(val){
 	location.href='${path}/eduhistory/detail.do?edu_no='+val;
 }
 </script>
-<link rel= "stylesheet" type="text/css" href="${path}/css/nahyun.css">
 
 </head>
 <body>
 	<h2>수강목록 해당 교육명 상세페이지</h2>
 	<div align="center" id="wrapper">
 		<c:if test="${!empty eduhistory_list}" >
-			<select id="sel" name="sel"  onchange="action(this.value)" multiple="multiple">
+			<select id="sel" name="sel"  onchange="action(this.value)">
 				<c:forEach items="${eduhistory_list}" var="HistoryList" varStatus="state">
 					<option value="${HistoryList.edu_no}" style="text-align: center;">
 						${HistoryList.edu_name}  ${HistoryList.edu_schedule}

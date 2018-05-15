@@ -3296,12 +3296,12 @@ tbody.collapse.in {
 }
 
 .dropdown-menu {
-	position: absolute;
+	position: relative;
 	top: 100%;
 	left: 0;
 	z-index: 1000;
 	display: none;
-	float: left;
+	float: right;
 	min-width: 160px;
 	padding: 5px 0;
 	margin: 2px 0 0;
@@ -3320,7 +3320,7 @@ tbody.collapse.in {
 
 .dropdown-menu.pull-right {
 	right: 0;
-	left: auto
+	left: auto;
 }
 
 .dropdown-menu .divider {

@@ -15,4 +15,21 @@
 	<select id="EmployeesCount" resultType="int">
 		select count(*) from employees
 	</select>
+	<select id="EmployeesCategoryCount" parameterType="hashmap" resultType="int">
+		select count(*) from employees where
+		<if test='dept != "nothing"'>
+			dept_no = #{dept} and
+		</if>
+		<if test='pos != "nothing"'>
+			position_no = #{pos} and
+		</if>
+		<choose>
+			<when test='cat == "number"'>
+				emp_no like concat('%', #{word}, '%')
+			</when>
+			<when test='cat == "name"'>
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+	</select>
 </mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+	<select id="EmpLoginCheck" parameterType="hashmap" resultType="com.es.user.UserDto">
+		select emp_no no, name, passwd
+		from employees
+		where emp_no=#{emp_no} and passwd=#{passwd}
+	</select>
+	<select id="CheckInnerInst" parameterType="String" resultType="com.es.user.UserDto">
+		<!-- 내부강사 확인여부 -->
+		select emp_no from instructor where instructor_no=#{emp_no}
+	</select>		
+	<select id="InstLoginCheck" parameterType="hashmap" resultType="com.es.user.UserDto">
+		<!-- 외부강사 로그인 -->
+		select instructor_no no, name, passwd
+		from external_instructor
+		where instructor_no=#{emp_no} and passwd=#{passwd}
+	</select>
+	<select id="findById" parameterType="com.es.user.UserDto" resultType="com.es.user.UserDto">
+	 	<choose>
+	 		<when test="emp_no.substring(0,1) == 'I'.toString()">
+	 			select instructor_no no, passwd, name
+	 			from external_instructor
+	 			where instructor_no=#{emp_no} and passwd=#{passwd}
+	 		</when>
+	 		<when test="emp_no.substring(0,1) == 'E'.toString()">
+	 			select emp_no no, passwd, name
+	 			from employees
+	 			where emp_no=#{emp_no} and passwd=#{passwd}
+	 		</when>
+	 	</choose>
+	</select>
+	<update id="changePasswd" parameterType="com.es.user.UserDto">
+		<choose>
+	 		<when test="emp_no.substring(0,1) == 'I'.toString()">
+	 			update external_instructor
+				set passwd=#{newPasswd}
+				where instructor_no=#{emp_no} and passwd=#{passwd}
+	 		</when>
+	 		<when test="emp_no.substring(0,1) == 'E'.toString()">
+	 			update employees
+				set passwd=#{newPasswd}
+				where emp_no=#{emp_no} and passwd=#{passwd}
+	 		</when>
+	 	</choose>
+	</update>
+	<select id="checkPassword" parameterType="com.es.user.UserDto" resultType="com.es.user.UserDto">
+		<choose>
+	 		<when test="emp_no.substring(0,1) == 'I'.toString()">
+	 			select PASSWD
+				from external_instructor
+				where instructor_no=#{emp_no} and PASSWD=#{passwd}
+	 		</when>
+	 		<when test="emp_no.substring(0,1) == 'E'.toString()">
+	 			select PASSWD
+				from employees
+				where emp_no=#{emp_no} and PASSWD=#{passwd}
+	 		</when>
+	 	</choose>
+ 	</select>
+</mapper>

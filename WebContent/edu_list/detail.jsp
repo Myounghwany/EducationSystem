@@ -23,6 +23,7 @@ $(document).ready(function() {
 	$('#edu_target').html(target);
 
 	
+
 	$('#applicationBtn').click(function(){
 		var edu_no = $('#edu_no').val();
 		
@@ -35,14 +36,11 @@ $(document).ready(function() {
 			},
 			dataType:"text",  
 			success : function(data){
-
 				if(data != 0){
 					alert("신청이 정상적으로 되었습니다.");
 				}else{
 					alert("신청 불가");
 				}
-
-				location.href="${path}/EducationList.do";
 				
 			},
 			error : function(request,status,error){
@@ -50,12 +48,41 @@ $(document).ready(function() {
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});
-		
-		
+				location.href="${path}/EducationList/detail.do?edu_no="+edu_no;
 
 	});
+
+	$('#deleteBtn').click(function(){
+		var edu_no = $('#edu_no').val();
+		
+		if(confirm("정말 취소 하시겠습니까?")){
+
+			$.ajax({
+				contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+				url : '${path}/EducationList/applicationDelete.do',
+				type : 'get',
+				data : {
+					edu_no : edu_no
+				},
+				dataType:"text",  
+				success : function(data){
+					alert('취소되었습니다.');
+				},
+				error : function(request,status,error){
+					alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+					console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+				}
+			});
+			
+			location.href="${path}/EducationList/detail.do?edu_no="+edu_no;
+		}
+	
+	
+	});
+	
 	
 });
+	
 </script>
 <style type="text/css">
 	table {
@@ -99,12 +126,16 @@ $(document).ready(function() {
 		</c:forEach>
 		
 		
-		<c:if test="${check eq 0 }">
+		<c:if test="${check eq 0 and applicants < detail.applicants_limit }">
 			<button id="applicationBtn">교육신청</button>
 		</c:if>
 		<c:if test="${check ne 0 }">
-			<span>신청완료</span>
+			<span>신청완료<button id="deleteBtn">신청취소</button></span>
 		</c:if>
+		<c:if test="${applicants >= detail.applicants_limit }">
+			<span style="color:red;"><br>인원 마감</span>
+		</c:if>
+		
 		
 		<table width="70%" border="1">
 			<tr>
@@ -156,8 +187,9 @@ $(document).ready(function() {
 				<td></td>
 			</tr>
 		</table>
-		
 		<input type="hidden" value="${detail.edu_no}" id="edu_no">
+		
+		
 	</div>
 </body>
 </html>

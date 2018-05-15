@@ -3,6 +3,17 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Manager">
+	<resultMap id="Employees" type="java.util.Map">
+		<result column="emp_no" property="emp_no" javaType="java.lang.String"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="dept" property="dept" javaType="java.lang.String"/>
+		<result column="position" property="position" javaType="java.lang.String"/>
+		<result column="address" property="address" javaType="java.lang.String"/>
+		<result column="phone" property="phone" javaType="java.lang.String"/>
+		<result column="email" property="email" javaType="java.lang.String"/>
+	</resultMap>
+
+
 	<select id="EmpMainList" parameterType="int" resultType="com.es.manager.EmpListDto">
 		select e.emp_no emp_no, e.name name, d.dept_name dept_name, p.position_name position_name
 		from employees e, department d, position p
@@ -15,5 +26,72 @@
 		from Instructor
 		order by instructor_no asc
 		limit #{start}, 10
+	</select>
+	<select id="EmpSearchList" parameterType="hashmap" resultType="com.es.manager.EmpListDto">
+		select e.emp_no emp_no, e.name name, d.dept_name dept_name, p.position_name position_name
+		from employees e, department d, position p
+		where e.dept_no = d.dept_no and e.position_no = p.position_no and
+		<if test='dept != "nothing"'>
+			e.dept_no = #{dept} and
+		</if>
+		<if test='pos != "nothing"'>
+			e.position_no = #{pos} and
+		</if>
+		<choose>
+			<when test='cat == "number"'>
+				e.emp_no like concat('%', #{word}, '%')
+			</when>
+			<when test='cat == "name"'>
+				e.name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+		order by e.emp_no asc
+		limit #{start}, 10
+	</select>
+	<select id="InstSearchList" parameterType="hashmap" resultType="com.es.manager.InstListDto">
+		select emp_no, instructor_no, name from instructor where
+		<choose>
+			<when test="type == 'internal'">
+				emp_no is not null and
+			</when>
+			<when test="type == 'external'">
+				emp_no is null and
+			</when>
+		</choose>
+		<choose>
+			<when test="cat == 'number'">
+				instructor_no like concat('%', #{word}, '%')
+			</when>
+			<when test="cat == 'name'">
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+		order by instructor_no asc
+		limit #{start}, 10
+	</select>
+	
+	<select id="EmpDetail" parameterType="String" resultMap="Employees">
+		SELECT 	e.emp_no emp_no, e.name name, d.dept_name dept,
+				p.position_name position, e.address address,
+				e.phone phone, e.email email
+		FROM 	employees e, department d, position p
+		WHERE 	e.dept_no = d.dept_no
+		AND		e.position_no = p.position_no
+		AND 	e.emp_no = #{emp_no}
+	</select>
+	<select id="EduList" parameterType="hashmap" resultType="com.es.manager.EduListDto">
+		select b.name belong_name, l.edu_no, l.edu_name, c.edu_name edu_code_name, l.edu_schedule, l.manager, i.name instructor_name
+		from education_list l, belong b, education_code c, instructor i
+		where l.belong_no = b.belong_no and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no
+		limit #{startRow}, #{endRow}
+	</select>
+	<select id="EduListCount" parameterType="int" resultType="int">
+		select count(*)
+		from education_list
+	</select>
+	<select id="EduListDetail" parameterType="int" resultType="com.es.manager.EduListDto">
+		select *, i.name as instructor_name
+		from education_list l, instructor i, education_detail detail
+		where l.edu_no=#{edu_no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no;
 	</select>
 </mapper>
