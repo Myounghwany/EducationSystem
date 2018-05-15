@@ -14,10 +14,10 @@
 	<c:if test="${result == 0}">
 	글 수정에 실패했습니다 <br>
 	잠시 후 다시 시도하세요 <br>
-	<meta http-equiv="refresh" content="2; url=main.do"/>
+	<meta http-equiv="refresh" content="2; url=notice.do"/>
 	</c:if>
 	<c:if test="${result == 1}">
-		<c:redirect url="main.do"/>
+		<c:redirect url="notice.do"/>
 	</c:if>
 
 </body>

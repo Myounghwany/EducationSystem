@@ -12,7 +12,7 @@
 
 
 <c:if test="${result == 1}">
-   <c:redirect url="main.do" />
+   <c:redirect url="notice.do" />
 </c:if>
 
 

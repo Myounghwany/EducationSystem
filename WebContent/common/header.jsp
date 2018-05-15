@@ -14,10 +14,10 @@
 <body style="width: 70%; margin: 0 auto;">
 	<div style="text-align: right">
 		<c:if test="${loginUser == null}">
-			<a href="#">로그인</a>
+			<a href="../member/loginForm.do">로그인</a>
 		</c:if>
 		<c:if test="${loginUser != null}">
-			<a href="#">로그아웃</a>
+			<a href="../member/loginForm.do">로그아웃</a>
 		</c:if>
 	</div>
 	<div class="navbar navbar-default">
@@ -31,7 +31,7 @@
 		</div>
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="${path}/#">공지사항</a></li>
+				<li><a href="${path}/notice.do">공지사항</a></li>
 				<li><a href="${path}/EducationList.do">교육목록/신청</a></li>
 				<li><a href="${path}/PetitionList.do">청원</a></li>
 				<li><a href="${path}/eduhistory.do">수강목록</a></li>

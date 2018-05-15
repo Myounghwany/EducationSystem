@@ -2,6 +2,37 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Notice">
+<mapper namespace="notice">
+	<select id="selectAll" resultType="com.es.notice.NoticeDataBean">
+		select * from notice ORDER BY notice_no DESC
+	</select>
+	
+	<insert id="insertNotice" parameterType="com.es.notice.NoticeDataBean">
+		insert into notice(title, content, writer, file_path, file_save_name, file_ori_name) 
+		values(#{title}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name})
+	</insert>
+	
+	<select id="check" resultType="int" parameterType="String">
+		select count(*) from notice where no=#{notice_no}
+	</select>
+	
+	<select id="selectOne" resultType="com.es.notice.NoticeDataBean">
+		select * from notice where
+		notice_no=#{notice_no}
+	</select>
 
+	<update id="updateNotice" parameterType="com.es.notice.NoticeDataBean">
+		update notice set
+		title=#{title}, content=#{content}, password=#{password} where
+		notice_no=#{notice_no}
+	</update>
+
+	<delete id="deleteNotice" parameterType="com.es.notice.NoticeDataBean">
+		delete from notice where
+		notice_no=#{notice_no} and password=#{password}
+	</delete>
+
+	<select id="search" resultType="com.es.notice.NoticeDataBean" parameterType="com.es.notice.NoticeDataBean">
+		select * from notice where ${searchName} like '%${searchValue}%' order by no DESC
+	</select>
 </mapper>
