@@ -58,7 +58,11 @@ public class EducationHandler {
 		HttpSession httpSession = request.getSession();
 		String emp_no =  (String) httpSession.getAttribute("no");
 		
+		if(emp_no != null) {
+			
+		
 		List<EduHistoryDto> edu_history = eduhistoryDao.eduHistoryList(emp_no);
+		System.out.println(" edu_history : "+edu_history);
 		request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
 		request.setAttribute("historySize", edu_history.size()); // 수강한 교육을 찾기위해
 		
@@ -135,7 +139,12 @@ public class EducationHandler {
 		
 		request.setAttribute("targetList", eduTargetList);
 		request.setAttribute("list", edu_list);
+		
+		}
+		
 		return new ModelAndView("edu_list/list");
+		
+		
 	}
 
 	/*주현- 교육목록 디테일*/

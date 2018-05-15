@@ -93,15 +93,22 @@ public class ProjectCommunityHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
+	
+		String emp_no =  (String) httpSession.getAttribute("no");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		
 		map.put("emp_no", emp_no);
 		map.put("project_no", project_no);
+
+		/*좋아요 눌렀는지 검사하기*/
+		int likeCheck = projectDao.projectLikeCheck(map);
 		
-		projectDao.projectLike(map);
+		if(likeCheck == 1) { //좋아요 눌렀으면 - 삭제
+			projectDao.projectLikeDelete(map);
+		}else { // 좋아요 안눌렀으면 
+			projectDao.projectLike(map);
+		}
 		
 	}
 	
@@ -112,8 +119,7 @@ public class ProjectCommunityHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		System.out.println(project_no);
@@ -145,9 +151,7 @@ public class ProjectCommunityHandler {
 		System.out.println("Controller ProjectWriteForm POST");
 		/*세션*/
 		HttpSession httpSession = req.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-	    httpSession.setAttribute("name", "유창연");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		String writer_name =  (String) httpSession.getAttribute("name");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
@@ -263,16 +267,18 @@ public class ProjectCommunityHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		map.put("emp_no",emp_no);
 		
 		
-		/*좋아요 눌렀는지 검사하기*/
+		/* 좋아요 눌렀는지 검사하기*/
 		int likeCheck = projectDao.projectLikeCheck(map);
 		
+		/* 좋아요 전체 갯수 */
+		int projectLikeCount = projectDao.projectLikeCount(map);
+		
 		request.setAttribute("likeCheck", likeCheck);
+		request.setAttribute("projectLikeCount", projectLikeCount);
 		request.setAttribute("commentListCount", commentListCount);
 		request.setAttribute("result", result);
 		request.setAttribute("hit", hit);
@@ -337,8 +343,7 @@ public class ProjectCommunityHandler {
 		/*세션등록*/
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		ProjectCommunityDto projectDto = new ProjectCommunityDto();
 		
@@ -453,11 +458,8 @@ public class ProjectCommunityHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-		httpSession.setAttribute("name", "juhyun");
 		
-		
-		String writer =  (String) httpSession.getAttribute("emp_no");
+		String writer =  (String) httpSession.getAttribute("no");
 		String writer_name =  (String) httpSession.getAttribute("name");
 		String content = request.getParameter("content");
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
@@ -514,8 +516,6 @@ public class ProjectCommunityHandler {
 		System.out.println("Controller CommentList");
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-		httpSession.setAttribute("name", "juhyun");
 		
 		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));

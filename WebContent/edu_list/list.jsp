@@ -256,6 +256,10 @@ function deleteBtn(no){
 									</c:if>
 								</c:if>
 							</c:forEach>
+
+							<c:if test="${empty history }">
+								<td class="apptd" id="apptd"><input type="button" value="교육신청" onclick="listBtn(${edulist.edu_no})"></td>
+							</c:if>
  
 					</tr>
 				</c:forEach>

@@ -77,8 +77,19 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 	
 	@Override
 	public int projectLikeCheck(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().selectOne("ProjectCommunity.projectLikeCheck",map);
+	}
+	
+	@Override
+	public int projectLikeDelete(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().delete("ProjectCommunity.projectLikeDelete",map);
+	}
+	
+	@Override
+	public int projectLikeCount(HashMap<String, Object> map) {
 		return SqlMapClient.getSession().selectOne("ProjectCommunity.projectLikeCount",map);
 	}
+	
 	
 	
 	/*comment*/
@@ -109,7 +120,6 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 	
 	@Override
 	public int commentListCount(int project_no) {
-		System.out.println("DBBean commentListCount");
 		return SqlMapClient.getSession().selectOne("ProjectCommunity.commentListCount",project_no);
 	}
 }

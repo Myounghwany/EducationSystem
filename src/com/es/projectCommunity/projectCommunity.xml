@@ -55,8 +55,14 @@
   	<insert id="projectLike" parameterType="hashmap">
   		insert into project_community_like(project_no, emp_no) values(#{project_no},#{emp_no})
   	</insert>
+  	<select id="projectLikeCheck" parameterType="hashmap" resultType="int">
+  		select count(distinct emp_no) from project_community_like where emp_no=#{emp_no} and project_no=#{project_no}
+  	</select>
+  	<delete id="projectLikeDelete" parameterType="hashmap">
+  		delete from project_community_like where emp_no=#{emp_no} and project_no=#{project_no}
+  	</delete>
   	<select id="projectLikeCount" parameterType="hashmap" resultType="int">
-  		select count(*) from project_community_like where emp_no=#{emp_no} and project_no=#{project_no}
+  		select count(distinct emp_no) from project_community_like where project_no=#{project_no}
   	</select>
   	
   	<!-- comment -->

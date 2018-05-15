@@ -11,33 +11,33 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <title>Project Community Detail</title>
 <style>
-.hover{ color:#FF3333; font-size :20px;}
+.hover{ color:#FF3333;}
 </style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 $(document).ready(function(){
 
 	var project_no=${result.project_no};
-	var emp_no = '<c:out value="${sessionScope.emp_no}"/>';
+	var emp_no = '<c:out value="${sessionScope.no}"/>';
 	var likeCheck = ${likeCheck};
 	
 	console.log('likeCheck : '+likeCheck);
 	console.log('emp_no : '+emp_no);
 	
 	if(likeCheck == 1){
-		$("#fa-heart").css('','');
+		$("#fa-heart").attr("title","추천취소");
+		$("#fa-heart").addClass('hover');
 		
 		$("#fa-heart").mouseenter(function(){
-			
-			$(this).addClass('hover');		 
-		 			
+			$(this).removeClass('hover');		 
 		}).mouseleave(function(){
-					 $(this).removeClass('hover');	
+					 $(this).addClass('hover');	
 				 }
 		 );
 		
 	}else{
 		
+		$("#fa-heart").attr("title","추천합니다");
 		$("#fa-heart").mouseenter(function(){
 			 $(this).addClass('hover');		 
 		 			
@@ -45,7 +45,6 @@ $(document).ready(function(){
 					 $(this).removeClass('hover');	
 				 }
 		 );
-
 	}
 	
 
@@ -60,6 +59,7 @@ $(document).ready(function(){
 			dataType:"text",  
 			success : function(data){
 					console.log('data : '+data);
+					location.href="${path}/ProjectCommunity/detail.do?project_no="+project_no;
 			},
 			error : function(request,status,error){
 				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
@@ -282,9 +282,10 @@ $(document).ready(function(){
 <h1>Project Community Detail</h1>
 <div style="width: 70%; margin: 20px auto">
 
-
+	
 	<span style="color: #FF5E00;"> <b>분류 : 	${result.classification}</b></span> <br>
-	<c:out value="${sessionScope.emp_no}"/>
+	<c:out value="${sessionScope.no}"/>
+	<span>${result.writer}</span>
 	<table class="w3-table w3-bordered">
 		<tr>
 			<th colspan="4" style="background-color: #EAEAEA;"> Project Coummunity 상세보기 </th>
@@ -315,17 +316,16 @@ $(document).ready(function(){
 				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
-			<c:if test="${result.writer eq sessionScope.emp_no}">
-					<td colspan="4">
-					추천 :   <i id="fa-heart" class="fas fa-heart" title="추천합니다."></i> 
+				<td colspan="4"> 추천 : ${projectLikeCount}   <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i> 
+			<c:if test="${result.writer eq sessionScope.no}">
 					
 					<div align="right">
 						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/ProjectCommunity/modify.do?project_no=${result.project_no}'">
 						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
 						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/ProjectCommunity/delete.do?project_no=${result.project_no}'}">
 					</div>
-				</td>
 			</c:if>
+				</td>
 		</tr>
 		
 		
