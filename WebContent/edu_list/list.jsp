@@ -14,7 +14,35 @@ $(document).ready(function() {
 	var index = "";
 	var edu_target =  ${targetList}; 
 	var listCount = ${listCount};
+	var applicantsList = ${applicantsList};
+	var edu_list = $(".ed_no");
 	
+	 $(function(){
+		    $(${applicantsList}).each(function(key, value){
+
+		    	$(function(){
+				    $('.ed_no').each(function(){
+				    	var ed = $(this).text();
+				    	
+				    	console.log($('#tr'+ed).find('.apptd')) ;
+				    	console.log('==============================================');
+				    	console.log('ed_no :'+ed+$('#tr'+ed).find('.apptd').text()) ;
+				    	console.log('==============================================');
+				    	
+				        if($(this).text() == value && $('#tr'+ed).find('.apptd').text() != ""){
+				        	console.log($('#tr'+ed).find('.apptd').append('<span style="color:red;">인원 마감</span>')) ;
+				        }
+
+				        if($(this).text() == value && $('#tr'+ed).find('.apptd').text() == ""){
+				        	console.log($('#tr'+ed).find('.apptd').html('<span style="color:red;">인원 마감</span>')) ;
+				        }
+				        
+				    });
+				});
+		    	
+		    });
+		});
+
 
 	for(var i=0; edu_target.length>i ; i++){
 		index = $("."+(i)).text();
@@ -92,6 +120,7 @@ function listBtn(no){
 			$('#edu_name').html(data.edu_name);
 			$('#edu_schedule').html(data.edu_schedule);
 			$('#instructor_name').html(data.instructor_name);
+			$('#app_limit').html(data.applicants+'/'+data.applicants_limit);
 			
 		},
 		error : function(request,status,error){
@@ -100,6 +129,33 @@ function listBtn(no){
 		}
 	});
 	
+	
+}
+
+function deleteBtn(no){
+	var edu_no = no; 
+	
+	if(confirm("정말 취소 하시겠습니까?")){
+
+		$.ajax({
+			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
+			url : '${path}/EducationList/applicationDelete.do',
+			type : 'get',
+			data : {
+				edu_no : edu_no
+			},
+			dataType:"text",  
+			success : function(data){
+				alert('취소되었습니다.');
+			},
+			error : function(request,status,error){
+				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+			}
+		});
+		
+		location.href="${path}/EducationList.do";
+	}
 	
 }
 
@@ -170,8 +226,8 @@ function listBtn(no){
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${list}" var="edulist" varStatus="state">
-					<tr>
-						<td id="ed_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_no}</td>
+					<tr id="tr${edulist.edu_no}">
+						<td id="ed_no" class="ed_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_no}</td>
 						<td id="ed_name" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_name}</td>
 						<td id="be_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.belong_no}</td>
 						<td id="ed_field" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_field}</td>
@@ -186,11 +242,11 @@ function listBtn(no){
 							<c:forEach items="${history}" var="history" varStatus="state1">
 								<c:if test="${not doneLoop}">
 									<c:if test="${history.edu_no eq edulist.edu_no}">
-									<td>신청완료</td>
-									<c:set var="doneLoop" value="true"/> 
+										<td class="apptd" id="apptd">신청완료<input type="button" value="신청취소" onclick="deleteBtn(${edulist.edu_no})"><br></td>
+										<c:set var="doneLoop" value="true"/> 
 									</c:if>
 									<c:if test="${history.edu_no ne edulist.edu_no  and state1.count eq historySize }">
-									<td class="appBtnLo"><input type="button" value="교육신청" onclick="listBtn(${edulist.edu_no})"></td>
+										<td class="apptd" id="apptd"><input type="button" value="교육신청" onclick="listBtn(${edulist.edu_no})"></td>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -217,7 +273,7 @@ function listBtn(no){
         
         <table border="1">
         	<tr>
-        		<td>교육코드</td><td><span id="edu_no"> </span></td> 
+        		<td width="35%">교육코드</td><td><span id="edu_no"> </span></td> 
         	</tr>
         	<tr>
         		<td>소속명</td><td><span id="belong_name"> </span></td> 
@@ -233,6 +289,9 @@ function listBtn(no){
         	</tr>
         	<tr>
         		<td>강사명</td><td><span id="instructor_name" ></span></td> 
+        	</tr>
+        	<tr>
+        		<td>신청자 수</td><td><span id="app_limit" ></span></td> 
         	</tr>
         </table><br/>
         <span>신청하시겠습니까?</span><br>

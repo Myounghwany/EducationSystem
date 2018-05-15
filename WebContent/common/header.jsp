@@ -36,7 +36,7 @@
 				<li><a href="${path}/PetitionList.do">청원</a></li>
 				<li><a href="${path}/eduhistory.do">수강목록</a></li>
 				<li><a href="${path}/instructor/main.do">강사</a></li>
-				<li><a href="${path}/ProjectList.do">프로젝트공유</a></li>
+				<li><a href="${path}/ProjectCommunity.do">프로젝트공유</a></li>
 			</ul>
 		</div>
 	</div>

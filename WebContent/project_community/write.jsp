@@ -11,17 +11,6 @@
 <title>Project Community 글쓰기</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-$(document).ready(function(){
-
-	
-	$('#resultTransfer').css('display',"none");
-	
-	$('#writeBtn').click(function(){
-		location="ProjectWrite.do";
-	});	
-		
-	});
-	
 function checkValtext() {
 	var f = window.document.insertForm;
 	
@@ -72,7 +61,7 @@ function checkValtext() {
 <h1>Project Community 글쓰기</h1>
 <div style="width: 70%; margin: 20px auto">
 	
-	<form name=insertForm class="form-horizontal" method="post" action="ProjectWrite.do" enctype="multipart/form-data" onSubmit="return checkValtext()">
+	<form name=insertForm class="form-horizontal" method="post" action="${path}/ProjectCommunity/write.do" enctype="multipart/form-data" onSubmit="return checkValtext()">
 		<table class="w3-table w3-bordered">
 			<tr>
 				<th colspan="2" style="background-color: #EAEAEA;">작성하기</th>
@@ -120,7 +109,7 @@ function checkValtext() {
 			</tr>
 		</table>
 		<div align="center" class="goList">
-			<input type="button" class="w3-button w3-white w3-border" value="목록보기" onclick="location='ProjectList.do'">
+			<input type="button" class="w3-button w3-white w3-border" value="목록보기" onclick="location='${path}/ProjectCommunity.do'">
 		</div>
 	</form>
 </div>
