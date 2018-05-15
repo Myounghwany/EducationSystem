@@ -1,6 +1,5 @@
 package com.es.instructor;
 
-import java.util.List;
 
 public class InstructorDto {
 	private String id;

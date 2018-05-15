@@ -329,9 +329,6 @@ public class InstructorHandler {
 				System.out.println("eduDetail : " + belong_name[i1] + " / " + dept_name[i1] + " / " + position_name[i1] );
 			}
 			model.addAttribute("edu_target", edu_target);
-			/*model.addAttribute("belong_name", belong_name);
-			model.addAttribute("dept_name", dept_name);
-			model.addAttribute("position_name", position_name);*/
 			
 		}
 		/*for(int i = 0; i<edu_detail.size(); i++) {
@@ -594,10 +591,6 @@ public class InstructorHandler {
 		for(int i = 0; i<belong_name.length; i++) {
 			System.out.println("eduReqDetail : " + belong_name[i] + " / " + dept_name[i] + " / " + position_name[i] );
 		}
-		/*
-		 * model.addAttribute("belong_name", belong_name);
-		 * model.addAttribute("dept_name", dept_name);
-		model.addAttribute("position_name", position_name);*/
 		
 		model.addAttribute("edu_target", edu_target);
 		
