@@ -156,7 +156,15 @@
 				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
 		from education_history h, education_list l, instructor, education_detail detail
 		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
-				and detail.edu_no = l.edu_no and h.emp_no=#{account}
+				and detail.edu_no = l.edu_no and h.emp_no=#{emp_no}
+		order by h.edu_state = 'I' desc, l.edu_schedule desc
+	</select>
+	<select id="InstEduHistory" resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
+				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from education_history h, education_list l, instructor, education_detail detail
+		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
+				and detail.edu_no = l.edu_no and h.instructor_no=#{emp_no}
 		order by h.edu_state = 'I' desc, l.edu_schedule desc
 	</select>
 	
@@ -171,5 +179,15 @@
 	<update id="insertEmpEval" parameterType="hashmap">
 		update education_history set emp_eval=#{emp_eval} where edu_no=#{no}
 	</update>
+	
+	<!-- 직원 자신이 제출한 강의평가 보기 -->
+	<select id="showEval" resultType="com.es.education.EduHistoryDto">
+		select  l.edu_no, l.edu_name, h.emp_no, h.edu_state, h.emp_eval , l.edu_schedule
+		from education_history h, education_list l
+		where l.edu_no = h.edu_no and h.emp_no = #{emp_no} and h.edu_no = #{no}
+	</select>
+	
+	
+	
 	
 </mapper>

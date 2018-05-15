@@ -1,53 +1,40 @@
-package com.es.education;
+package com.es.manager;
 
-import java.util.Date;
+public class EduListDto {
 
-public class EduHistoryDto {
-	private String emp_no;
-	private int no;			 //pk번호
-	private int edu_no; 	 //교육번호
-	private int belong_no;	 //소속번호
-	private String edu_field;	//교육분야
-	private int edu_code; 	 	//교육코드
-	private String edu_name;	//교육명
-	private String edu_target;  //교육대상
-	private String manager;		//담당자
-	private String edu_way;		//교육방법
-	private String edu_schedule; //교육일정
-	private String edu_date;	 //교육일시
-	private String edu_location; //교육장소
-	private String instructor_no;//강사번호
-	private String budget; 		 //소요예산
-	private String note; 		 //비고
-	private int applicants_limit;//신청자제한수
-	private String closing_date; //신청마감일
-	private int approval_state;  //승인여부
-	
-	/* 교육번호로 교육명, 강사번호로 강사명, 교육번호로 일정 알아내기 추가 */
-	private String emp_eval; //직원평가
-	private String edu_state; //이수여부
-	private String instructor_eval;
+	/*education_list*/
+	private int edu_no;
+	private int belong_no;
+	private String edu_field;
+	private int edu_code;
+	private String edu_name;
+	private String edu_target;
+	private String manager;
+	private String edu_way;
+	private String edu_schedule;
+	private String edu_date;
+	private String edu_location;
+	private String instructor_no; //강사번호
+	private String budget;
+	private String note;
+	private int applicants_limit;
+	private String closing_date;
+	private int approval_state;
+
+	/*instructor*/
+	private String instructor_name;
+
+
+	/*belong*/
+	private String belong_name;
+
+	/*education_code*/
+	private String edu_code_name;
+
+	/*education_detail*/
 	private String file_path;
 	private String file_save_name;
 	private String file_ori_name;
-	private Date end_date; //교육종료일
-	private int buttonFlag;
-	
-	public int getButtonFlag() {
-		return buttonFlag;
-	}
-
-	public void setButtonFlag(int buttonFlag) {
-		this.buttonFlag = buttonFlag;
-	}
-
-	public Date getEnd_date() {
-		return end_date;
-	}
-
-	public void setEnd_date(Date end_date) {
-		this.end_date = end_date;
-	}
 
 	public String getFile_path() {
 		return file_path;
@@ -71,24 +58,6 @@ public class EduHistoryDto {
 
 	public void setFile_ori_name(String file_ori_name) {
 		this.file_ori_name = file_ori_name;
-	}
-
-	private String instructor_name;
-
-	public String getEmp_no() {
-		return emp_no;
-	}
-
-	public void setEmp_no(String emp_no) {
-		this.emp_no = emp_no;
-	}
-
-	public int getNo() {
-		return no;
-	}
-
-	public void setNo(int no) {
-		this.no = no;
 	}
 
 	public int getEdu_no() {
@@ -227,30 +196,6 @@ public class EduHistoryDto {
 		this.approval_state = approval_state;
 	}
 
-	public String getEmp_eval() {
-		return emp_eval;
-	}
-
-	public void setEmp_eval(String emp_eval) {
-		this.emp_eval = emp_eval;
-	}
-
-	public String getEdu_state() {
-		return edu_state;
-	}
-
-	public void setEdu_state(String edu_state) {
-		this.edu_state = edu_state;
-	}
-
-	public String getInstructor_eval() {
-		return instructor_eval;
-	}
-
-	public void setInstructor_eval(String instructor_eval) {
-		this.instructor_eval = instructor_eval;
-	}
-
 	public String getInstructor_name() {
 		return instructor_name;
 	}
@@ -258,5 +203,22 @@ public class EduHistoryDto {
 	public void setInstructor_name(String instructor_name) {
 		this.instructor_name = instructor_name;
 	}
+
+	public String getBelong_name() {
+		return belong_name;
+	}
+
+	public void setBelong_name(String belong_name) {
+		this.belong_name = belong_name;
+	}
+
+	public String getEdu_code_name() {
+		return edu_code_name;
+	}
+
+	public void setEdu_code_name(String edu_code_name) {
+		this.edu_code_name = edu_code_name;
+	} 
+
 
 }

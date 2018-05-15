@@ -7,6 +7,10 @@
 <!-- table css -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- 나현 로그인모달 & 드롭다운-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <title>Project Community List</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
