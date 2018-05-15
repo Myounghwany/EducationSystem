@@ -42,4 +42,21 @@
 	<select id="InstructorCount" resultType="int">
 		select count(*) from instructor
 	</select>
+	<select id="InstructorCategoryCount" resultType="int">
+		select count(*) from instructor where
+		<if test="type == 'internal'">
+			emp_no is not null and
+		</if>
+		<if test="type == 'external'">
+			emp_no is null and
+		</if>
+		<choose>
+			<when test="cat == 'number'">
+				instructor_no like concat('%', #{word}, '%')
+			</when>
+			<when test="cat == 'name'">
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+	</select>
 </mapper>

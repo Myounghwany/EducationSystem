@@ -8,6 +8,51 @@
 <script>
 	$('document').ready(function() {
 		
+		var pageStart = ${pageStart};
+		var pageEnd = ${pageEnd};
+		var next = ${next};
+		
+		if($('#srchDept').val() == 'nothing' && $('#srchPos').val() == 'nothing' && $('#srchWord').val() == '') {
+			if(pageStart > 5) {
+				$('#pagePrev').attr('href', 'empList.do?pageNum='+$('#pagePrev').attr('page-value'));
+			}
+			
+			var length = 0;
+			for(var i=pageStart; i<=pageEnd; i++) {
+				var id = '#pageNumber' + i;
+				$(id).attr('href', 'empList.do?pageNum='+$(id).attr('page-value')); 
+			}
+			
+			if(next == 1) {
+				$('#pageNext').attr('href', 'empList.do?pageNum='+$('#pageNext').attr('page-value'));
+			}
+		} else {
+			var srchDept = $('#srchDept').val();
+			var srchPos = $('#srchPos').val();
+			var srchCat = $('#srchCat').val();
+			var srchWord = $('#srchWord').val();
+			
+			if(pageStart > 5) {
+				$('#pagePrev').attr('href', 'empList.do?srchDept=' +srchDept +
+						'&srchPos=' + srchPos + '&srchCat=' + srchCat +
+						'&srchWord=' + srchWord + '&pageNum='+$('#pagePrev').attr('page-value'));
+			}
+			
+			var length = 0;
+			for(var i=pageStart; i<=pageEnd; i++) {
+				var id = '#pageNumber' + i;
+				$(id).attr('href', 'empList.do?srchDept=' +srchDept +
+						'&srchPos=' + srchPos + '&srchCat=' + srchCat +
+						'&srchWord=' + srchWord + '&pageNum='+$(id).attr('page-value'));
+			}
+			
+			if(next == 1) {
+				$('#pageNext').attr('href', 'empList.do?srchDept=' +srchDept +
+						'&srchPos=' + srchPos + '&srchCat=' + srchCat +
+						'&srchWord=' + srchWord + '&pageNum='+$('#pageNext').attr('page-value'));				
+			}
+		}
+		
 		$('#title tr th').click(function() {
 			var title_value = $(this).attr('title_value');
 			switch(title_value) {
@@ -123,18 +168,18 @@
 								<td colspan="4" style="text-align: center;">
 									<c:if test="${fn:length(empList) > 0}">
 										<c:if test="${pageStart > 5}">
-											<a href="empList.do?pageNum=${pageStart-1}">[이전]</a>
+											<a id="pagePrev" page-value="${pageStart-1}">[이전]</a>
 											&nbsp;|
 										</c:if>
 										<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
-											&nbsp;<a href="empList.do?pageNum=${page}">${page}</a>
+											&nbsp;<a id="pageNumber${page}" page-value="${page}">${page}</a>
 											<c:if test="${page != pageEnd}">
 												&nbsp;|
 											</c:if>
 										</c:forEach>
 										<c:if test="${next == 1}">
 											&nbsp;|&nbsp;
-											<a href="empList.do?pageNum=${pageEnd+1}">[다음]</a>
+											<a id="pageNext" page-value="${pageEnd+1}">[다음]</a>
 										</c:if>
 									</c:if>
 									<br />
