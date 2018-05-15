@@ -73,7 +73,7 @@
 					<c:otherwise>
 						<c:forEach items="${requestScope.list}" var="list" varStatus="state">
 							<tr>
-								<td>${list.project_no}</td>
+								<td>${listCount - (spage)*10 - state.count + 11}</td>
 								<td>${list.classification}</td>
 								<td><a href="ProjectCommunity/detail.do?project_no=${list.project_no}" 
 									 	class="title" >${list.title}</a></td>

@@ -8,15 +8,66 @@
 <!-- table css -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <title>Project Community Detail</title>
+<style>
+.hover{ color:#FF3333; font-size :20px;}
+</style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 $(document).ready(function(){
 
 	var project_no=${result.project_no};
 	var emp_no = '<c:out value="${sessionScope.emp_no}"/>';
+	var likeCheck = ${likeCheck};
+	
+	console.log('likeCheck : '+likeCheck);
 	console.log('emp_no : '+emp_no);
 	
+	if(likeCheck == 1){
+		$("#fa-heart").css('','');
+		
+		$("#fa-heart").mouseenter(function(){
+			
+			$(this).addClass('hover');		 
+		 			
+		}).mouseleave(function(){
+					 $(this).removeClass('hover');	
+				 }
+		 );
+		
+	}else{
+		
+		$("#fa-heart").mouseenter(function(){
+			 $(this).addClass('hover');		 
+		 			
+		}).mouseleave(function(){
+					 $(this).removeClass('hover');	
+				 }
+		 );
+
+	}
+	
+
+	$("#fa-heart").click(function(){
+		$.ajax({
+			contentType : 'application/text; charset=utf-8',
+			url : '${path}/ProjectCommunity/like.do',
+			type : 'get',
+			data : {
+				'project_no' : project_no
+			},
+			dataType:"text",  
+			success : function(data){
+					console.log('data : '+data);
+			},
+			error : function(request,status,error){
+				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
+			}
+		});
+	});
+
 	
 	
 	/* 댓글 목록 */
@@ -255,8 +306,8 @@ $(document).ready(function(){
 			<td colspan="3">${result.title}</td>
 		</tr>
 		<tr height="100">
-			<td>내용</td>
-			<td colspan="3"><pre>${result.content}</pre></td>
+			<td colspan="4" height="400"><pre>${result.content}</pre>
+			</td>
 		</tr>
 		<tr>
 			<td>첨부파일</td>
@@ -266,6 +317,8 @@ $(document).ready(function(){
 		<tr>
 			<c:if test="${result.writer eq sessionScope.emp_no}">
 					<td colspan="4">
+					추천 :   <i id="fa-heart" class="fas fa-heart" title="추천합니다."></i> 
+					
 					<div align="right">
 						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/ProjectCommunity/modify.do?project_no=${result.project_no}'">
 						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
@@ -285,6 +338,9 @@ $(document).ready(function(){
 	
   <!--  댓글  -->
      <label for="content">comment</label>
+  	<c:if test="${commentListCount ne 0}">
+		<strong style="padding-left: 10px">댓글 : ${commentListCount} 개</strong><br>
+  	</c:if>
      
      <form name="commentInsertForm" id="commentInsertForm">
          <div class="input-group">

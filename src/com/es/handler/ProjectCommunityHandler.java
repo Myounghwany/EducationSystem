@@ -86,6 +86,25 @@ public class ProjectCommunityHandler {
 		return new ModelAndView("project_community/list");
 	}
 	
+	@RequestMapping("/ProjectCommunity/like")
+	public void ProjectLike(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Controller ProjectCommunity/like");
+		HashMap<String, Object> map = new HashMap<String, Object>(); 
+		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		
+		map.put("emp_no", emp_no);
+		map.put("project_no", project_no);
+		
+		projectDao.projectLike(map);
+		
+	}
+	
 	@RequestMapping("/ProjectCommunity/delete")
 	public String ProjectDelte(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Controller ProjectDelete");
@@ -231,14 +250,30 @@ public class ProjectCommunityHandler {
 	@RequestMapping("/ProjectCommunity/detail")
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Controller ProjectDetail ");
-		
+		HashMap<String, Object> map = new HashMap<String, Object>(); 
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
+		
+		map.put("project_no", project_no);
 		
 		System.out.println(project_no);
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
 		int hit = projectDao.updateHit(result);
+		int commentListCount = projectDao.commentListCount(project_no); //댓글 갯수
 		
+		/*세션*/
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("emp_no", "E2018040001");
+
+		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		map.put("emp_no",emp_no);
+		
+		
+		/*좋아요 눌렀는지 검사하기*/
+		int likeCheck = projectDao.projectLikeCheck(map);
+		
+		request.setAttribute("likeCheck", likeCheck);
+		request.setAttribute("commentListCount", commentListCount);
 		request.setAttribute("result", result);
 		request.setAttribute("hit", hit);
 		
@@ -485,8 +520,9 @@ public class ProjectCommunityHandler {
 		
 		int project_no = Integer.parseInt(request.getParameter("project_no"));
 		List<ProjectReplyDto> list = projectDao.commentList(project_no);
-
+		
 		request.setAttribute("list", list);
+		
 		
 		return list;
 	}
@@ -557,6 +593,10 @@ public class ProjectCommunityHandler {
 		
 		
 	}
+	
+	
+	
+	
 
 	
 }
