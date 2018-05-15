@@ -33,6 +33,9 @@
 		  <c:otherwise>
 		  	<div>
 			  <div class="dropdown">
+			  	<c:if test="${sessionScope.account eq 'inst'}">
+			  		<span style="color:pink;">외부강사</span>
+			  	</c:if>
 			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 			    	${sessionScope.name}님  <span class="caret"></span>
 			    </button>

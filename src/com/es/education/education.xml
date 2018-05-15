@@ -157,6 +157,14 @@
 				and detail.edu_no = l.edu_no and h.emp_no=#{emp_no}
 		order by h.edu_state = 'I' desc, l.edu_schedule desc
 	</select>
+	<select id="InstEduHistory" resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
+				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from education_history h, education_list l, instructor, education_detail detail
+		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
+				and detail.edu_no = l.edu_no and h.instructor_no=#{emp_no}
+		order by h.edu_state = 'I' desc, l.edu_schedule desc
+	</select>
 	
 	<!-- 수강목록 상세 커리큘럼 보기 -->
 	<select id="EduHistoryDetail" resultType="com.es.education.EduHistoryDto" >

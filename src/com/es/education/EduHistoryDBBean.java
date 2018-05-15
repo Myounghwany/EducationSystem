@@ -13,7 +13,15 @@ public class EduHistoryDBBean implements EduHistoryDao{
 	@Override
 	public List<EduHistoryDto> eduHistoryList(String emp_no) {
 		System.out.println("eduHistory ");
-		return SqlMapClient.getSession().selectList("Education.EduHistory", emp_no);
+		List<EduHistoryDto> result = null;
+		if(emp_no.substring(0, 1).equals("E")) {
+			System.out.println("직원인지 체크/"+emp_no.substring(0, 1));
+			result = SqlMapClient.getSession().selectList("Education.EduHistory", emp_no);
+		} else if(emp_no.substring(0, 1).equals("I")){
+			System.out.println("강사인지 체크/"+emp_no.substring(0, 1));
+			result = SqlMapClient.getSession().selectList("Education.InstEduHistory", emp_no);
+		} 
+		return result;
 	}
 	
 	@Override

@@ -8,7 +8,12 @@
 		from employees
 		where emp_no=#{emp_no} and passwd=#{passwd}
 	</select>
+	<select id="CheckInnerInst" parameterType="String" resultType="com.es.user.UserDto">
+		<!-- 내부강사 확인여부 -->
+		select emp_no from instructor where instructor_no=#{emp_no}
+	</select>		
 	<select id="InstLoginCheck" parameterType="hashmap" resultType="com.es.user.UserDto">
+		<!-- 외부강사 로그인 -->
 		select instructor_no no, name, passwd
 		from external_instructor
 		where instructor_no=#{emp_no} and passwd=#{passwd}

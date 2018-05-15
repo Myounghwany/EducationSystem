@@ -25,14 +25,24 @@ public class UserDBBean implements UserDao{
 		if( no.equals("E")) {
 			temp = SqlMapClient.getSession().selectOne("User.EmpLoginCheck", check);
 			System.out.println("직원 로그인");
-			System.out.println("temp:"+ temp);
 		}
 		//emp_no의 앞자리가 I로 시작하면
 		else if( no.equals("I")) {
-			//외부강사 테이블에서 확인하는 쿼리
-			temp = SqlMapClient.getSession().selectOne("User.InstLoginCheck", check);
-			System.out.println("외부강사 로그인");
-			System.out.println("temp:"+ temp);
+			//내부강사인지 먼저 확인 (강사테이블에 사번이 있는지 체크)
+			temp = SqlMapClient.getSession().selectOne("User.CheckInnerInst", emp_no);
+			System.out.println("내부강사인지 확인" + temp);
+			
+			//emp_no가 없다는 것은 외부강사
+			if(temp == null) {
+				//외부강사 테이블에서 확인하는 쿼리
+				temp = SqlMapClient.getSession().selectOne("User.InstLoginCheck", check);
+				System.out.println("사번이 없으니까 외부강사 로그인" + temp);
+			
+				//사번이 있으면 내부강사
+			} else if(temp != null) { 
+				System.out.println("내부강사 로그인" + temp);
+				result = 0;
+			}
 		}
 		if(temp==null) {
 			result = 0;
@@ -58,6 +68,8 @@ public class UserDBBean implements UserDao{
 	public void logout(HttpSession session) {
 //		session.invalidate();
 		session.removeAttribute("no");
+		session.removeAttribute("name");
+		session.removeAttribute("account");
 		System.out.println("session invalidate()");
 	}
 	

@@ -26,8 +26,8 @@ public class UserHandler {
 	public String loginCheck(UserDto userDto, HttpSession session, Model model,
 			HttpSession request, RedirectAttributes rttr) throws Exception{
 
-		System.out.println("login emp_no : "+ userDto.getNo());
-		System.out.println("login password : "+ userDto.getPasswd());
+//		System.out.println("login emp_no : "+ userDto.getNo());
+//		System.out.println("login password : "+ userDto.getPasswd());
 
 		String emp_no = userDto.getNo();
 		String passwd = userDto.getPasswd();
@@ -38,26 +38,32 @@ public class UserHandler {
 		case -1 :
 			rttr.addAttribute("msg", "fail");
 			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-			System.out.println("case -1");
+//			System.out.println("case -1");
 			break;
 		case 0:
 			//request.setAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
 			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
 			rttr.addAttribute("msg", "fail");
-			System.out.println("case 0");
+//			System.out.println("case 0");
 			break;
 		case 1:
-			System.out.println("emp_no : " + emp_no);
-			System.out.println("password : " + passwd);
+			System.out.println("emp_no : " + emp_no + "passwd : " + passwd);
 			UserDto getUser = userDao.findById(emp_no, passwd);
-			System.out.println("getUser 객체 : " + getUser);
+//			System.out.println("getUser 객체 : " + getUser);
 			
 			session.setAttribute("no", getUser.getNo());
 			session.setAttribute("password", getUser.getPasswd());
 			session.setAttribute("name",  getUser.getName());
-			System.out.println("세션 등록.." + session);
+			if(getUser.getNo().substring(0, 1).equals("E")) {
+				System.out.println("직원 로그인");
+				session.setAttribute("account", "emp"); //직원 혹은 내부강사
+			} else if(getUser.getNo().substring(0, 1).equals("I")) {
+				System.out.println("외부강사 로그인");
+				session.setAttribute("account", "inst"); //외부강사 표시 세션 등록
+			}
+			System.out.println("세션 등록..");
 			rttr.addFlashAttribute("result", "success");
-			System.out.println("case 1");
+//			System.out.println("case 1");
 			break;
 		}
 

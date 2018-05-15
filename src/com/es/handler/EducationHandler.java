@@ -234,15 +234,9 @@ public class EducationHandler {
 	/*나현 - 수강목록*/
 	@RequestMapping("/eduhistory")
 	public String eduHistory(Model model, HttpSession session, HttpServletResponse response) throws IOException {
-		/* 세션 없을 시*/
-		String emp_no = (String) session.getAttribute("emp_no");
-		if(emp_no == null) {
-			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<script>alert('권한이 없습니다.'); history.go(-1); </script>");
-			out.flush();
-			
-		} else {
+		String emp_no = (String) session.getAttribute("no");
+//		세션이 있을 때만
+		if (emp_no != null) {
 			/* 직원의 전체 수강내역 리스트 */
 			List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(emp_no);
 			for(EduHistoryDto dto : eduhistory_list) {
@@ -253,7 +247,7 @@ public class EducationHandler {
 				cal.setTime(tempDate);
 				cal.add(Calendar.DATE, 15);
 				
-				System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
+//				System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
 				
 				// 현재 날짜 가져 온다
 				Date curDate = new Date();
@@ -264,15 +258,13 @@ public class EducationHandler {
 				if( c.getTime().before(cal.getTime()) ) { //c:현재 날짜 < cal:평가마감일 (버튼 생성)
 					// 비교해서 현재 날짜가 더 전이면
 					dto.setButtonFlag(1); 
-					System.out.println("Flag 1 전송"); //flag 1 : 강의평가 할 수 있는 것
+//				System.out.println("Flag 1 전송"); //flag 1 : 강의평가 할 수 있는 것
 				} else {
 					// 비교해서 현재 날짜가 이 후면
 					dto.setButtonFlag(0);
-					System.out.println("Flag 0 전송"); //flag 0 : 강의평가 기간이 지나 제출할 수 없음
+//				System.out.println("Flag 0 전송"); //flag 0 : 강의평가 기간이 지나 제출할 수 없음
 				}
 			}
-	
-			System.out.println(eduhistory_list.get(7));
 			
 			Date date = new Date();//현재날짜 보내기
 			model.addAttribute("date", date);
@@ -288,7 +280,7 @@ public class EducationHandler {
 	public Map<String, Object> eduHistoryShowEval(Model model, HttpSession session, @RequestParam("edu_no") int edu_no) {
 		System.out.println("해당 edu_no : " + edu_no);
 		
-		String emp_no = (String) session.getAttribute("emp_no");
+		String emp_no = (String) session.getAttribute("no");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		EduHistoryDto show_eval = eduhistoryDao.EduHistoryShowEval(edu_no, emp_no); //어떤 직원인지 emp_no를 넣어줌
 		
@@ -310,7 +302,7 @@ public class EducationHandler {
 	public String eduHistoryDetail(Model model, HttpSession session, @RequestParam("edu_no") int no ) 
 			throws ParseException, UnsupportedEncodingException{
 		//select box로 보여줄 직원의 수강목록
-		String emp_no = (String) session.getAttribute("emp_no");
+		String emp_no = (String) session.getAttribute("no");
 		List<EduHistoryDto> eduhistory_list = eduhistoryDao.eduHistoryList(emp_no);
 		model.addAttribute("eduhistory_list", eduhistory_list);
 		
