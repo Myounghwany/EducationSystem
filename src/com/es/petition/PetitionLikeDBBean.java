@@ -11,8 +11,10 @@ public class PetitionLikeDBBean implements PetitionLikeDao {
 	@Override
 	public int petitionAgree(PetitionLikeDto petitionLikeDto) {
 		System.out.println("Agree DBBean");
+		
 		int petition_no = petitionLikeDto.getPetition_no();
 		int agree = agreeCheck(petitionLikeDto);
+		
 		if (agree != 0) {
 			return 0;
 		}
@@ -32,9 +34,8 @@ public class PetitionLikeDBBean implements PetitionLikeDao {
 		return SqlMapClient.getSession().insert( "Petition.petitionAgree", petitionLikeDto );
 		
 	}
-
-	@Override
-	public int agreeCheck (PetitionLikeDto petitionLikeDto) {
+ 
+	private int agreeCheck (PetitionLikeDto petitionLikeDto) {
 		System.out.println("이미동의했는지 확인여부");
 		return SqlMapClient.getSession().selectOne( "Petition.agreeCheck", petitionLikeDto );
 	}

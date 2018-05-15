@@ -15,11 +15,13 @@ public interface PetitionDao {
 	
 	
 	List<PetitionDto> expireList(HashMap<String, Object> map);
-	List<PetitionDto> petitionList(HashMap<String, Object> map);
+	List<PetitionDto> ongoingList(HashMap<String, Object> map);
 	List<PetitionDto> evaluateList(HashMap<String, Object> map);
 	List<PetitionDto> allList(HashMap<String, Object> map);
 	
 	int closingEvaluate();
+
+	 
 
 	 
  

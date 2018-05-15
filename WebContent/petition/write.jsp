@@ -45,7 +45,7 @@ function writecheck() {
 		return false;
 	}
 	if (w.content.value == "") {
-		alert("게시글을 입력해주세요.");
+		alert("내용을 입력해주세요.");
 		w.content.focus();
 		return false;
 	} 
