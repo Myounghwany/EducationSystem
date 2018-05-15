@@ -26,10 +26,10 @@ public class UserHandler {
 	public String loginCheck(UserDto userDto, HttpSession session, Model model,
 			HttpSession request, RedirectAttributes rttr) throws Exception{
 
-		System.out.println("login emp_no : "+ userDto.getEmp_no());
+		System.out.println("login emp_no : "+ userDto.getNo());
 		System.out.println("login password : "+ userDto.getPasswd());
 
-		String emp_no = userDto.getEmp_no();
+		String emp_no = userDto.getNo();
 		String passwd = userDto.getPasswd();
 		
 		int result = userDao.loginCheck(emp_no, passwd);
@@ -47,8 +47,12 @@ public class UserHandler {
 			System.out.println("case 0");
 			break;
 		case 1:
+			System.out.println("emp_no : " + emp_no);
+			System.out.println("password : " + passwd);
 			UserDto getUser = userDao.findById(emp_no, passwd);
-			session.setAttribute("emp_no", getUser.getEmp_no());
+			System.out.println("getUser 객체 : " + getUser);
+			
+			session.setAttribute("no", getUser.getNo());
 			session.setAttribute("password", getUser.getPasswd());
 			session.setAttribute("name",  getUser.getName());
 			System.out.println("세션 등록.." + session);
@@ -101,7 +105,7 @@ public class UserHandler {
 	public String checkPassword(@ModelAttribute UserDto user, 
 			HttpSession session, @RequestParam("passwd") String passwd) throws Exception {
 		
-		String emp_no = (String) session.getAttribute("emp_no");
+		String emp_no = (String) session.getAttribute("no");
 		
 		int result = userDao.checkPassword(emp_no, passwd);
 		System.out.println("result:" + result);

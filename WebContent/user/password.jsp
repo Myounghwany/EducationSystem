@@ -23,7 +23,7 @@ table { width: 45%; }
 <div align="center" style="margin: 10% auto;">
 	<h3>비밀번호 변경 페이지</h3>
 	<form name="form" method="post"
-		action="${path}/user/password.do?emp_no=${sessionScope.emp_no}"
+		action="${path}/user/password.do?emp_no=${sessionScope.no}"
 		onsubmit="return valid()">
 		<table>
 			<tr>

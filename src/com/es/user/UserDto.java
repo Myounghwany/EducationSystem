@@ -1,23 +1,25 @@
 package com.es.user;
 
 public class UserDto {
-	private String emp_no; //사번
+	private String no; //사번 or 외부강사
 	private String passwd; //비밀번호
 	private String changePasswd; //비밀번호
 	private String checkPasswd; //비밀번호
 	private String name;
 	
+	
+	
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getEmp_no() {
-		return emp_no;
-	}
-	public void setEmp_no(String emp_no) {
-		this.emp_no = emp_no;
 	}
 	public String getPasswd() {
 		return passwd;
