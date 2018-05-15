@@ -8,8 +8,11 @@ public class InstructorDto {
 	private String instructor_no;
 	private int approval_state;
 	private String instructor_check;
+	private String hire_date;
+	private String approval_date;
 	private int edu_no;
 	private int belong_no;
+	private String belong_name;
 	private String name;
 	private String edu_field;
 	private int edu_code;
@@ -43,6 +46,10 @@ public class InstructorDto {
 	private String instructor_eval;
 	private String edu_code_name;
 	private String instructor_name;
+	private String deadLine;
+	private int student;
+	private int page;
+	private int eduListNum;
 	public String getId() {
 		return id;
 	}
@@ -73,6 +80,18 @@ public class InstructorDto {
 	public void setInstructor_check(String instructor_check) {
 		this.instructor_check = instructor_check;
 	}
+	public String getHire_date() {
+		return hire_date;
+	}
+	public void setHire_date(String hire_date) {
+		this.hire_date = hire_date;
+	}
+	public String getApproval_date() {
+		return approval_date;
+	}
+	public void setApproval_date(String approval_date) {
+		this.approval_date = approval_date;
+	}
 	public int getEdu_no() {
 		return edu_no;
 	}
@@ -84,6 +103,12 @@ public class InstructorDto {
 	}
 	public void setBelong_no(int belong_no) {
 		this.belong_no = belong_no;
+	}
+	public String getBelong_name() {
+		return belong_name;
+	}
+	public void setBelong_name(String belong_name) {
+		this.belong_name = belong_name;
 	}
 	public String getName() {
 		return name;
@@ -282,6 +307,30 @@ public class InstructorDto {
 	}
 	public void setInstructor_name(String instructor_name) {
 		this.instructor_name = instructor_name;
+	}
+	public String getDeadLine() {
+		return deadLine;
+	}
+	public void setDeadLine(String deadLine) {
+		this.deadLine = deadLine;
+	}
+	public int getStudent() {
+		return student;
+	}
+	public void setStudent(int student) {
+		this.student = student;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getEduListNum() {
+		return eduListNum;
+	}
+	public void setEduListNum(int eduListNum) {
+		this.eduListNum = eduListNum;
 	}
 	
 }

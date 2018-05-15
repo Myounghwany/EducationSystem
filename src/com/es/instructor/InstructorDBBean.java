@@ -36,8 +36,8 @@ public class InstructorDBBean implements InstructorDao{
 	
 
 	@Override
-	public List selectEduList(String account_no) {
-		return SqlMapClient.getSession().selectList("Instructor.selectEduList", account_no);
+	public List selectEduList(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduList", instructorDto);
 	}
 
 	@Override
@@ -108,6 +108,21 @@ public class InstructorDBBean implements InstructorDao{
 	@Override
 	public int updateInstEval(InstructorDto instructorDto) {
 		return SqlMapClient.getSession().update("Instructor.updateInstEval", instructorDto);
+	}
+
+	@Override
+	public int selectEduListCnt(String account_no) {
+		return SqlMapClient.getSession().selectOne("Instructor.selectEduListCnt", account_no);
+	}
+
+	@Override
+	public List<InstructorDto> selectEduNameList(String instructor_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduNameList", instructor_no);
+	}
+
+	@Override
+	public int deleteEduReq(String edu_no) {
+		return SqlMapClient.getSession().delete("Instructor.deleteEduReq", edu_no);
 	}
 
 }
