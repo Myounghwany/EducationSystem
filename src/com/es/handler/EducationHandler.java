@@ -56,8 +56,7 @@ public class EducationHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-//		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		List<EduHistoryDto> edu_history = eduhistoryDao.eduHistoryList(emp_no);
 		request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
@@ -153,8 +152,7 @@ public class EducationHandler {
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
-//		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 
 		/* 수강신청했는지 알려고*/
 		List apCheck = new ArrayList();
@@ -225,8 +223,7 @@ public class EducationHandler {
 		
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
 		HttpSession httpSession = request.getSession();
-//		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		String instructor_no = edu_detail.getInstructor_no();
 
@@ -250,8 +247,7 @@ public class EducationHandler {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
-		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		map.put("edu_no", edu_no);
 		map.put("emp_no", emp_no);
