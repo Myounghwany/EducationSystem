@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.es.db.SqlMapClient;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
+import com.es.employees.EmployeesDto;
 import com.es.employees.PositionDto;
 
 @Configuration("ManagerDao")
@@ -50,17 +51,28 @@ public class ManagerDBBean implements ManagerDao {
 	}
 
 	@Override
-	public int getEmpCount(String category, String word) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("category", category);
-		map.put("word", word);
-		return SqlMapClient.getSession().selectOne("Employees.EmployeesSearchCount", map);
+	public int getEmpCount(Map<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectOne("Employees.EmployeesCategoryCount", srchMap);
 	}
 
 	@Override
-	public List<EmpListDto> getEmpList(int start, String category, String word) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EmpListDto> getEmpList(Map<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectList("Manager.EmpSearchList", srchMap);
+	}
+
+	@Override
+	public int getInstCount(HashMap<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectOne("Instructor.InstructorCategoryCount", srchMap);
+	}
+
+	@Override
+	public List<InstListDto> getInstList(HashMap<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectList("Manager.InstSearchList", srchMap);
+	}
+
+	@Override
+	public Map<String, String> getEmpDetail(String emp_no) {
+		return SqlMapClient.getSession().selectOne("Manager.EmpDetail", emp_no);
 	}
 	
 }

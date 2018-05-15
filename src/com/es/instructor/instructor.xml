@@ -63,5 +63,24 @@
 	<update id="updateInstEval" parameterType="com.es.instructor.InstructorDto">
 		update education_history set edu_state = #{edu_state}, instructor_eval = #{instructor_eval} where no = #{no}
 	</update>
-	
+	<select id="InstructorCount" resultType="int">
+		select count(*) from instructor
+	</select>
+	<select id="InstructorCategoryCount" resultType="int">
+		select count(*) from instructor where
+		<if test="type == 'internal'">
+			emp_no is not null and
+		</if>
+		<if test="type == 'external'">
+			emp_no is null and
+		</if>
+		<choose>
+			<when test="cat == 'number'">
+				instructor_no like concat('%', #{word}, '%')
+			</when>
+			<when test="cat == 'name'">
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+	</select>
 </mapper>

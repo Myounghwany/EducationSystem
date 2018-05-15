@@ -1,6 +1,8 @@
 package com.es.manager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
@@ -23,8 +25,14 @@ public interface ManagerDao {
 
 	int getInstCount();
 
-	int getEmpCount(String category, String word);
+	int getEmpCount(Map<String, Object> srchMap);
 
-	List<EmpListDto> getEmpList(int start, String category, String word);
+	List<EmpListDto> getEmpList(Map<String, Object> srchMap);
+
+	int getInstCount(HashMap<String, Object> srchMap);
+
+	List<InstListDto> getInstList(HashMap<String, Object> srchMap);
+
+	Map<String, String> getEmpDetail(String emp_no);
 
 }
