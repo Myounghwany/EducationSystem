@@ -15,7 +15,7 @@
 
 <script>
 	$('document').ready(function() {
-		alert($(location).attr('href')); //http://localhost:8080/EducationSystem/manageEmpList.do
+		//alert($(location).attr('href')); //http://localhost:8080/EducationSystem/manageEmpList.do
 		
 		$('#title tr th').click(function() {
 			var title_value = $(this).attr('title_value');

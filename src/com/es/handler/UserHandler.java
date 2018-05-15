@@ -23,12 +23,10 @@ public class UserHandler {
 
 	/*로그인 로직*/
 	@RequestMapping(value="user/login", method = RequestMethod.POST)
-	public String loginCheck(UserDto userDto, HttpSession session, Model model,
-			HttpSession request, RedirectAttributes rttr) throws Exception{
+	public String loginCheck(UserDto userDto, HttpSession session, Model model, RedirectAttributes rttr) throws Exception{
 
 //		System.out.println("login emp_no : "+ userDto.getNo());
 //		System.out.println("login password : "+ userDto.getPasswd());
-
 		String emp_no = userDto.getNo();
 		String passwd = userDto.getPasswd();
 		
@@ -36,20 +34,16 @@ public class UserHandler {
 
 		switch(result) {
 		case -1 :
-			rttr.addAttribute("msg", "fail");
-			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
+			rttr.addAttribute("result", "fail");
 //			System.out.println("case -1");
 			break;
 		case 0:
-			//request.setAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-			rttr.addAttribute("msg", "fail");
+			rttr.addFlashAttribute("result", "fail");
 //			System.out.println("case 0");
 			break;
 		case 1:
 			System.out.println("emp_no : " + emp_no + "passwd : " + passwd);
 			UserDto getUser = userDao.findById(emp_no, passwd);
-//			System.out.println("getUser 객체 : " + getUser);
 			
 			session.setAttribute("no", getUser.getNo());
 			session.setAttribute("password", getUser.getPasswd());
@@ -67,7 +61,7 @@ public class UserHandler {
 			break;
 		}
 
-		return "redirect:/";
+		return "redirect:/main.do";
 	}
 
 	/*로그아웃 로직*/
@@ -87,8 +81,7 @@ public class UserHandler {
 	/* 비밀번호 변경 로직*/
 	@RequestMapping(value="user/password", method=RequestMethod.POST)
 	public String passwordPost(Model model, @RequestParam("emp_no") String emp_no,
-			@RequestParam("currentPasswd") String passwd,
-			@ModelAttribute UserDto user) {
+			@RequestParam("currentPasswd") String passwd, @ModelAttribute UserDto user) {
 		System.out.println("기존 비밀번호 : " + passwd);
 		System.out.println("변경할 비밀번호 : " + user.getCheckPasswd());
 

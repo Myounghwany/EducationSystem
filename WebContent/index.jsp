@@ -10,7 +10,13 @@
 <!-- 드롭다운(비밀번호 변경) -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
-
+	window.onload = function() {
+		var result = '${result}';
+		console.log(result);
+		if(result == "fail") {
+			alert("로그인 실패");
+		}
+	}
 </script>
 <body>
 

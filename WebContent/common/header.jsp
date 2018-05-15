@@ -13,15 +13,6 @@
 <!-- 로그인모달 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<script>
-	window.onload = function() {
-		var result = "${msg}";
-		console.log(result);
-		if(result == "fail") {
-			alert("비밀번호 틀림");
-		}
-	}
-</script>
 </head>
 <body style="width: 70%; margin: 0 auto;">
 	<div style="text-align: right" class="container">
@@ -92,7 +83,6 @@
 						<!------- form ------->
 						<form id="loginForm" name="loginForm" class="form-signin"
 							method="post" action="${path}/user/login.do">
-							<span id="reauth-email" class="reauth-email"></span>
 							
 							<input type="text" name="no" id="no" class="form-control" placeholder="ID" required autofocus value=""> 
 							
