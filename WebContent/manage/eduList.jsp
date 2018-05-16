@@ -8,6 +8,8 @@
 <link type='text/css' href='../css/basic.css' rel='stylesheet' media='screen' />
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 <!-- 로그인모달 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -59,11 +61,13 @@
 				success : function(data){
 					$('#edu_no').html(data.edu_no);
 					$('#belong_no').html(data.belong_no);
+					$('#belong_name').html(data.belong_name);
 					$('#edu_name').html(data.edu_name);
 					$('#edu_schedule').html(data.edu_schedule);
 					$('#budget').html(data.budget);
 					$('#closing_date').html(data.closing_date);
 					$('#edu_code').html(data.edu_code);
+					$('#edu_code_name').html(data.edu_code_name);
 					$('#edu_date').html(data.edu_date);
 					$('#edu_feild').html(data.edu_feild);
 					$('#edu_location').html(data.edu_location);
@@ -98,6 +102,51 @@
 	function PageMove(page){
 		location.href="eduList.do?page="+page;
 	}
+	
+	function eduModify(edu_no, instructor_no){
+		var edu_no = document.getElementById("edu_no").innerHTML;
+		var manager_no = '${sessionScope.no}';
+		console.log('edu_no: ' + edu_no + ' sessionScope.no: '+ manager_no);
+		if(confirm("강의계획서 수정페이지로 이동하시겠습니까?")==true){
+			location.href="/EducationSystem/manage/eduModify.do?edu_no=" + edu_no + "&manager_no="+manager_no;
+		}else{
+			return;
+		}
+	}
+	
+	//검색
+	function selectBelong(belong_no) {
+		if (belong_no == '0') {
+			$('#department').empty();
+			$('#department').append('<option value = "0">전체</option>');
+		}
+		$.ajax({
+			url : '/EducationSystem/manage/belong.do',
+			type : 'get',
+			contentType : "application/x-www-form-urlencoded; charset=utf-8",
+			data : {
+				belong_no : belong_no
+			},
+			headers : {
+				Accept : "application/json"
+			},
+			success : function(res) {
+				$('#department').empty();
+				$('#department').append('<option value = "0">전체</option>');
+				for (i in res) {
+					$('#department').append(
+							'<option value = "'+res[i].dept_no+'">'
+									+ res[i].dept_name + '</option>');
+					console.log(res[i].dept_no + ' - ' + res[i].dept_name);
+				}
+			},
+			error : function(request, status, error) {
+				alert("code:" + request.status + "\n" + "message:"
+						+ request.responseText + "\n" + "error:" + error);
+			}
+		});
+	}
+	
 </script>
 <style>
 	table {
@@ -130,6 +179,12 @@
 	#container #basic-modal #menu .edu:hover{ 
 		background-color: #EAEAEA; 				/* 리스트 tr 행 마우스 오버 */
 	}
+	#menu_value:hover{
+		background-color: #EBF7FF;	
+	}
+	#title_value:hover{
+		color : #3162C7;
+	}
 	#menu .no { width : 8%;}
 	#menu .belong { width : 8%;}
 	#menu .name { width : 30%;}
@@ -143,18 +198,20 @@
 	<div>
 		<table id="title">
 			<tr>
-				<th title_value="emp">강사 및 직원관리</th>
-				<th title_value="edu">교육과정 관리</th>
+				<th title_value="emp" id="title_value">강사 및 직원관리</th>
+				<th title_value="edu" id="title_value">교육과정 관리</th>
 			</tr>
 		</table>
 	</div>
 	<div id="basic-modal">
 		<table id="menu">
 			<tr>
-				<th menu_value="eduList">교육목록</th>
+				<th menu_value="eduList" id="menu_value">교육목록</th>
 				<td rowspan="4">
 					<table frame="void">
 						<thead>
+							<tr><td colspan="7" style="text-align: right;">
+								*총 강의 개수 : ${totalCount}</td></tr>		
 							<tr>
 								<th class="no">교육번호</th>
 								<th class="belong">소속</th>
@@ -183,16 +240,17 @@
 							<p><code>교육번호 : <span id="edu_no"> </span> | 
 									  교육명 : <span id="edu_name"> </span>
 								</code>
-								<button id="updateEduList" style="float:right;">수정 </button>
+								<button id="eduModify" onclick="eduModify()" style="float:right;"
+								class="w3-button w3-green w3-border">강의계획서 수정</button>
 							</p>
 							<h5>소속번호 : <span id="belong_no"> </span></h5>
+							<h5>소속명 : <span id="belong_name"> </span></h5>
 							<h5>교육코드 : <span id="edu_code"> </span></h5>
 							<h5>교육코드명 : <span id="edu_code_name"> </span></h5>
 							<h5>교육일정 : <span id="edu_schedule"> </span></h5>
 							<h5>신청마감일 : <span id="closing_date"> </span></h5>
-							<h5>교육일정 : <span id="edu_schedule"> </span></h5>
 							<h5>교육일시 : <span id="edu_date"> </span></h5>
-							<h5>교육뷴야 : <span id="edu_feild"> </span></h5>
+							<h5>교육상세뷴야 : <span id="edu_feild"> </span></h5>
 							<h5>교육장소 : <span id="edu_location"> </span></h5>
 							<h5>교육대상 : <span id="edu_target"> </span></h5>
 							<h5>교육방법 : <span id="edu_way"> </span></h5>
@@ -200,14 +258,13 @@
 							<h5>강사번호 : <span id="instructor_no"> </span></h5>
 							<h5>담당자 : <span id="manager"> </span></h5>
 							<h5>소요예산 : <span id="budget"> </span></h5>
-							<p>비고: <span id="note"> </span></p>
-						
+							<p>비고: <pre><span id="note"> </span></pre></p>
 						</div>
 						<!-- preload the images -->
 						<div style='display:none'>
 							<img src='../img/x.png' alt='' />
 						</div>	
-							
+
 						<tr>
 							<td colspan="7" style="text-align: center">
 								<!-- 페이징 -->
@@ -236,38 +293,41 @@
 								</div>
 								
 								
-								<!-- 검색 -->
-								<form action="eduList.do" method="post" onsubmit="checkSubmit()">
-								<select name="srchDept" id="srchDept">
-									<option value="nothing">---소속---</option>
-									<c:forEach items="${deptList}" var="deptList">
-										<option value="${deptList.dept_no}">${deptList.dept_name}</option>
-									</c:forEach>
-								</select>
-								<select name="srchPos" id="srchPos">
-									<option value="nothing">---교육분야--</option>
-									<c:forEach items="${posList}" var="posList">
-										<option value="${posList.position_no}">${posList.position_name}</option>
-									</c:forEach>
-								</select>
-								<select name="srchCat" id="srchCat">
-									<option value="number">담당자</option>
-									<option value="name">강사명</option>
-								</select>
-								<input type="text" id="srchWord" style="width: 110px;"/>
-								<input id="srch" type="submit" value="검색"/>
+								<form id="searchForm" action="/EducationSystem/manage/eduList.do" method="post">
+									<select name="search_belong">
+										<option value="belong">소속</option>
+										<c:forEach items="${belong}" var="item">
+											<option value="${item.belong_no }">${item.name }</option>
+										</c:forEach>
+									</select>
+									<select name="search_edu_code">
+										<option value="edu_code">교육분야</option>
+										<c:forEach items="${edu_code}" var="item">
+											<option value="${item.edu_code}" >${item.edu_name}</option>
+										</c:forEach>
+									</select>
+									<select name="search_manager">
+										<option value="manager">강사명</option>
+										<c:forEach items="${instructor}" var="item">
+											<option value="${item.instructor_no}" >${item.name}</option>
+										</c:forEach>
+									</select>
+									
+									<input name="keyword" type="text" value="${map.keyword}">
+									<input type="submit" value="검색" >
 								</form>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+
 				</td>
 			</tr>
 			<tr>
-				<th menu_value="eduAudit">교육심사</th>
+				<th menu_value="eduAudit" id="menu_value">교육심사</th>
 			</tr>
 			<tr>
-				<th menu_value="regist">강의 등록</th>
+				<th menu_value="regist" id="menu_value">강의 등록</th>
 			</tr>
 		</table>
 	</div>

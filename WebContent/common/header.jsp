@@ -31,8 +31,8 @@
 			    	${sessionScope.name}님  <span class="caret"></span>
 			    </button>
 			    <ul class="dropdown-menu">
-			      <li><a href="${path}/user/password.do?emp_no=${sessionScope.no}">비민번호 변경</a></li>
-			      <li><a href="${path}/user/logout.do">로그아웃</a></li>
+			      <li><a href="/EducationSystem/user/password.do?emp_no=${sessionScope.no}">비민번호 변경</a></li>
+			      <li><a href="/EducationSystem/user/logout.do">로그아웃</a></li>
 			    </ul>
 			  </div>
 			</div>
@@ -50,12 +50,12 @@
 		</div>
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="${path}/notice.do">공지사항</a></li>
-				<li><a href="${path}/EducationList.do">교육목록/신청</a></li>
-				<li><a href="${path}/PetitionList.do">청원</a></li>
-				<li><a href="${path}/eduhistory.do">수강목록</a></li>
-				<li><a href="${path}/instructor/main.do">강사</a></li>
-				<li><a href="${path}/ProjectCommunity.do">프로젝트공유</a></li>
+				<li><a href="/EducationSystem/notice.do">공지사항</a></li>
+				<li><a href="/EducationSystem/EducationList.do">교육목록/신청</a></li>
+				<li><a href="/EducationSystem/PetitionList.do">청원</a></li>
+				<li><a href="/EducationSystem/eduhistory.do">수강목록</a></li>
+				<li><a href="/EducationSystem/instructor/main.do">강사</a></li>
+				<li><a href="/EducationSystem/ProjectCommunity.do">프로젝트공유</a></li>
 			</ul>
 		</div>
 	</div>
@@ -82,7 +82,7 @@
 
 						<!------- form ------->
 						<form id="loginForm" name="loginForm" class="form-signin"
-							method="post" action="${path}/user/login.do">
+							method="post" action="/EducationSystem/user/login.do">
 							
 							<input type="text" name="no" id="no" class="form-control" placeholder="ID" required autofocus value=""> 
 							
