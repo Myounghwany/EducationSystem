@@ -189,6 +189,10 @@ $(document).ready(function() {
 		</table>
 		<input type="hidden" value="${detail.edu_no}" id="edu_no">
 		
+		<br>
+		<div align="center" class="goList">
+			<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/EducationList.do'">
+		</div>
 		
 	</div>
 </body>
