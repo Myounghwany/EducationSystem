@@ -284,8 +284,6 @@ $(document).ready(function(){
 
 	
 	<span style="color: #FF5E00;"> <b>분류 : 	${result.classification}</b></span> <br>
-	<c:out value="${sessionScope.no}"/>
-	<span>${result.writer}</span>
 	<table class="w3-table w3-bordered">
 		<tr>
 			<th colspan="4" style="background-color: #EAEAEA;"> Project Coummunity 상세보기 </th>
@@ -316,7 +314,7 @@ $(document).ready(function(){
 				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
-				<td colspan="4"> 추천 : ${projectLikeCount}   <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i> 
+				<td colspan="4"><strong> 추천 <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i>  ${projectLikeCount} 개 </strong>
 			<c:if test="${result.writer eq sessionScope.no}">
 					
 					<div align="right">
