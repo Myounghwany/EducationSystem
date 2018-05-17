@@ -335,4 +335,5 @@
 <script type='text/javascript' src='../js/jquery.js'></script>
 <script type='text/javascript' src='../js/jquery.simplemodal.js'></script>
 <script type='text/javascript' src='../js/basic.js'></script>
+<jsp:include page="../common/fixedFooter.jsp" />
 </body>

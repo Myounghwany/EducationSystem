@@ -30,9 +30,18 @@ public class EduHistoryDto {
 	private String file_path;
 	private String file_save_name;
 	private String file_ori_name;
+	private Date start_date;
 	private Date end_date; //교육종료일
 	private int buttonFlag;
 	
+	public Date getStart_date() {
+		return start_date;
+	}
+
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+
 	public int getButtonFlag() {
 		return buttonFlag;
 	}

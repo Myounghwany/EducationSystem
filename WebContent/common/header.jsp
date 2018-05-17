@@ -28,13 +28,18 @@
 .dropdown:hover .dropdown-content {
     display: block;
 }
+.headAtag:hover{
+	color: green;
+	text-decoration: none;
+	background-color: #FFFFF6;
+}
 </style>
 </head>
 <body style="width: 70%; margin: 0 auto;">
 	<div style="text-align: right" class="container">
 		<c:choose>
 		  <c:when test="${ sessionScope.no == null }">
-				<button type="button" class="dynamic-button" data-toggle="modal" data-target="#login" tabindex="0"
+				<button type="button" class="w3-button w3-white w3-border" data-toggle="modal" data-target="#login" tabindex="0"
 					style="width: 117px; height: 40px;">로그인</button>
 		  </c:when>
 		  <c:otherwise>
@@ -42,12 +47,12 @@
 			  	<c:if test="${sessionScope.account eq 'inst'}">
 			  		<span style="color:pink;">외부강사</span>
 			  	</c:if>
-			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+			    <button class="w3-button w3-white w3-border" type="button" data-toggle="dropdown">
 			    	${sessionScope.name}님  <span class="caret"></span>
 			    </button>
 			    <div class="dropdown-content">
-			      <p><a href="/EducationSystem/user/password.do?emp_no=${sessionScope.no}">비민번호 변경</a></p>
-			      <p><a href="/EducationSystem/user/logout.do">로그아웃</a></p>
+			      <p><a class="headAtag" href="/EducationSystem/user/password.do?emp_no=${sessionScope.no}">비밀번호 변경</a></p>
+			      <p><a class="headAtag" href="/EducationSystem/user/logout.do">로그아웃</a></p>
 			    </div>
 		  </div>
 

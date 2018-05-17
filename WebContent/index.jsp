@@ -17,7 +17,10 @@
 		}
 	}
 </script>
-<body>
+<body style="width: 70%; margin: 0 auto;">
 
 index 페이지 입니다.
+
+
+<jsp:include page="common/footer.jsp" />
 </body>

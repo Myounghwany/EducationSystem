@@ -14,7 +14,7 @@
 <style>
 
 .eduReqBtn{
-	text-align: center;
+	text-align: right;
 	margin-left:auto; 
     margin-right:auto;
 }
@@ -358,4 +358,5 @@
 		</div>
 	</form>
 	</div>
+<jsp:include page="../common/footer.jsp" />
 </body>

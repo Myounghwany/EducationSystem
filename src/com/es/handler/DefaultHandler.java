@@ -20,7 +20,6 @@ public class DefaultHandler {
 	
 	@RequestMapping("main")
 	public ModelAndView moveMain(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("main");
 		return new ModelAndView("index");
 	}
 

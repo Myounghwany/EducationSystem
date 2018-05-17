@@ -46,14 +46,14 @@
 </script>
 <body>
 <h2>수강목록 페이지</h2>
-<div style="width: 80%; margin: 20px auto">
+<div style=" margin: 20px auto">
 	
 	세션계졍 : ${sessionScope.no}, ${sessionScope.name}님 <br>
 	<c:if test="${sessionScope.account eq 'emp'}">
-		강의평가는 수강종료일 이후 <b>15일</b> 이내에 하셔야 합니다. <br><br>
+		강의평가는 수강종료일 이후 <b>7일</b> 이내에 하셔야 합니다. <br><br>
 	</c:if>
-	<div class="container">
-		<table class="w3-table w3-bordered" >
+	<div>
+		<table class="w3-table w3-bordered">
 			<tr>
 				<th width="5%">번호</th>
 				<th width="40%">교육명</th>
@@ -95,9 +95,13 @@
 							<c:if test="${sessionScope.account eq 'emp'}">
 								<td>${HistoryList.edu_state}</td>
 								<td>
+									<c:if test="${date < HistoryList.start_date}">
+										<span>강의대기</span>
+									</c:if>
+									
 									<!-- 현재 수강중 표시 조건
 										 1.오늘 날짜 < 강의 종료일일 때  -->
-									<c:if test="${date <= HistoryList.end_date}">
+									<c:if test="${HistoryList.start_date < date && date <= HistoryList.end_date}">
 										<span style="color:blue;">현재 수강중 </span>
 									</c:if>
 									
@@ -182,7 +186,6 @@
 		</table>
 	</div>
 </div>
-	
+<jsp:include page="../common/fixedFooter.jsp" />
 </body>
-
 <!-- holder.js -->

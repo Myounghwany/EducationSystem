@@ -265,7 +265,7 @@ public class EducationHandler {
 				// end date에 7일 더한다
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(tempDate);
-				cal.add(Calendar.DATE, 15);
+				cal.add(Calendar.DATE, 7);
 
 				//				System.out.println("end_date : " + tempDate + "// cal : " + cal.getTime());
 
