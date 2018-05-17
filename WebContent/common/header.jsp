@@ -7,12 +7,28 @@
 <title>Education System</title>
 
 <link rel="StyleSheet" href="/EducationSystem/css/bootstrap.min.css">
-<!-- 드롭다운(비밀번호 변경) -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- 로그인모달 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
 </head>
 <body style="width: 70%; margin: 0 auto;">
 	<div style="text-align: right" class="container">
@@ -22,20 +38,18 @@
 					style="width: 117px; height: 40px;">로그인</button>
 		  </c:when>
 		  <c:otherwise>
-		  	<div>
-			  <div class="dropdown">
+		  <div class="dropdown">
 			  	<c:if test="${sessionScope.account eq 'inst'}">
 			  		<span style="color:pink;">외부강사</span>
 			  	</c:if>
 			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 			    	${sessionScope.name}님  <span class="caret"></span>
 			    </button>
-			    <ul class="dropdown-menu">
-			      <li><a href="/EducationSystem/user/password.do?emp_no=${sessionScope.no}">비민번호 변경</a></li>
-			      <li><a href="/EducationSystem/user/logout.do">로그아웃</a></li>
-			    </ul>
-			  </div>
-			</div>
+			    <div class="dropdown-content">
+			      <p><a href="/EducationSystem/user/password.do?emp_no=${sessionScope.no}">비민번호 변경</a></p>
+			      <p><a href="/EducationSystem/user/logout.do">로그아웃</a></p>
+			    </div>
+		  </div>
 
 		  </c:otherwise>
 		</c:choose>
@@ -46,7 +60,7 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="${path}/main.do">HOME</a>
+			<a class="navbar-brand" href="/EducationSystem/main.do">HOME</a>
 		</div>
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">

@@ -71,7 +71,7 @@ table { width: 45%; }
 function valid() {
 	var f = window.document.form;
 	var x = document.getElementById("chkMsg").innerHTML;
-	alert("비밀번호 변경 성공 여부 : " + x);
+	alert("기존비밀번호 일치여부 : " + x);
 	
 	if (f.currentPasswd.value == "") {
 		alert("기존 비밀번호를 입력해주세요");

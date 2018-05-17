@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Configuration;
 
 import com.es.db.SqlMapClient;
+import com.es.instructor.InstructorDto;
 
 @Configuration("ManagerEduDao")
 public class ManagerEduDBBean implements ManagerEduDao{
@@ -40,5 +41,43 @@ public class ManagerEduDBBean implements ManagerEduDao{
 		map.put("searchOption", searchOption);
 		map.put("keyword",  keyword);
 		return SqlMapClient.getSession().selectList("ManagerEdu.searchAll", map);
+	}
+	
+	/*총 심사 목록 리스트 개수*/
+	@Override
+	public int judgeCount() {
+		return SqlMapClient.getSession().selectOne("ManagerEdu.EduJudgeCount");
+	}
+	
+	/*교육 심사목록*/
+	@Override
+	public List<EduListDto> eduJudgeList(int startRow, int endRow) {
+		HashMap<Object, Object> page = new HashMap<>();
+		page.put("startRow", startRow);
+		page.put("endRow", endRow);
+		return SqlMapClient.getSession().selectList("ManagerEdu.EduJudgeList", page);
+	}
+	@Override
+	public EduListDto eduDetailStatus(int edu_no) {
+		return SqlMapClient.getSession().selectOne("ManagerEdu.EduDetailStatus", edu_no);
+	}
+	
+	/*심사현황 수정*/
+	@Override
+	public int updateEduState(int edu_no, int app) {
+		HashMap<Object, Object> state = new HashMap<>();
+		state.put("edu_no", edu_no);
+		state.put("app", app);
+		return SqlMapClient.getSession().update("ManagerEdu.updateEduState", state);
+	}
+	
+	/*강의 등록*/
+	@Override
+	public int insertEduReq(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().insert("ManagerEdu.insertEduRegist", instructorDto);
+	}
+	@Override
+	public int insertEduReqDetail(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().insert("ManagerEdu.insertEduRegistDetail", instructorDto);
 	}
 }

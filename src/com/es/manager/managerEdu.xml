@@ -7,12 +7,13 @@
 	<select id="EduList" parameterType="hashmap" resultType="com.es.manager.EduListDto">
 		select b.name belong_name, l.edu_no, l.edu_name, c.edu_name edu_code_name, l.edu_schedule, l.manager, i.name instructor_name
 		from education_list l, belong b, education_code c, instructor i
-		where l.belong_no = b.belong_no and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no
+		where l.belong_no = b.belong_no and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no  and l.approval_state =3
 		limit #{startRow}, #{endRow}
 	</select>
 	<select id="EduListCount" parameterType="int" resultType="int">
 		select count(*)
 		from education_list
+		where approval_state =3
 	</select>
 	<select id="EduListDetail" parameterType="int" resultType="com.es.manager.EduListDto">
 		select l.edu_no, l.belong_no, b.name as belong_name, l.edu_field, l.edu_code, c.edu_name as edu_code_name, l.edu_name, l.edu_target, l.manager, 
@@ -38,5 +39,31 @@
 		</choose>
 	</sql>
 	<!-- 교육심사 -->
+	<select id="EduJudgeCount" parameterType="int" resultType="int">
+		select count(*) from education_list where approval_state != 3
+	</select>
+	<select id="EduJudgeList" parameterType="hashmap" resultType="com.es.manager.EduListDto">
+		select b.name belong_name, l.edu_no, l.edu_name, c.edu_name edu_code_name, l.edu_schedule, l.manager, i.name instructor_name, l.approval_state
+		from education_list l, belong b, education_code c, instructor i
+		where l.belong_no = b.belong_no and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no and l.approval_state != 3
+		limit #{startRow}, #{endRow}
+	</select>
+	<select id="EduDetailStatus" parameterType="int" resultType="com.es.manager.EduListDto">
+		select *
+		from education_list
+		where edu_no=#{edu_no}
+	</select>
+	<update id="updateEduState" parameterType="hashmap">
+		update education_list
+		set approval_state = #{app}
+		where edu_no = #{edu_no}
+	</update>
 	<!-- 교육등록 -->
+	<insert id = "insertEduRegist" parameterType = "com.es.instructor.InstructorDto" >
+		insert into education_list
+		values(NULL, #{belong_no}, #{edu_field}, #{edu_code}, #{edu_name}, #{edu_target}, #{manager}, #{edu_way}, #{edu_schedule}, #{edu_date}, #{edu_location}, #{instructor_no}, #{budget}, #{note}, #{applicants_limit}, STR_TO_DATE(concat(#{closing_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), 3)
+	</insert>
+	<insert id = "insertEduRegistDetail" parameterType = "com.es.instructor.InstructorDto">
+		insert into education_detail values(NULL, LAST_INSERT_ID(), STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), #{input_time}, NULL, #{file_path}, #{file_ori_name}, #{file_save_name})
+	</insert>
 </mapper>

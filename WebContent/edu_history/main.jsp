@@ -109,7 +109,7 @@
 									<c:if test="${ empty HistoryList.emp_eval and HistoryList.end_date < date and HistoryList.buttonFlag eq 1}">
 										<button class="button button2"
 												onclick="window.open('eduhistory/emp_eval.do?edu_no=${HistoryList.edu_no}', '강의평가',
-												'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
+												'width=600,height=450,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
 											강의평가
 										</button>
 									</c:if>

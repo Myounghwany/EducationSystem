@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<title>관리자 페이지 - Education System</title>
+<title>관리자 페이지/교육심사</title>
 <jsp:include page="../common/header.jsp" />
 <!-- 추가 Page styles -->
 <link type='text/css' href='../css/demo.css' rel='stylesheet' media='screen' />
@@ -36,7 +36,7 @@
 			case 'eduList':
 				location.href='eduList.do';
 				break;
-			case 'eduAudit':
+			case 'eduJudge':
 				location.href='eduJudge.do';
 				break;
 			case 'regist':
@@ -86,67 +86,9 @@
 		});
 	});
 	
-	function checkSubmit() {
-		if(srchWord.value == '') {
-			alert('검색어를 입력해주세요.');
-			return false;
-		}
-		var dept = $('#srchDept').val();
-		var pos = $('#srchPos').val();
-		var cat = $('#srchCat').val();
-		var word = $('#srchWord').val();
-		location.href='empList.do?';
-		return true;		
-	}
-	
 	function PageMove(page){
-		location.href="eduList.do?page="+page;
+		location.href="eduJudge.do?page="+page;
 	}
-	
-	function eduModify(edu_no, instructor_no){
-		var edu_no = document.getElementById("edu_no").innerHTML;
-		var manager_no = '${sessionScope.no}';
-		console.log('edu_no: ' + edu_no + ' sessionScope.no: '+ manager_no);
-		if(confirm("강의계획서 수정페이지로 이동하시겠습니까?")==true){
-			location.href="/EducationSystem/manage/eduModify.do?edu_no=" + edu_no + "&manager_no="+manager_no;
-		}else{
-			return;
-		}
-	}
-	
-	//검색
-	function selectBelong(belong_no) {
-		if (belong_no == '0') {
-			$('#department').empty();
-			$('#department').append('<option value = "0">전체</option>');
-		}
-		$.ajax({
-			url : '/EducationSystem/manage/belong.do',
-			type : 'get',
-			contentType : "application/x-www-form-urlencoded; charset=utf-8",
-			data : {
-				belong_no : belong_no
-			},
-			headers : {
-				Accept : "application/json"
-			},
-			success : function(res) {
-				$('#department').empty();
-				$('#department').append('<option value = "0">전체</option>');
-				for (i in res) {
-					$('#department').append(
-							'<option value = "'+res[i].dept_no+'">'
-									+ res[i].dept_name + '</option>');
-					console.log(res[i].dept_no + ' - ' + res[i].dept_name);
-				}
-			},
-			error : function(request, status, error) {
-				alert("code:" + request.status + "\n" + "message:"
-						+ request.responseText + "\n" + "error:" + error);
-			}
-		});
-	}
-	
 </script>
 <style>
 	table {
@@ -175,8 +117,12 @@
 		color: black;
 		text-decoration: none;
 	}
+	
 	#container #basic-modal #menu .edu:hover{ 
 		background-color: #EAEAEA; 				/* 리스트 tr 행 마우스 오버 */
+	}
+	#container #basic-modal #menu .edu .status:hover{ 
+		background-color: white; 				/* 리스트 tr 행 마우스 오버 */
 	}
 	#menu_value:hover{
 		background-color: #EBF7FF;	
@@ -185,10 +131,11 @@
 		color : #3162C7;
 	}
 	#menu .no { width : 8%;}
-	#menu .belong { width : 8%;}
+	#menu .belong { width : 5%;}
 	#menu .name { width : 30%;}
 	#menu .code { width : 10%;}
 	#menu .manager { width : 10%;}
+	#menu .instructor_name { width : 8%;}
 
 </style>
 <body>
@@ -209,20 +156,21 @@
 				<td rowspan="4">
 					<table frame="void">
 						<thead>
-							<tr><td colspan="7" style="text-align: right;">
-								*총 강의 개수 : ${totalCount}</td></tr>		
+							<tr><td colspan="8" style="text-align: right;">
+								*총 심사현황 개수 : ${totalCount}</td></tr>		
 							<tr>
 								<th class="no">교육번호</th>
 								<th class="belong">소속</th>
 								<th class="name">교육명</th>
 								<th class="code">교육분야</th>
-								<th>교육일시</th>
+								<th class="schedule">교육일시</th>
 								<th class="manager">담당자</th>
-								<th>강사명</th>
+								<th class="instructor_name">강사명</th>
+								<th class="judgeStatus">심사현황</th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${eduList}" var="eduList">
+							<c:forEach items="${eduJudgeList}" var="eduList">
 								<tr class="edu" name='basic'>
 									<td class="eduNum">${eduList.edu_no}</td> <!-- 교육번호 -->
 									<td>${eduList.belong_name}</td> <!-- 소속 -->
@@ -231,6 +179,21 @@
 									<td>${eduList.edu_schedule}</td> <!-- 교육일시 -->
 									<td>${eduList.manager}</td> <!-- 담당자 -->
 									<td>${eduList.instructor_name}</td> <!-- 강사명 -->
+									<!-- 심사현황 // 1 - 승인대기, 2 - 승인심사 3 - 승인완료 4-거절-->
+									<td onclick="event.cancelBubble = true;">
+										<button onclick="window.open('/EducationSystem/manage/eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
+											'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
+											<c:if test="${eduList.approval_state eq 1}">
+												<span>승인대기</span>
+											</c:if>
+											<c:if test="${eduList.approval_state eq 2}">
+												<span style="color:blue">승인심사</span>
+											</c:if>
+											<c:if test="${eduList.approval_state eq 4}">
+												<span style="color:red">승인거절</span>
+											</c:if>
+										</button>
+									</td> 
 								</tr>
 							</c:forEach>
 								
@@ -239,8 +202,6 @@
 							<p><code>교육번호 : <span id="edu_no"> </span> | 
 									  교육명 : <span id="edu_name"> </span>
 								</code>
-								<button id="eduModify" onclick="eduModify()" style="float:right;"
-								class="w3-button w3-green w3-border">강의계획서 수정</button>
 							</p>
 							<h5>소속번호 : <span id="belong_no"> </span></h5>
 							<h5>소속명 : <span id="belong_name"> </span></h5>
@@ -265,7 +226,7 @@
 						</div>	
 
 						<tr>
-							<td colspan="7" style="text-align: center">
+							<td colspan="8" style="text-align: center">
 								<!-- 페이징 -->
 								<div style="margin:20px auto " align="center" >					
 										<ul class="pagination" >
@@ -291,30 +252,6 @@
 											</ul>
 								</div>
 								
-								
-								<form id="searchForm" action="/EducationSystem/manage/eduList.do" method="post">
-									<select name="search_belong">
-										<option value="belong">소속</option>
-										<c:forEach items="${belong}" var="item">
-											<option value="${item.belong_no }">${item.name }</option>
-										</c:forEach>
-									</select>
-									<select name="search_edu_code">
-										<option value="edu_code">교육분야</option>
-										<c:forEach items="${edu_code}" var="item">
-											<option value="${item.edu_code}" >${item.edu_name}</option>
-										</c:forEach>
-									</select>
-									<select name="search_manager">
-										<option value="manager">강사명</option>
-										<c:forEach items="${instructor}" var="item">
-											<option value="${item.instructor_no}" >${item.name}</option>
-										</c:forEach>
-									</select>
-									
-									<input name="keyword" type="text" value="${map.keyword}">
-									<input type="submit" value="검색" >
-								</form>
 							</td>
 						</tr>
 					</tbody>
@@ -323,7 +260,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th menu_value="eduAudit" id="menu_value">교육심사</th>
+				<th menu_value="eduJudge" id="menu_value">교육심사</th>
 			</tr>
 			<tr>
 				<th menu_value="regist" id="menu_value">강의 등록</th>
