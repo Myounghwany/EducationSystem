@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,8 +54,12 @@ public class InstructorHandler {
 		if(page == null) page = "1"; 
 		System.out.println("page : " + page);
 		System.out.println("instructor/main");
+		HttpSession httpSession = request.getSession();
+		String account_no =  (String) httpSession.getAttribute("no");
+		String name =  (String) httpSession.getAttribute("name");
+		System.out.println("emp_no : " + account_no + " / " + "name : " + name);
 		
-		String account_no = "E2018040001";
+		/*String account_no = "E2018040001";*/
 		//직원일 경우
 		if(account_no.substring(0, 1).equals("E")) {
 			String instructor_check = instructorDao.selectInstructorCheck(account_no);
@@ -95,6 +100,7 @@ public class InstructorHandler {
 			model.addAttribute("instructor_no", account_no);
 			EduList(account_no, model, page);
 		}
+		model.addAttribute("name", name);
 		return "inst_req/main";
 	}
 	
@@ -183,11 +189,12 @@ public class InstructorHandler {
 	
 	
 	@RequestMapping(value = "/eduReq", method = RequestMethod.POST)
-	public String EduReg(HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
+	public String EduReg(InstructorDto instructorDto2,HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
 		String file_ori_name = file.getOriginalFilename();
 		String file_path = null;
 		String file_save_name = null;
-		
+		System.out.println(instructorDto2.getEdu_code());
+		System.out.println("belong_no : " + instructorDto2.getBelong_no());
 		if(file_ori_name.length() != 0) {
 			file_path = request.getServletContext().getRealPath("/save");
 			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
@@ -302,10 +309,22 @@ public class InstructorHandler {
 		List<InstructorDto> edu_name = instructorDao.selectEduNameList(instructor_no);//다른 강의로 상세페이지 이동용 이름
 		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
 		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
-		
+		System.out.println("closing_date : " + edu_list.get(0).getClosing_date());	
+		if(edu_list.get(0).getClosing_date().substring(4, 5).equals("-")) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date newDate = format.parse(edu_list.get(0).getClosing_date());
+			System.out.println("newDate : " + newDate);
+			
+			SimpleDateFormat newFormat = new SimpleDateFormat("yyyy.MM.dd");
+			System.out.println("newFormat : " + newFormat.format(newDate));
+			
+			edu_list.get(0).setClosing_date(String.valueOf(newFormat.format(newDate)));
+			
+		}
 		for(int i = 0; i<edu_list.size(); i++) {
 			InstructorDto edu_list2 = edu_list.get(i);
 			System.out.println(edu_list2.getEdu_no() + " / " + edu_list2.getBelong_no() + " / " + edu_list2.getEdu_field() + " / " + edu_list2.getEdu_way() + " / ");
+			//edu_target
 			String b = null;
 			try {
 				b = new String(edu_list2.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
@@ -331,10 +350,6 @@ public class InstructorHandler {
 			model.addAttribute("edu_target", edu_target);
 			
 		}
-		/*for(int i = 0; i<edu_detail.size(); i++) {
-			InstructorDto edu_list2 = edu_detail.get(i);
-			System.out.println( "education_detail : " + edu_list2.getFile_path() + " / " + edu_list2.getFile_ori_name() + " / " + edu_list2.getFile_save_name() + " / ");
-		}*/
 		model.addAttribute("edu_name", edu_name);
 		model.addAttribute("instructor_no", instructor_no);
 		model.addAttribute("edu_list", edu_list);
@@ -366,7 +381,7 @@ public class InstructorHandler {
 	    } else {                                                            // 익스플로러 이외 한글처리	
 	    	fileName = new String(file_ori_name.getBytes("utf-8"), "ISO-8859-1");
 	    }
-		File file = new File(file_path+file_ori_name);
+		File file = new File(file_path);
 		response.reset();
 		response.setContentType("application/octer-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=" + fileName + "");
@@ -445,10 +460,20 @@ public class InstructorHandler {
 			File f = new File(file_path+file.getOriginalFilename());
 			file.transferTo(f);			
 			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+			file_path += "\\" + file_save_name;
 		}
-		File f = new File(file_path+file.getOriginalFilename());
-	    file.transferTo(f);
-	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
+		if(file_ori_name.length() != 0) {
+			file_path = request.getServletContext().getRealPath("/save");
+			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+			File dir = new File(file_path);
+			if(!dir.isDirectory()) {
+				dir.mkdirs();
+			}
+			File f = new File(file_path+file.getOriginalFilename());
+			file.transferTo(f);			
+			file_path += "\\" + file_save_name;
+		}
+	    System.out.println("file_path : " + file_path + "file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
 		String edu_way = request.getParameter("edu_way");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -512,7 +537,7 @@ public class InstructorHandler {
 		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
 		instructorDto.setFile_ori_name(file_ori_name);
 		instructorDto.setFile_save_name(file_save_name);
-		instructorDto.setFile_path(file_path);;
+		instructorDto.setFile_path(file_path);
 		
 		int result = instructorDao.modifyEdu(instructorDto);
 		int result2 = instructorDao.modifyEduDetail(instructorDto);
@@ -550,10 +575,23 @@ public class InstructorHandler {
 	}
 	
 	@RequestMapping(value = "/eduReqDetail", method = RequestMethod.GET)
-	public String EduReqDetail(@RequestParam("edu_no") String edu_no, Model model) throws Exception {
+	public String EduReqDetail(@RequestParam("edu_no") String edu_no, HttpServletRequest request, Model model) throws Exception {
+		
 		List<InstructorDto> edu_list = instructorDao.selectEduList2(edu_no);
 		List<InstructorDto> edu_detail = instructorDao.selectEduDetail(edu_no);
-		InstructorDto instructorDto = new InstructorDto();
+		
+		if(edu_list.get(0).getClosing_date().substring(4, 5).equals("-")) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date newDate = format.parse(edu_list.get(0).getClosing_date());
+			System.out.println("newDate : " + newDate);
+			
+			SimpleDateFormat newFormat = new SimpleDateFormat("yyyy.MM.dd");
+			System.out.println("newFormat : " + newFormat.format(newDate));
+			
+			edu_list.get(0).setClosing_date(String.valueOf(newFormat.format(newDate)));
+			
+		}
+		
 		String[] belong_name = null;
 		String[] dept_name = null;
 		String[] position_name = null;
@@ -647,9 +685,8 @@ public class InstructorHandler {
 			File f = new File(file_path+file.getOriginalFilename());
 			file.transferTo(f);			
 			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+			file_path += "\\" + file_save_name;
 		}
-		File f = new File(file_path+file.getOriginalFilename());
-	    file.transferTo(f);
 	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
 		String edu_way = request.getParameter("edu_way");
 		String startDate = request.getParameter("startDate");
@@ -726,6 +763,6 @@ public class InstructorHandler {
 	@RequestMapping("/eduReqDelete")
 	public String EduReqDelete(@RequestParam("edu_no") String edu_no, Model model)throws Exception{
 		instructorDao.deleteEduReq(edu_no);
-		return "redirect:/instructor/eduReqDetail.do?edu_no="+edu_no;
+		return "redirect:/instructor/main.do";
 	}
 }

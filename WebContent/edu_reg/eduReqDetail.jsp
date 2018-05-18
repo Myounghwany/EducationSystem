@@ -116,16 +116,7 @@ option {
 				<th>교육대상</th>
 				<td>
 					<c:forEach items = "${edu_target }" var = "item1">
-						<%-- <c:forEach items = "${dept_name }" var = "item2"> --%>
-						<%-- <c:forEach items = "${dept_name }" var = "item2">
-							<c:forEach items = "${position_name }" var = "item3"> --%>
 						${item1 } <br/>
-						<%-- ${item2 } 
-						직급 : 
-						${item3 } --%>
-							<%-- </c:forEach>
-						</c:forEach> --%>
-						<%-- </c:forEach> --%>
 					</c:forEach>
 				</td>	
 			</tr>
@@ -139,11 +130,7 @@ option {
 			</tr>
 			<tr>
 				<th>신청마감일</th>
-				<td>
-					<fmt:parseDate value="${item.closing_date }" pattern="yyyy-MM-dd HH:mm:ss" var="closing_date" /> 
-					<fmt:formatDate value="${closing_date }" pattern="yyyy.MM.dd" var="date" /> 
-					${date }
-				</td>
+				<td>${item.closing_date }</td>
 			</tr>
 			<tr>
 				<th>교육방법</th>

@@ -88,7 +88,7 @@ function checkValue(){
 	        		<c:choose>
 						<c:when test="${empty edu_history}">
 						<tr>
-							<td colspan="4" style="text-align: center;"><br/><br/>수강자가 존재하지 않습니다</td>
+							<td colspan="5" style="text-align: center;"><br/><br/>수강자가 존재하지 않습니다</td>
 						</tr>
 						</c:when>
 						<c:otherwise>
