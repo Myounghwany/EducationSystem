@@ -277,6 +277,11 @@ public class ProjectCommunityHandler {
 		/* 좋아요 전체 갯수 */
 		int projectLikeCount = projectDao.projectLikeCount(map);
 		
+		/* 좋아요 누른 사람 list */
+		List<String> likePerson = projectDao.projectLikePerson(map);
+		
+		
+		request.setAttribute("likePerson", likePerson);
 		request.setAttribute("likeCheck", likeCheck);
 		request.setAttribute("projectLikeCount", projectLikeCount);
 		request.setAttribute("commentListCount", commentListCount);

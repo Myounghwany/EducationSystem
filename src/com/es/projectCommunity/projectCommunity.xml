@@ -51,7 +51,9 @@
   	</update> 
   	<delete id="projectDelete" parameterType="int">
   		delete from project_community where project_no=#{project_no}
-  	</delete>	
+  	</delete>
+  	
+  	<!-- like -->	
   	<insert id="projectLike" parameterType="hashmap">
   		insert into project_community_like(project_no, emp_no) values(#{project_no},#{emp_no})
   	</insert>
@@ -63,6 +65,9 @@
   	</delete>
   	<select id="projectLikeCount" parameterType="hashmap" resultType="int">
   		select count(distinct emp_no) from project_community_like where project_no=#{project_no}
+  	</select>
+    <select id="projectLikePerson" parameterType="hashmap" resultType="string">
+  		select distinct CONCAT(e.name,'(',l.emp_no,')') from project_community_like l, employees e where project_no=#{project_no} and l.emp_no=e.emp_no
   	</select>
   	
   	<!-- comment -->

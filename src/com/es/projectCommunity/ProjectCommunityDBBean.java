@@ -70,6 +70,8 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 		
 	}
 	
+	/* 좋아요 */
+	
 	@Override
 	public int projectLike(HashMap<String, Object> map) {
 		return SqlMapClient.getSession().insert("ProjectCommunity.projectLike",map);
@@ -90,6 +92,10 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 		return SqlMapClient.getSession().selectOne("ProjectCommunity.projectLikeCount",map);
 	}
 	
+	@Override
+	public List<String> projectLikePerson(HashMap<String, Object> map) {
+		return SqlMapClient.getSession().selectList("ProjectCommunity.projectLikePerson",map);
+	}
 	
 	
 	/*comment*/

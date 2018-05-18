@@ -24,6 +24,32 @@ $(document).ready(function(){
 	console.log('likeCheck : '+likeCheck);
 	console.log('emp_no : '+emp_no);
 	
+	var v_mempplist = $('#mempplist');
+		
+	$("span.likeSpan").mouseenter(function(){
+		
+		var v_thisOffset =  $(this).offset();
+		var v_mempplistW = v_mempplist.width() + 20;
+		var v_mempplistH = v_mempplist.height();
+		console.log('v_mempplistH :'+v_mempplistH);
+		console.log(v_thisOffset.top - v_mempplistH);
+		
+		$(this).css({'text-decoration': 'underline'});
+		v_mempplist.css({'left':v_thisOffset.left - v_mempplistW+100 ,'top':v_thisOffset.top - v_mempplistH});
+		
+		v_mempplist.show();
+
+		event.preventDefault();
+
+		
+	}).mouseleave(function(){
+		$(this).css({'text-decoration': 'none'});
+		v_mempplist.hide();
+	});
+	
+			 
+	
+	
 	if(likeCheck == 1){
 		$("#fa-heart").attr("title","추천취소");
 		$("#fa-heart").addClass('hover');
@@ -316,7 +342,7 @@ $(document).ready(function(){
 				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
-				<td colspan="4"><strong> 추천 <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i>  ${projectLikeCount} 개 </strong>
+				<td colspan="4"><strong> 추천 <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i> <span class="likeSpan"> ${projectLikeCount} 개 </span></strong>
 			<c:if test="${result.writer eq sessionScope.no}">
 					
 					<div align="right">
@@ -328,9 +354,15 @@ $(document).ready(function(){
 				</td>
 		</tr>
 		
-		
-		
 	</table>
+
+	<div id="mempplist" style="display: none;position:absolute; background-color: black; color: white;">
+		<c:forEach items="${requestScope.likePerson}" var="list" varStatus="state">
+			${list}<br>
+		</c:forEach>
+	</div>
+
+		
 	
 	<div align="center" class="goList">
 		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/ProjectCommunity.do'">
