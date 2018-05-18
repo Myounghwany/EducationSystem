@@ -200,18 +200,19 @@ $(document).ready(function(){
 		
 	});
 
-	
 	//댓글 수정 - 댓글 내용 출력을 input 폼으로 변경 
 	$(document).on("click", ".commentUpdateRBtn", function(){
 		var reply_no=$(this).val();	
 		var content = $('#replyContent'+reply_no).text();
 		
 		var a ='';
+		a += '<form>'
 	    a += '<div class="input-group">';
 	    a += '<input type="text" class="form-control" name="content_'+reply_no+'" value="'+content+'"/>';
 	    a += '<span class="input-group-btn"><button class="btn btn-default commentUpdateProc" type="button" value='+reply_no+'>수정</button> </span>';
-	    a += '<span class="input-group-btn"><button class="btn btn-default" type="button" onclick="location.href=${path}/ProjectCommunity/detail.do?project_no='+project_no+'">취소</button> </span>';
+	    a += '<span class="input-group-btn"><button class="btn btn-default" type="reset" onclick="location.href="${path}/ProjectCommunity/detail.do?project_no='+project_no+'">취소</button> </span>';
 	    a += '</div>';
+		a += '</form>'
 	    $('.commentContent'+reply_no).html(a);
 		
 	    console.log('project_no : '+project_no);
@@ -305,7 +306,8 @@ $(document).ready(function(){
 			<td colspan="3">${result.title}</td>
 		</tr>
 		<tr height="100">
-			<td colspan="4" height="400"><pre>${result.content}</pre>
+			<td colspan="4" height="400">
+			<div style="word-break:break-all;">${result.content}</div>
 			</td>
 		</tr>
 		<tr>
