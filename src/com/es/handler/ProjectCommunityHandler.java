@@ -281,6 +281,7 @@ public class ProjectCommunityHandler {
 		List<String> likePerson = projectDao.projectLikePerson(map);
 		
 		
+		request.setAttribute("likePersonSize", likePerson.size());
 		request.setAttribute("likePerson", likePerson);
 		request.setAttribute("likeCheck", likeCheck);
 		request.setAttribute("projectLikeCount", projectLikeCount);

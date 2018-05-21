@@ -272,9 +272,9 @@ function deleteBtn(no){
 <!-- modal -->  
   <div id="id01" class="w3-modal">
     <div class="w3-modal-content" style="width: 400px; height: 400px;">
-      <header class="w3-container w3-teal"> 
+      <header class="w3-container w3" style="background-color: #EAEAEA;"> 
         <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-        <h1>교육신청</h1>
+        <h1 style="color : black;">교육신청</h1>
       </header>
       <div class="w3-container">
         <p>선택한 교육과정</p>

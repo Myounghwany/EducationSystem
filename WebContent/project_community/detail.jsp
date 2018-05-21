@@ -20,19 +20,16 @@ $(document).ready(function(){
 	var project_no=${result.project_no};
 	var emp_no = '<c:out value="${sessionScope.no}"/>';
 	var likeCheck = ${likeCheck};
-	
-	console.log('likeCheck : '+likeCheck);
-	console.log('emp_no : '+emp_no);
-	
 	var v_mempplist = $('#mempplist');
 		
 	$("span.likeSpan").mouseenter(function(){
 		
+		if(${likePersonSize} != 0){
+			
+		
 		var v_thisOffset =  $(this).offset();
 		var v_mempplistW = v_mempplist.width() + 20;
 		var v_mempplistH = v_mempplist.height();
-		console.log('v_mempplistH :'+v_mempplistH);
-		console.log(v_thisOffset.top - v_mempplistH);
 		
 		$(this).css({'text-decoration': 'underline'});
 		v_mempplist.css({'left':v_thisOffset.left - v_mempplistW+100 ,'top':v_thisOffset.top - v_mempplistH});
@@ -40,11 +37,17 @@ $(document).ready(function(){
 		v_mempplist.show();
 
 		event.preventDefault();
-
+	}
 		
 	}).mouseleave(function(){
 		$(this).css({'text-decoration': 'none'});
 		v_mempplist.hide();
+	});
+
+	$("span.likeSpan").click(function(){
+		if(${likePersonSize} != 0){
+		document.getElementById('id01').style.display='block';
+		}
 	});
 	
 			 
@@ -84,7 +87,6 @@ $(document).ready(function(){
 			},
 			dataType:"text",  
 			success : function(data){
-					console.log('data : '+data);
 					location.href="${path}/ProjectCommunity/detail.do?project_no="+project_no;
 			},
 			error : function(request,status,error){
@@ -105,11 +107,8 @@ $(document).ready(function(){
 				'project_no':project_no
 			},
 			success : function(data){
-					console.log('data : '+data);
-					console.log('=================================');
 					var a =''; 
 					$.each(data, function(key, value){ 
-						console.log('key : '+key+' value : '+value+'\n'+' data : '+data+'\n'+value.reply_no+' value.dep :'+value.dep);
 						
 						if(value.dep == 0){
 							a += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;">';
@@ -200,10 +199,6 @@ $(document).ready(function(){
 		
 		var reply_no=$(this).val();	
 		var content=$('.commentInsertFormR [name="content"]').val();
-
-		 console.log('project_no : '+project_no);
-		 console.log('reply_no : '+reply_no);
-		 console.log('content : '+content);
 		
 		$.ajax({
 				contentType : 'application/text; charset=utf-8',
@@ -241,20 +236,12 @@ $(document).ready(function(){
 		a += '</form>'
 	    $('.commentContent'+reply_no).html(a);
 		
-	    console.log('project_no : '+project_no);
-		console.log('reply_no : '+reply_no);
-		console.log('content : '+content);
-		
 	});
 	
 	//댓글 수정 
 	$(document).on("click", ".commentUpdateProc", function(){
 		var reply_no=$(this).val();	
 		var content = $('[name=content_'+reply_no+']').val();
-	    
-	    console.log('project_no : '+project_no);
-		console.log('reply_no : '+reply_no);
-		console.log('content : '+content);
 		
 		$.ajax({
 	        url : '${path}/ProjectCommunity/CommentUpdate.do',
@@ -272,8 +259,6 @@ $(document).ready(function(){
 	$(document).on("click", ".commentDeleteRBtn", function(){
 		var reply_no=$(this).val();	
 	    
-	    console.log('project_no : '+project_no);
-		console.log('reply_no : '+reply_no);
 		
 		if(confirm('정말 삭제 하시겠습니까?')){
 
@@ -356,9 +341,18 @@ $(document).ready(function(){
 		
 	</table>
 
+	<c:set var="doneLoop" value="false"/>
 	<div id="mempplist" style="display: none;position:absolute; background-color: black; color: white;">
 		<c:forEach items="${requestScope.likePerson}" var="list" varStatus="state">
+		<c:if test="${not doneLoop}">
 			${list}<br>
+		
+		<c:if test="${state.count > 9}">
+		<c:set var="doneLoop" value="true"/> <c:if test="${likePersonSize-10 ne 0}">
+			외 ${likePersonSize-10} 명 <br>
+		</c:if></c:if>
+		
+		</c:if>	
 		</c:forEach>
 	</div>
 
@@ -367,9 +361,9 @@ $(document).ready(function(){
 	<div align="center" class="goList">
 		<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/ProjectCommunity.do'">
 	</div><br>
-	
   <!--  댓글  -->
      <label for="content">comment</label>
+     
   	<c:if test="${commentListCount ne 0}">
 		<strong style="padding-left: 10px">댓글 : ${commentListCount} 개</strong><br>
   	</c:if>
@@ -386,7 +380,23 @@ $(document).ready(function(){
  
      <div class="commentList"></div>
 
+	<!-- modal -->
+	<div id="id01" class="w3-modal">
+    <div class="w3-modal-content" style="width: 350px; height: 450px;">
+      <header class="w3-container w3" style="background-color: #EAEAEA;"> 
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <p style="font-size: 20px; background-color: #EAEAEA;">총 ${likePersonSize} 개</p>
+      </header>
+      <div class="w3-container" id="container-content" style="align-items: center; overflow-y:scroll; width: 350px; height: 400px;" >
+        <c:forEach items="${requestScope.likePerson}" var="list" varStatus="state">
+        		<br><div align="center">${list}</div> 
+		</c:forEach>
+      </div>
+    </div>
+  </div>
+	
 
 	</div>
+	
 </body>
 </html>
