@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.es.education.EduHistoryDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
@@ -32,5 +33,8 @@ public interface ManagerDao {
 
 	List<InstListDto> getInstList(HashMap<String, Object> srchMap);
 
-	Map<String, String> getEmpDetail(String emp_no);
+	EmpListDto getEmpDetail(String emp_no);
+
+	List<EduHistoryDto> getEmpEduList(String emp_no);
+
 }

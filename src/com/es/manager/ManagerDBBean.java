@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Configuration;
 
 import com.es.db.SqlMapClient;
+import com.es.education.EduHistoryDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
@@ -70,7 +71,12 @@ public class ManagerDBBean implements ManagerDao {
 	}
 
 	@Override
-	public Map<String, String> getEmpDetail(String emp_no) {
+	public EmpListDto getEmpDetail(String emp_no) {
 		return SqlMapClient.getSession().selectOne("Manager.EmpDetail", emp_no);
+	}
+
+	@Override
+	public List<EduHistoryDto> getEmpEduList(String emp_no) {
+		return SqlMapClient.getSession().selectList("Education.EduHistory", emp_no);
 	}
 }
