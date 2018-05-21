@@ -2,7 +2,10 @@ package com.es.instructor;
 
 
 public class InstructorDto {
-	private String id;
+	private String identity_no;
+	private String address;
+	private String phone;
+	private String email;
 	private String account_no;
 	private String instructor_no;
 	private int approval_state;
@@ -49,11 +52,29 @@ public class InstructorDto {
 	private int student;
 	private int page;
 	private int eduListNum;
-	public String getId() {
-		return id;
+	public String getIdentity_no() {
+		return identity_no;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setIdentity_no(String identity_no) {
+		this.identity_no = identity_no;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getAccount_no() {
 		return account_no;

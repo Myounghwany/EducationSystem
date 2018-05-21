@@ -15,6 +15,17 @@
 	<insert id="insertInstructorRequest" parameterType = "com.es.instructor.InstructorDto">
 		insert into instructor select concat('I', (select date_format(now(), '%Y%m')), (select lpad(count(*)+1, 4, '0') from instructor)), #{emp_no}, null, 1, now(), #{name};
 	</insert>
+	<select id="selectInstructorInfo" resultType = "com.es.instructor.InstructorDto" parameterType = "com.es.instructor.InstructorDto">
+		select *
+		<choose>
+			<when test='account_no == null'>
+				from external_instructor where instructor_no = #{instructor_no} 
+			</when>
+			<otherwise>
+				, B.name belong_name from employees A join belong B on A.belong_no = B.belong_no left join department C on A.dept_no = C.dept_no left join position D on A.position_no = D.position_no where emp_no = #{account_no}
+			</otherwise>
+		</choose>
+	</select>
 	<select id="selectEduReq" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
 		select *, B.name belong_name, C.edu_name edu_code_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code where instructor_no = #{account_no} and approval_state != 3
 	</select>

@@ -13,6 +13,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 <!-- 나현 로그인모달 & 드롭다운-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -53,7 +54,7 @@
 	function isntEvalBtn(edu_no, deadLine){
 		window.name = "parentForm";
 		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no + "&deadLine=" + deadLine, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
-	}
+	}	
 </script>
 <jsp:include page="../common/header.jsp" />
 <body>
@@ -62,6 +63,7 @@
 	<c:choose>
 		<c:when test='${instructor_no=="null"}'>
 			<div id="info">${result }</div>
+
 			<table class="w3-table w3-bordered">
 				<tr>
 					<th>
@@ -73,7 +75,40 @@
 		<c:otherwise>
 			<c:choose>
 				<c:when test='${approval_state == 3}'>
-					<span id="name">${name }</span> 강사님 ( ${instructor_no} ) 환영합니다!
+					<a href="#" data-target="#layerpop" data-toggle="modal"><i class="fas fa-info-circle"></i></a><span id="name">&nbsp;${name }</span> 강사님 ( ${instructor_no} ) 환영합니다!
+						<div class="modal fade" id="layerpop" >
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <!-- header -->
+						      <div class="modal-header">
+						        <!-- 닫기(x) 버튼 -->
+						        <button type="button" class="close" data-dismiss="modal">×</button>
+						        <!-- header title -->
+						        <h4 class="modal-title">강사 정보</h4>
+						      </div>
+						      <!-- body -->
+						      <div class="modal-body">
+						            <c:forEach items="${instInfo }" var = "item">
+						            	강사명 : ${item.name }<br/>
+						            	<c:if test='${account_no!=null}'>
+							            	사원번호 : ${item.emp_no}<br/>
+						            		소속 : ${item.belong_name }<br/>
+						            		부서 : ${item.dept_name }<br/>
+						            		직급 : ${item.position_name }<br/>
+						            	</c:if>
+						            	주민번호 : ${item.identity_no }<br/>
+						            	주소지 : ${item.address } <br/>
+						            	휴대폰 : ${item.phone }<br/>
+						            	이메일 : ${item.email }
+						            </c:forEach>
+						      </div>
+						      <!-- Footer -->
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
 						<c:choose>
 							<c:when test='${account_no!=null}'>
 							<table class="w3-table w3-bordered">

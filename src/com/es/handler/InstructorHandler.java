@@ -58,7 +58,7 @@ public class InstructorHandler {
 		String account_no =  (String) httpSession.getAttribute("no");
 		String name =  (String) httpSession.getAttribute("name");
 		System.out.println("emp_no : " + account_no + " / " + "name : " + name);
-		
+		InstructorDto instructorDto = new InstructorDto();
 		/*String account_no = "E2018040001";*/
 		//직원일 경우
 		if(account_no.substring(0, 1).equals("E")) {
@@ -86,6 +86,11 @@ public class InstructorHandler {
 					model.addAttribute("hire_date", hire_date);
 					System.out.println("instructor_no : " + instructor_no + "강사권한 O");
 					System.out.println("approval_state : " + approval_state);
+					instructorDto.setAccount_no(account_no);
+					instructorDto.setInstructor_no(instructor_no);
+					//강사정보
+					List <InstructorDto> instInfo = instructorDao.selectInstructorInfo(instructorDto);
+					model.addAttribute("instInfo", instInfo);
 					EduList(instructor_no, model, page);
 				//강사 승인 X
 				}else {
@@ -98,6 +103,10 @@ public class InstructorHandler {
 		}else {
 			model.addAttribute("approval_state", "3");
 			model.addAttribute("instructor_no", account_no);
+			//강사정보
+			instructorDto.setInstructor_no(account_no);
+			List <InstructorDto> instInfo = instructorDao.selectInstructorInfo(instructorDto);
+			model.addAttribute("instInfo", instInfo);
 			EduList(account_no, model, page);
 		}
 		model.addAttribute("name", name);
