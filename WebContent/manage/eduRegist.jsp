@@ -215,7 +215,7 @@
 	<form name= "eduForm" method="post" action = "/EducationSystem/manage/regist.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
 		<table id="table1" class="w3-table w3-bordered">
 			<tr>
-				<th colspan="2" style="background-color: #EAEAEA;">교육신청 작성</th>
+				<th colspan="4" style="background-color: #EAEAEA;">교육신청 작성</th>
 			</tr>
 			<tr>
 				<td width="150px"><span class="necessary">*</span>교육코드</td>
@@ -244,7 +244,7 @@
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>소속번호</td>
-				<td>
+				<td colspan="3">
 					<select name = "belong_no">
 						<option value = "">소속</option>
 						<c:forEach items = "${belong_no }" var = "item">
@@ -255,43 +255,43 @@
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육분야</td>
-				<td><input type="text" name="edu_field" style="width: 700px;"/></td>
+				<td colspan="3"><input type="text" name="edu_field" style="width: 700px;"/></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육명</td>
-				<td><input type="text" name="edu_name" style="width: 700px;"/></td>
+				<td colspan="3"><input type="text" name="edu_name" style="width: 700px;"/></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육방법</td>
-				<td><input type="text" name="edu_way" style="width: 700px;"/></td>
+				<td colspan="3"><input type="text" name="edu_way" style="width: 700px;"/></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육일정</td>
-				<td>	
+				<td colspan="3">	
 					<input type="text" id="startDate" name="startDate"> &nbsp; ~ &nbsp;
 					<input type="text" id="endDate" name="endDate">
 				</td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육일시</td>
-				<td><input type="text" name="edu_date" style="width: 700px;"/></td>
+				<td colspan="3"><input type="text" name="edu_date" style="width: 700px;"/></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>소요시간</td>
-				<td><input type="number" name="input_time" onkeyPress="InputOnlyNumber(this);">&nbsp;소요시간은 시 단위로 입력이 가능합니다</td>
+				<td colspan="3"><input type="number" name="input_time" onkeyPress="InputOnlyNumber(this);">&nbsp;소요시간은 시 단위로 입력이 가능합니다</td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>신청마감일</td>
-				<td><input type="text" name="closing_date" id="closingDate"></td>
+				<td colspan="3"><input type="text" name="closing_date" id="closingDate"></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육장소</td>
-				<td><input type="text" name="edu_location"/></td>
+				<td colspan="3"><input type="text" name="edu_location"/></td>
 			</tr>
 			<input type="hidden" name="instructor_no" value="${instructor_no }"/>
 			<tr>
 				<td><span class="necessary">*</span>담당자</td>
-				<td><input type="text" name = "manager"/></td>
+				<td colspan="3"><input type="text" name = "manager"/></td>
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>교육대상</td>
@@ -334,7 +334,7 @@
 			</tr>
 			<tr>
 				<td><span class="necessary">&nbsp;</span>소요예산</td>
-				<td>
+				<td colspan="3">
 					<textarea class="form-control" rows="4" name="budget" maxlength="1000"
 					style="width: 700px; height: 300px;"></textarea>
 					<span style="float: right;"> 
@@ -344,7 +344,7 @@
 			</tr>
 			<tr>
 				<td><span class="necessary">&nbsp;</span>비고</td>
-				<td>
+				<td colspan="3">
 					<textarea class="form-control" rows="4" name="note" maxlength="1000"
 					style="width: 700px; height: 300px;"></textarea><span style="float: right;"> 
 						(<span id="textCount2" class="textCount2">0</span>/1000)
@@ -353,11 +353,11 @@
 			</tr>
 			<tr>
 				<td><span class="necessary">*</span>신청자 제한 수</td>
-				<td><input type="number" name="applicants_limit" onkeyPress="InputOnlyNumber(this);"/>&nbsp;명</td>
+				<td colspan="3"><input type="number" name="applicants_limit" onkeyPress="InputOnlyNumber(this);"/>&nbsp;명</td>
 			</tr>
 			<tr>
 				<td><span class="necessary">&nbsp;</span>파일첨부</td>
-				<td><input type="file" name="file_name"/></td>
+				<td colspan="3"><input type="file" name="file_name"/></td>
 			</tr>
 		</table>
 		<br/>	

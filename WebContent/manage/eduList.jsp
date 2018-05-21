@@ -13,7 +13,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <script>
 	$('document').ready(function() {
 		//alert($(location).attr('href')); //http://localhost:8080/EducationSystem/manageEmpList.do
@@ -210,12 +209,12 @@
 			<tr>
 				<th menu_value="eduList" id="menu_value">교육목록</th>
 				<td rowspan="4">
-					<table frame="void">
+					<table frame="void" class="sortingT">
 						<thead>
 							<tr><td colspan="7" style="text-align: right;">
 								*총 강의 개수 : ${totalCount}</td></tr>		
 							<tr>
-								<th class="no">교육번호</th>
+								<th class="no">교육번호 </th>
 								<th class="belong">소속</th>
 								<th class="name">교육명</th>
 								<th class="code">교육분야</th>
@@ -348,5 +347,6 @@
 <script type='text/javascript' src='../js/jquery.js'></script>
 <script type='text/javascript' src='../js/jquery.simplemodal.js'></script>
 <script type='text/javascript' src='../js/basic.js'></script>
+
 <jsp:include page="../common/fixedFooter.jsp" />
 </body>
