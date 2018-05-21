@@ -396,25 +396,26 @@ public class ManagerEduHandler {
 	
 	/* 강의등록 로직 */
 	@RequestMapping(value = "manage/regist", method = RequestMethod.POST)
-	public String EduRegist(EduListDto eduDto, HttpServletRequest request, HttpServletResponse response, Model model
-						) throws Exception{
-		request.setCharacterEncoding("UTF-8");
-		System.out.println("들어오나....");
-//		String file_ori_name = file.getOriginalFilename();
-//		String file_path = null;
-//		String file_save_name = null;
-//
-//		if(file_ori_name.length() != 0) {
-//	         file_path = request.getServletContext().getRealPath("/save");
-//	         file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
-//	         File dir = new File(file_path);
-//	         if(!dir.isDirectory()) {
-//	            dir.mkdirs();
-//	         }
-//	         File f = new File(file_path+file.getOriginalFilename());
-//	         file.transferTo(f);         
-//	         file_path += "\\" + file_save_name;
-//	    }
+	public String EduRegist(HttpServletRequest request, HttpServletResponse response, Model model,
+			 @RequestParam("file_name") MultipartFile file) throws Exception{
+		System.out.println("들어오나...." + request.getParameter("instructor_no"));
+		String file_ori_name = file.getOriginalFilename();
+		String file_path = null;
+		String file_save_name = null;
+
+		if(file_ori_name.length() != 0) {
+	         file_path = request.getServletContext().getRealPath("/save");
+	         file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+	         File dir = new File(file_path);
+	         if(!dir.isDirectory()) {
+	            dir.mkdirs();
+	         }
+	         File f = new File(file_path+file.getOriginalFilename());
+	         file.transferTo(f);         
+	         file_path += "\\" + file_save_name;
+// 			 System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+
+	    }
 		
 		String edu_code = request.getParameter("edu_code");
 		String belong_no = request.getParameter("belong_no");
@@ -435,72 +436,71 @@ public class ManagerEduHandler {
 		String applicants_limit = request.getParameter("applicants_limit");
 		String file_name = request.getParameter("file_name");
 		
-		System.out.println("선택된 강사번호:" + eduDto.getInstructor_no());
 		System.out.println(edu_code + '/'+ belong_no + '/'+ edu_field + '/'+ edu_name + '/'+ edu_way + '/'+ startDate 
 				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ instructor_no 
 				+ '/'+ manager + '/'+ budget + '/'+ note + '/'+ applicants_limit + '/' + file_name);
-//		String[] select1 = request.getParameterValues("select1");
-//		int length = select1.length;
-//		String[] belong_no1 = new String[length];
-//		String[] belong_name = new String[length];
-//		String[] dept_no = new String[length];
-//		String[] dept_name = new String[length];
-//		String[] position_no = new String[length];
-//		String[] position_name = new String[length];
-//		
-//		JSONArray arr = new JSONArray();
-//		for(int i=0; i<select1.length; i++) {
-//			JSONObject obj = new JSONObject();
-//			int idx1 = select1[i].indexOf("!");
-//			int idx2 = select1[i].indexOf("@");
-//			int idx3 = select1[i].indexOf("#");
-//			int idx4 = select1[i].indexOf("$");
-//			int idx5 = select1[i].indexOf("%");
-//			belong_no1[i] = select1[i].substring(0, idx1);
-//			belong_name[i] = select1[i].substring(idx1+1, idx2);
-//			dept_no[i] = select1[i].substring(idx2+1, idx3);
-//			dept_name[i] = select1[i].substring(idx3+1, idx4);
-//			position_no[i] = select1[i].substring(idx4+1, idx5);
-//			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
-//			obj.put("belong_no", belong_no1[i]);
-//			obj.put("belong_name", belong_name[i]);
-//			obj.put("dept_no", dept_no[i]);
-//			obj.put("dept_name", dept_name[i]);
-//			obj.put("position_no", position_no[i]);
-//			obj.put("position_name", position_name[i]);
-//			/*arr.add(obj);*/
-//			arr.add(obj);
-//		}
-//		System.out.println("target : " + arr.toString());
-//		InstructorDto instructorDto = new InstructorDto();
-//		instructorDto.setEdu_code(Integer.parseInt(edu_code));
-//		instructorDto.setBelong_no(Integer.parseInt(belong_no));
-//		instructorDto.setEdu_field(edu_field);
-//		instructorDto.setEdu_name(edu_name);
-//		instructorDto.setEdu_way(edu_way);
-//		instructorDto.setEdu_schedule(startDate+"~"+endDate);
-//		instructorDto.setStart_date(startDate);
-//		instructorDto.setEnd_date(endDate);
-//		instructorDto.setEdu_date(edu_date);
-//		instructorDto.setInput_time(Integer.parseInt(input_time));
-//		instructorDto.setClosing_date(closing_date);
-//		instructorDto.setEdu_location(edu_location);
-//		instructorDto.setInstructor_no(instructor_no);
-//		instructorDto.setManager(manager);
-//		instructorDto.setEdu_target(arr.toString());
-//		instructorDto.setBudget(budget);
-//		instructorDto.setNote(note);
-//		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
-//		//instructorDto.setFile_ori_name(file_ori_name);
-//		//instructorDto.setFile_save_name(file_save_name);
-//		//instructorDto.setFile_path(file_path);;
-//		
-//		int result = managerEduDao.insertEduReq(instructorDto);
-//		int result2 = managerEduDao.insertEduReqDetail(instructorDto);
-//		
-//		if(result == 1 && result2 ==1) {
-//			System.out.println("강의등록 성공");
-//		}
+		String[] select1 = request.getParameterValues("select1");
+		int length = select1.length;
+		String[] belong_no1 = new String[length];
+		String[] belong_name = new String[length];
+		String[] dept_no = new String[length];
+		String[] dept_name = new String[length];
+		String[] position_no = new String[length];
+		String[] position_name = new String[length];
+		
+		JSONArray arr = new JSONArray();
+		for(int i=0; i<select1.length; i++) {
+			JSONObject obj = new JSONObject();
+			int idx1 = select1[i].indexOf("!");
+			int idx2 = select1[i].indexOf("@");
+			int idx3 = select1[i].indexOf("#");
+			int idx4 = select1[i].indexOf("$");
+			int idx5 = select1[i].indexOf("%");
+			belong_no1[i] = select1[i].substring(0, idx1);
+			belong_name[i] = select1[i].substring(idx1+1, idx2);
+			dept_no[i] = select1[i].substring(idx2+1, idx3);
+			dept_name[i] = select1[i].substring(idx3+1, idx4);
+			position_no[i] = select1[i].substring(idx4+1, idx5);
+			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
+			obj.put("belong_no", belong_no1[i]);
+			obj.put("belong_name", belong_name[i]);
+			obj.put("dept_no", dept_no[i]);
+			obj.put("dept_name", dept_name[i]);
+			obj.put("position_no", position_no[i]);
+			obj.put("position_name", position_name[i]);
+			/*arr.add(obj);*/
+			arr.add(obj);
+		}
+		System.out.println("target : " + arr.toString());
+		InstructorDto instructorDto = new InstructorDto();
+		instructorDto.setEdu_code(Integer.parseInt(edu_code));
+		instructorDto.setBelong_no(Integer.parseInt(belong_no));
+		instructorDto.setEdu_field(edu_field);
+		instructorDto.setEdu_name(edu_name);
+		instructorDto.setEdu_way(edu_way);
+		instructorDto.setEdu_schedule(startDate+"~"+endDate);
+		instructorDto.setStart_date(startDate);
+		instructorDto.setEnd_date(endDate);
+		instructorDto.setEdu_date(edu_date);
+		instructorDto.setInput_time(Integer.parseInt(input_time));
+		instructorDto.setClosing_date(closing_date);
+		instructorDto.setEdu_location(edu_location);
+		instructorDto.setInstructor_no(instructor_no);
+		instructorDto.setManager(manager);
+		instructorDto.setEdu_target(arr.toString());
+		instructorDto.setBudget(budget);
+		instructorDto.setNote(note);
+		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
+		instructorDto.setFile_ori_name(file_ori_name);
+		instructorDto.setFile_save_name(file_save_name);
+		instructorDto.setFile_path(file_path);;
+		
+		int result = managerEduDao.insertEduReq(instructorDto);
+		int result2 = managerEduDao.insertEduReqDetail(instructorDto);
+		
+		if(result == 1 && result2 ==1) {
+			System.out.println("강의등록 성공");
+		}
 		return "redirect:/manage/eduList.do";
 	}
 }
