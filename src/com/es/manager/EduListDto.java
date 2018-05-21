@@ -1,5 +1,7 @@
 package com.es.manager;
 
+import java.util.Date;
+
 public class EduListDto {
 
 	/*education_list*/
@@ -21,14 +23,28 @@ public class EduListDto {
 	private String budget;
 	private String note;
 	private int applicants_limit;
-	private String closing_date;
+	private Date closing_date; //신청 마감일
 	private int approval_state;
 
 	/*education_detail*/
 	private String file_path;
 	private String file_save_name;
 	private String file_ori_name;
+	private int buttonFlag; //심사 마감기간 여부
+	private Date closing_judge; //심사 마감일
 	
+	public Date getClosing_judge() {
+		return closing_judge;
+	}
+	public void setClosing_judge(Date closing_judge) {
+		this.closing_judge = closing_judge;
+	}
+	public int getButtonFlag() {
+		return buttonFlag;
+	}
+	public void setButtonFlag(int buttonFlag) {
+		this.buttonFlag = buttonFlag;
+	}
 	public int getEdu_no() {
 		return edu_no;
 	}
@@ -139,10 +155,10 @@ public class EduListDto {
 	public void setApplicants_limit(int applicants_limit) {
 		this.applicants_limit = applicants_limit;
 	}
-	public String getClosing_date() {
+	public Date getClosing_date() {
 		return closing_date;
 	}
-	public void setClosing_date(String closing_date) {
+	public void setClosing_date(Date closing_date) {
 		this.closing_date = closing_date;
 	}
 	public int getApproval_state() {

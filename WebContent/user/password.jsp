@@ -15,8 +15,9 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style type="text/css">
-td { height: 50px; font-weight: bold; padding-right: 30px;}
-table { width: 45%; }
+td { height: 50px; font-weight: bold; padding-right: 30px; text-align: center;}
+th { background-color: #EAEAEA; }
+h3 { font-weight: bold; }
 </style>
 </head>
 <body>
@@ -25,7 +26,19 @@ table { width: 45%; }
 	<form name="form" method="post"
 		action="${path}/user/password.do?emp_no=${sessionScope.no}"
 		onsubmit="return valid()">
-		<table>
+		<table class="w3-table w3-bordered" style="width:50%;">
+			<tr>
+				<th colspan="3">정보 입력</th>
+			</tr>
+			<tr>
+				<td width="25%" style="text-align: right;">
+					ID(사번)
+				</td>
+				<td width="35%">
+					${sessionScope.no}(${sessionScope.name})
+				</td>
+				<td width="40%"><span id="chkMsg"></span></td>
+			</tr>
 			<tr>
 				<td width="25%" style="text-align: right;">
 					기존 비밀번호
@@ -71,7 +84,7 @@ table { width: 45%; }
 function valid() {
 	var f = window.document.form;
 	var x = document.getElementById("chkMsg").innerHTML;
-	alert("기존비밀번호 일치여부 : " + x);
+	alert("기존 비밀번호 일치여부 : " + x);
 	
 	if (f.currentPasswd.value == "") {
 		alert("기존 비밀번호를 입력해주세요");

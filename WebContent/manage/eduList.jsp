@@ -7,7 +7,6 @@
 <!-- 추가 Contact Form CSS files -->
 <link type='text/css' href='../css/basic.css' rel='stylesheet' media='screen' />
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
-
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <!-- 로그인모달 -->
@@ -189,7 +188,11 @@
 	#menu .name { width : 30%;}
 	#menu .code { width : 10%;}
 	#menu .manager { width : 10%;}
-
+	code{
+		font-family: 'Nanum Gothic', serif;
+		font-weight: bold;
+		font-size: 1.4em;
+	}
 </style>
 <body>
 <h2>교육과정 관리</h2>
@@ -230,7 +233,7 @@
 									<td>${eduList.edu_code_name}</td> <!-- 교육코드 -->
 									<td>${eduList.edu_schedule}</td> <!-- 교육일시 -->
 									<td>${eduList.manager}</td> <!-- 담당자 -->
-									<td>${eduList.instructor_name}</td> <!-- 강사명 -->
+									<td>${eduList.instructor_name}(${eduList.instructor_no})</td> <!-- 강사명 -->
 								</tr>
 							</c:forEach>
 								
@@ -242,22 +245,32 @@
 								<button id="eduModify" onclick="eduModify()" style="float:right;"
 								class="w3-button w3-green w3-border">강의계획서 수정</button>
 							</p>
-							<h5>소속번호 : <span id="belong_no"> </span></h5>
-							<h5>소속명 : <span id="belong_name"> </span></h5>
-							<h5>교육코드 : <span id="edu_code"> </span></h5>
-							<h5>교육코드명 : <span id="edu_code_name"> </span></h5>
-							<h5>교육일정 : <span id="edu_schedule"> </span></h5>
-							<h5>신청마감일 : <span id="closing_date"> </span></h5>
-							<h5>교육일시 : <span id="edu_date"> </span></h5>
-							<h5>교육상세뷴야 : <span id="edu_feild"> </span></h5>
-							<h5>교육장소 : <span id="edu_location"> </span></h5>
-							<h5>교육대상 : <span id="edu_target"> </span></h5>
-							<h5>교육방법 : <span id="edu_way"> </span></h5>
-							<h5>강사이름 : <span id="instructor_name"> </span></h5>
-							<h5>강사번호 : <span id="instructor_no"> </span></h5>
-							<h5>담당자 : <span id="manager"> </span></h5>
-							<h5>소요예산 : <span id="budget"> </span></h5>
-							<p>비고: <pre><span id="note"> </span></pre></p>
+							<div style="height: auto;">
+								<div style="width: 50%; float:left;">
+									<p>소속번호 : <span id="belong_no"> </span></p>
+									<p>소속명 : <span id="belong_name"> </span></p>
+									<p>교육코드 : <span id="edu_code"> </span></p>							
+									<p>교육코드명 : <span id="edu_code_name"> </span></p>
+									<p>교육일정 : <span id="edu_schedule"> </span></p>
+									<p>신청마감일 : <span id="closing_date"> </span></p>
+									<p>교육일시 : <span id="edu_date"> </span></p>
+									<p>교육상세분야 : <span id="edu_feild"> </span></p>
+									</div>
+								<div>
+									<p>교육장소 : <span id="edu_location"> </span></p>
+									<p>교육대상 : <span id="edu_target"> </span></p>
+									<p>교육방법 : <span id="edu_way"> </span></p>
+									<p>강사이름 : <span id="instructor_name"> </span></p>
+									<p>강사번호 : <span id="instructor_no"> </span></p>
+									<p>담당자 : <span id="manager"> </span></p>
+								</div>
+							</div>
+							<div style="width: 100%;">
+								<span>소요예산 :</span>
+								<pre><span id="budget"> </span></pre>
+								<p>비고: </p>
+								<pre><span id="note"> </span></pre>
+							</div>
 						</div>
 						<!-- preload the images -->
 						<div style='display:none'>

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>​
 <title>관리자 페이지/교육심사</title>
 <jsp:include page="../common/header.jsp" />
 <!-- 추가 Page styles -->
@@ -130,13 +131,18 @@
 	#title_value:hover{
 		color : #3162C7;
 	}
-	#menu .no { width : 8%;}
+	#menu .no { width : 5%; }
 	#menu .belong { width : 5%;}
 	#menu .name { width : 30%;}
-	#menu .code { width : 10%;}
-	#menu .manager { width : 10%;}
+	#menu .code { width : 5%;}
+	#menu .closing_date { width : 10%;}
+	#menu .manager { width : 8%;}
 	#menu .instructor_name { width : 8%;}
-
+	code{
+			font-family: 'Nanum Gothic', serif;
+			font-weight: bold;
+			font-size: 1.4em;
+		}
 </style>
 <body>
 <h2>교육과정 관리</h2>
@@ -156,14 +162,22 @@
 				<td rowspan="4">
 					<table frame="void">
 						<thead>
-							<tr><td colspan="8" style="text-align: right;">
-								*총 심사현황 개수 : ${totalCount}</td></tr>		
+							<tr>
+								<td colspan="5" style="text-align:left; color: #033c73;">
+								* 강의승인여부는 신청마감일 20일 전까지 완료해주세요 /
+								오늘 날짜 : <fmt:formatDate var="date" value="${date}" pattern="yyyy-MM-dd"/>​ ${date}
+								</td>
+								<td colspan="4" style="text-align: right;">
+								* 총 심사현황 개수 : ${totalCount}</td>
+							</tr>		
 							<tr>
 								<th class="no">교육번호</th>
 								<th class="belong">소속</th>
 								<th class="name">교육명</th>
 								<th class="code">교육분야</th>
 								<th class="schedule">교육일시</th>
+								<th class="closing_date">
+									<span style="color:red;">승인마감</span>/신청마감</th>
 								<th class="manager">담당자</th>
 								<th class="instructor_name">강사명</th>
 								<th class="judgeStatus">심사현황</th>
@@ -177,8 +191,20 @@
 									<td>${eduList.edu_name}</td> <!-- 교육명  -->
 									<td>${eduList.edu_code_name}</td> <!-- 교육코드 -->
 									<td>${eduList.edu_schedule}</td> <!-- 교육일시 -->
+									<td> <!-- 수강자 신청마감일 /승인마감일  -->
+										<fmt:formatDate var="closing_date" value="${eduList.closing_date}" pattern="yyyy-MM-dd" /> 
+										
+										<script>
+										var date = new Date('${closing_date}');
+										date.setDate (date.getDate() - 14);
+										document.write("<span style='color:red;'>"+ date.toISOString().substr(0,10) + "</span>");
+										</script>
+										 / 
+										<span id="closing_date">${closing_date}</span>
+									
+									​</td> 
 									<td>${eduList.manager}</td> <!-- 담당자 -->
-									<td>${eduList.instructor_name}</td> <!-- 강사명 -->
+									<td>${eduList.instructor_name}(${eduList.instructor_no})</td> <!-- 강사명 -->
 									<!-- 심사현황 // 1 - 승인대기, 2 - 승인심사 3 - 승인완료 4-거절-->
 									<td onclick="event.cancelBubble = true;">
 										<button onclick="window.open('/EducationSystem/manage/eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
@@ -203,22 +229,32 @@
 									  교육명 : <span id="edu_name"> </span>
 								</code>
 							</p>
-							<h5>소속번호 : <span id="belong_no"> </span></h5>
-							<h5>소속명 : <span id="belong_name"> </span></h5>
-							<h5>교육코드 : <span id="edu_code"> </span></h5>
-							<h5>교육코드명 : <span id="edu_code_name"> </span></h5>
-							<h5>교육일정 : <span id="edu_schedule"> </span></h5>
-							<h5>신청마감일 : <span id="closing_date"> </span></h5>
-							<h5>교육일시 : <span id="edu_date"> </span></h5>
-							<h5>교육상세뷴야 : <span id="edu_feild"> </span></h5>
-							<h5>교육장소 : <span id="edu_location"> </span></h5>
-							<h5>교육대상 : <span id="edu_target"> </span></h5>
-							<h5>교육방법 : <span id="edu_way"> </span></h5>
-							<h5>강사이름 : <span id="instructor_name"> </span></h5>
-							<h5>강사번호 : <span id="instructor_no"> </span></h5>
-							<h5>담당자 : <span id="manager"> </span></h5>
-							<h5>소요예산 : <span id="budget"> </span></h5>
-							<p>비고: <pre><span id="note"> </span></pre></p>
+							<div style="height: auto;">
+								<div style="width: 50%; float:left;">
+									<p>소속번호 : <span id="belong_no"> </span></p>
+									<p>소속명 : <span id="belong_name"> </span></p>
+									<p>교육코드 : <span id="edu_code"> </span></p>
+									<p>교육코드명 : <span id="edu_code_name"> </span></p>
+									<p>교육일정 : <span id="edu_schedule"> </span></p>
+									<p>신청마감일 : <span id="closing_date"> </span></p>
+									<p>교육일시 : <span id="edu_date"> </span></p>
+									<p>교육상세분야 : <span id="edu_feild"> </span></p>
+								</div>
+								<div>
+									<p>교육장소 : <span id="edu_location"> </span></p>
+									<p>교육대상 : <span id="edu_target"> </span></p>
+									<p>교육방법 : <span id="edu_way"> </span></p>
+									<p>강사이름 : <span id="instructor_name"> </span></p>
+									<p>강사번호 : <span id="instructor_no"> </span></p>
+									<p>담당자 : <span id="manager"> </span></p>
+								</div>
+							</div>
+							<div style="width:100%;">
+								<p>소요예산 : </p>
+								<pre><span id="budget"></span></pre>
+								<p>비고: </p>
+								<pre><span id="note"> </span></pre>
+							</div>
 						</div>
 						<!-- preload the images -->
 						<div style='display:none'>
@@ -226,7 +262,7 @@
 						</div>	
 
 						<tr>
-							<td colspan="8" style="text-align: center">
+							<td colspan="9" style="text-align: center">
 								<!-- 페이징 -->
 								<div style="margin:20px auto " align="center" >					
 										<ul class="pagination" >

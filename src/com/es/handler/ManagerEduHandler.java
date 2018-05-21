@@ -2,6 +2,9 @@ package com.es.handler;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +34,6 @@ import com.es.instructor.InstructorDto;
 import com.es.manager.EduListDto;
 import com.es.manager.ManagerEduDao;
 import com.es.manager.PagingDto;
-import com.es.user.UserDto;
 
 @Controller
 public class ManagerEduHandler {
@@ -119,6 +121,7 @@ public class ManagerEduHandler {
 			aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
 		}
 		System.out.println("강의 대상(target) : " + aaa);
+		System.out.println("closing_date(신청마감일): " + eduListDetail.getClosing_date());
 		model.addAttribute("edu_no", eduListDetail.getEdu_no());
 		resultMap.put("edu_target", aaa); //강의대상
 		resultMap.put("edu_no", eduListDetail.getEdu_no());
@@ -210,18 +213,17 @@ public class ManagerEduHandler {
 		String file_save_name = null;
 		
 		if(file_ori_name.length() != 0) {
-			file_path = request.getServletContext().getRealPath("/save");
-			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
-			File dir = new File(file_path);
-			if(!dir.isDirectory()) {
-				dir.mkdirs();
-			}
-			File f = new File(file_path+file.getOriginalFilename());
-			file.transferTo(f);			
-			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
-		}
-		File f = new File(file_path+file.getOriginalFilename());
-	    file.transferTo(f);
+	         file_path = request.getServletContext().getRealPath("/save");
+	         file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+	         File dir = new File(file_path);
+	         if(!dir.isDirectory()) {
+	            dir.mkdirs();
+	         }
+	         File f = new File(file_path+file.getOriginalFilename());
+	         file.transferTo(f);         
+	         file_path += "\\" + file_save_name;
+        }
+		
 	    System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);
 	
 	    String edu_way = request.getParameter("edu_way");
@@ -309,7 +311,36 @@ public class ManagerEduHandler {
 
 		//심사리스트 뽑기
 		List<EduListDto> eduJudgeList = managerEduDao.eduJudgeList(page, pageDao.getPageSize());
+		for(EduListDto dto : eduJudgeList) {
+			//신청마감일
+			Date closing_date = dto.getClosing_date();
+			//신청 마감일 closing_date에 7일 더한다
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(closing_date); //closing_date를 가져온다.
+			cal.add(Calendar.DATE, -14); //2주 전으로 세팅
+			
+			// 현재 날짜 가져 온다
+			Date curDate = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(curDate);
+			
+//			현재날짜 < 마감일 2주전에 심사해야함
+			if(c.getTime().before(cal.getTime())) {
+				dto.setButtonFlag(1);
+				dto.setClosing_judge(cal.getTime());
+				System.out.println("Flag 1 전송.... 심사해야되는 기간");
+
+			} else {
+				dto.setButtonFlag(0);
+			}
+			String closing_date2 = new SimpleDateFormat("yyyy.MM.dd").format(closing_date);
+			String closing_judge = new SimpleDateFormat("yyyy.MM.dd").format(cal.getTime());
+			System.out.println(closing_judge + "/" + closing_date2); //  승인마감 / 신청마감 3주전
+		}
 		
+		//현재시각
+		Date date = new Date();
+		model.addAttribute("date", date);
 		model.addAttribute("eduJudgeList", eduJudgeList);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("paging", pageDao);
@@ -365,22 +396,26 @@ public class ManagerEduHandler {
 	
 	/* 강의등록 로직 */
 	@RequestMapping(value = "manage/regist", method = RequestMethod.POST)
-	public String EduReg(EduListDto eduDto, HttpServletRequest request, HttpServletResponse response, Model model,@RequestParam("file_name") MultipartFile file) throws Exception{
-		String file_ori_name = file.getOriginalFilename();
-		String file_path = null;
-		String file_save_name = null;
+	public String EduRegist(EduListDto eduDto, HttpServletRequest request, HttpServletResponse response, Model model
+						) throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		System.out.println("들어오나....");
+//		String file_ori_name = file.getOriginalFilename();
+//		String file_path = null;
+//		String file_save_name = null;
+//
+//		if(file_ori_name.length() != 0) {
+//	         file_path = request.getServletContext().getRealPath("/save");
+//	         file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
+//	         File dir = new File(file_path);
+//	         if(!dir.isDirectory()) {
+//	            dir.mkdirs();
+//	         }
+//	         File f = new File(file_path+file.getOriginalFilename());
+//	         file.transferTo(f);         
+//	         file_path += "\\" + file_save_name;
+//	    }
 		
-		if(file_ori_name.length() != 0) {
-			file_path = request.getServletContext().getRealPath("/save");
-			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
-			File dir = new File(file_path);
-			if(!dir.isDirectory()) {
-				dir.mkdirs();
-			}
-			File f = new File(file_path+file.getOriginalFilename());
-			file.transferTo(f);			
-			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
-		}
 		String edu_code = request.getParameter("edu_code");
 		String belong_no = request.getParameter("belong_no");
 		String edu_field = request.getParameter("edu_field");
@@ -404,68 +439,68 @@ public class ManagerEduHandler {
 		System.out.println(edu_code + '/'+ belong_no + '/'+ edu_field + '/'+ edu_name + '/'+ edu_way + '/'+ startDate 
 				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ instructor_no 
 				+ '/'+ manager + '/'+ budget + '/'+ note + '/'+ applicants_limit + '/' + file_name);
-		String[] select1 = request.getParameterValues("select1");
-		int length = select1.length;
-		String[] belong_no1 = new String[length];
-		String[] belong_name = new String[length];
-		String[] dept_no = new String[length];
-		String[] dept_name = new String[length];
-		String[] position_no = new String[length];
-		String[] position_name = new String[length];
-		
-		JSONArray arr = new JSONArray();
-		for(int i=0; i<select1.length; i++) {
-			JSONObject obj = new JSONObject();
-			int idx1 = select1[i].indexOf("!");
-			int idx2 = select1[i].indexOf("@");
-			int idx3 = select1[i].indexOf("#");
-			int idx4 = select1[i].indexOf("$");
-			int idx5 = select1[i].indexOf("%");
-			belong_no1[i] = select1[i].substring(0, idx1);
-			belong_name[i] = select1[i].substring(idx1+1, idx2);
-			dept_no[i] = select1[i].substring(idx2+1, idx3);
-			dept_name[i] = select1[i].substring(idx3+1, idx4);
-			position_no[i] = select1[i].substring(idx4+1, idx5);
-			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
-			obj.put("belong_no", belong_no1[i]);
-			obj.put("belong_name", belong_name[i]);
-			obj.put("dept_no", dept_no[i]);
-			obj.put("dept_name", dept_name[i]);
-			obj.put("position_no", position_no[i]);
-			obj.put("position_name", position_name[i]);
-			/*arr.add(obj);*/
-			arr.add(obj);
-		}
-		System.out.println("target : " + arr.toString());
-		InstructorDto instructorDto = new InstructorDto();
-		instructorDto.setEdu_code(Integer.parseInt(edu_code));
-		instructorDto.setBelong_no(Integer.parseInt(belong_no));
-		instructorDto.setEdu_field(edu_field);
-		instructorDto.setEdu_name(edu_name);
-		instructorDto.setEdu_way(edu_way);
-		instructorDto.setEdu_schedule(startDate+"~"+endDate);
-		instructorDto.setStart_date(startDate);
-		instructorDto.setEnd_date(endDate);
-		instructorDto.setEdu_date(edu_date);
-		instructorDto.setInput_time(Integer.parseInt(input_time));
-		instructorDto.setClosing_date(closing_date);
-		instructorDto.setEdu_location(edu_location);
-		instructorDto.setInstructor_no(instructor_no);
-		instructorDto.setManager(manager);
-		instructorDto.setEdu_target(arr.toString());
-		instructorDto.setBudget(budget);
-		instructorDto.setNote(note);
-		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
-		instructorDto.setFile_ori_name(file_ori_name);
-		instructorDto.setFile_save_name(file_save_name);
-		instructorDto.setFile_path(file_path);;
-		
-		int result = managerEduDao.insertEduReq(instructorDto);
-		int result2 = managerEduDao.insertEduReqDetail(instructorDto);
-		
-		if(result == 1 && result2 ==1) {
-			System.out.println("강의등록 성공");
-		}
+//		String[] select1 = request.getParameterValues("select1");
+//		int length = select1.length;
+//		String[] belong_no1 = new String[length];
+//		String[] belong_name = new String[length];
+//		String[] dept_no = new String[length];
+//		String[] dept_name = new String[length];
+//		String[] position_no = new String[length];
+//		String[] position_name = new String[length];
+//		
+//		JSONArray arr = new JSONArray();
+//		for(int i=0; i<select1.length; i++) {
+//			JSONObject obj = new JSONObject();
+//			int idx1 = select1[i].indexOf("!");
+//			int idx2 = select1[i].indexOf("@");
+//			int idx3 = select1[i].indexOf("#");
+//			int idx4 = select1[i].indexOf("$");
+//			int idx5 = select1[i].indexOf("%");
+//			belong_no1[i] = select1[i].substring(0, idx1);
+//			belong_name[i] = select1[i].substring(idx1+1, idx2);
+//			dept_no[i] = select1[i].substring(idx2+1, idx3);
+//			dept_name[i] = select1[i].substring(idx3+1, idx4);
+//			position_no[i] = select1[i].substring(idx4+1, idx5);
+//			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
+//			obj.put("belong_no", belong_no1[i]);
+//			obj.put("belong_name", belong_name[i]);
+//			obj.put("dept_no", dept_no[i]);
+//			obj.put("dept_name", dept_name[i]);
+//			obj.put("position_no", position_no[i]);
+//			obj.put("position_name", position_name[i]);
+//			/*arr.add(obj);*/
+//			arr.add(obj);
+//		}
+//		System.out.println("target : " + arr.toString());
+//		InstructorDto instructorDto = new InstructorDto();
+//		instructorDto.setEdu_code(Integer.parseInt(edu_code));
+//		instructorDto.setBelong_no(Integer.parseInt(belong_no));
+//		instructorDto.setEdu_field(edu_field);
+//		instructorDto.setEdu_name(edu_name);
+//		instructorDto.setEdu_way(edu_way);
+//		instructorDto.setEdu_schedule(startDate+"~"+endDate);
+//		instructorDto.setStart_date(startDate);
+//		instructorDto.setEnd_date(endDate);
+//		instructorDto.setEdu_date(edu_date);
+//		instructorDto.setInput_time(Integer.parseInt(input_time));
+//		instructorDto.setClosing_date(closing_date);
+//		instructorDto.setEdu_location(edu_location);
+//		instructorDto.setInstructor_no(instructor_no);
+//		instructorDto.setManager(manager);
+//		instructorDto.setEdu_target(arr.toString());
+//		instructorDto.setBudget(budget);
+//		instructorDto.setNote(note);
+//		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
+//		//instructorDto.setFile_ori_name(file_ori_name);
+//		//instructorDto.setFile_save_name(file_save_name);
+//		//instructorDto.setFile_path(file_path);;
+//		
+//		int result = managerEduDao.insertEduReq(instructorDto);
+//		int result2 = managerEduDao.insertEduReqDetail(instructorDto);
+//		
+//		if(result == 1 && result2 ==1) {
+//			System.out.println("강의등록 성공");
+//		}
 		return "redirect:/manage/eduList.do";
 	}
 }

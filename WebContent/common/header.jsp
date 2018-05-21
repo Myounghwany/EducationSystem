@@ -35,8 +35,8 @@
 }
 </style>
 </head>
-<body style="width: 70%; margin: 0 auto;">
-	<div style="text-align: right" class="container">
+<body style="width: 70%; margin: 10px auto;">
+	<div style="text-align: right;">
 		<c:choose>
 		  <c:when test="${ sessionScope.no == null }">
 				<button type="button" class="w3-button w3-white w3-border" data-toggle="modal" data-target="#login" tabindex="0"

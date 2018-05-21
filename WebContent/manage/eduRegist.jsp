@@ -14,7 +14,7 @@
 <style>
 
 .eduReqBtn{
-	text-align: right;
+	text-align: center;
 	margin-left:auto; 
     margin-right:auto;
 }
@@ -126,6 +126,7 @@
 	}
 	function inputCheck(){
 		var instructor_no = document.getElementById("select_instructor").value;
+		alert('선택한 강사:' + instructor_no);
 		if(!document.eduForm.edu_code.value || document.eduForm.edu_code.value == ""){
 			alert('교육코드를 선택하세요');
 			document.eduForm.edu_code.focus();
@@ -183,7 +184,7 @@
 			document.eduForm.applicants_limit.focus();
 			return false;
 		}
-			
+		return true;
 	}
 	function InputOnlyNumber(obj) 
 	{
@@ -199,7 +200,7 @@
 	<h3>교육신청 페이지</h3>
 	<div style="width: 90%; margin: 20px auto">
 	<br/>
-	<form name= "eduForm" method="post" action = "/EducationSystem/manage/regist.do" enctype="multipart/form-data" onsubmit="return inputCheck()">
+	<form name="eduForm" method="post" action="/EducationSystem/manage/regist.do" enctype="multipart/form-data">
 		<table id="table1" class="w3-table w3-bordered">
 			<tr>
 				<th colspan="4" style="background-color: #EAEAEA;" >교육신청 작성</th>
@@ -271,81 +272,83 @@
 				<td><span class="necessary">*</span>신청마감일</td>
 				<td colspan="3"><input type="text" name="closing_date" id="closingDate"></td>
 			</tr>
-			<tr>
-				<td><span class="necessary">*</span>교육장소</td>
-				<td colspan="3"><input type="text" name="edu_location"/></td>
-			</tr>
-			<tr>
-				<td><span class="necessary">*</span>담당자</td>
-				<td colspan="3"><input type="text" name = "manager"/></td>
-			</tr>
-			<tr>
-				<td><span class="necessary">*</span>교육대상</td>
-				<td colspan="3">소속 : 
-					<select name = "target_belong" onChange="javascript:selectBelong(this.value)">
-						<option value = "0">전체</option>
-						<c:forEach items = "${belong_no }" var = "item">
-							<option value = "${item.belong_no }">${item.name }</option>
-						</c:forEach>
-					</select>
-					부서 :
-					<select name = "target_department" id="department">
-						<option value = "0">전체</option>
-					</select>
-					직급 : 
-					<select name = "target_position">
-						<option value = "0">전체</option>
-						<c:forEach items = "${position }" var = "item">
-							<option value = "${item.position_no }">${item.position_name }</option>
-						</c:forEach>
-					</select>
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">*</span>교육장소</td> -->
+<!-- 				<td colspan="3"><input type="text" name="edu_location"/></td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">*</span>담당자</td> -->
+<!-- 				<td colspan="3"><input type="text" name = "manager"/></td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">*</span>교육대상</td> -->
+<!-- 				<td colspan="3">소속 :  -->
+<!-- 					<select name = "target_belong" onChange="javascript:selectBelong(this.value)"> -->
+<!-- 						<option value = "0">전체</option> -->
+<%-- 						<c:forEach items = "${belong_no }" var = "item"> --%>
+<%-- 							<option value = "${item.belong_no }">${item.name }</option> --%>
+<%-- 						</c:forEach> --%>
+<!-- 					</select> -->
+<!-- 					부서 : -->
+<!-- 					<select name = "target_department" id="department"> -->
+<!-- 						<option value = "0">전체</option> -->
+<!-- 					</select> -->
+<!-- 					직급 :  -->
+<!-- 					<select name = "target_position"> -->
+<!-- 						<option value = "0">전체</option> -->
+<%-- 						<c:forEach items = "${position }" var = "item"> --%>
+<%-- 							<option value = "${item.position_no }">${item.position_name }</option> --%>
+<%-- 						</c:forEach> --%>
+<!-- 					</select> -->
 					
-					<input type = "button" value="추가" onclick="addTarget()">
-					<br/>
-					<table cellpadding="5" cellspacing="1" style="font-size:9pt;" bgcolor="#999999">
-			            <tr>
-			                <td align="center" bgcolor="white">
-			                	<select id="select1" name="select1" size="10" style="width:200px;"  multiple="multiple"></select>
-			                </td>
+<!-- 					<input type = "button" value="추가" onclick="addTarget()"> -->
+<!-- 					<br/> -->
+<!-- 					<table style="font-size:9pt;" bgcolor="#999999"> -->
+<!-- 			            <tr> -->
+<!-- 			                <td align="center" bgcolor="white"> -->
+<!-- 			                	<select id="select1" name="select1" size="10" style="width:200px;"  multiple="multiple"></select> -->
+<!-- 			                </td> -->
 			                
-			            </tr>
-			            <tr>
-			                <td align="center" colspan="4" bgcolor="white">   
-			                	<input type="button" value="삭제" onclick="removeTarget()"> 
-			                </td>
-			            </tr>
-		        	</table>
-				</td>
+<!-- 			            </tr> -->
+<!-- 			            <tr> -->
+<!-- 			                <td align="center" colspan="4" bgcolor="white">    -->
+<!-- 			                	<input type="button" value="삭제" onclick="removeTarget()">  -->
+<!-- 			                </td> -->
+<!-- 			            </tr> -->
+<!-- 		        	</table> -->
+<!-- 				</td> -->
 					
-			</tr>
-			<tr>
-				<td><span class="necessary">&nbsp;</span>소요예산</td>
-				<td colspan="3">
-					<textarea class="form-control" rows="4" name="budget" maxlength="1000"
-					style="width: 700px; height: 100px;"></textarea>
-					<span style="float: right;"> 
-						(<span id="textCount1" class="textCount1">0</span>/1000)
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td><span class="necessary">&nbsp;</span>비고</td>
-				<td colspan="3">
-					<textarea class="form-control" rows="4" name="note" maxlength="1000"
-					style="width: 700px; height: 300px;"></textarea><span style="float: right;"> 
-						(<span id="textCount2" class="textCount2">0</span>/1000)
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td><span class="necessary">*</span>신청자 제한 수</td>
-				<td colspan="3"><input type="number" name="applicants_limit" onkeyPress="InputOnlyNumber(this);"/>&nbsp;명</td>
-			</tr>
-			<tr>
-				<td><span class="necessary">&nbsp;</span>파일첨부</td>
-				<td colspan="3"><input type="file" name="file_name"/></td>
-			</tr>
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">&nbsp;</span>소요예산</td> -->
+<!-- 				<td colspan="3"> -->
+<!-- 					<textarea class="form-control" rows="4" name="budget" maxlength="1000" -->
+<!-- 					style="width: 700px; height: 100px;"></textarea> -->
+<!-- 					<span style="float: right;">  -->
+<!-- 						(<span id="textCount1" class="textCount1">0</span>/1000) -->
+<!-- 					</span> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">&nbsp;</span>비고</td> -->
+<!-- 				<td colspan="3"> -->
+<!-- 					<textarea class="form-control" rows="4" name="note" maxlength="1000" -->
+<!-- 					style="width: 700px; height: 300px;"></textarea><span style="float: right;">  -->
+<!-- 						(<span id="textCount2" class="textCount2">0</span>/1000) -->
+<!-- 					</span> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">*</span>신청자 제한 수</td> -->
+<!-- 				<td colspan="3"><input type="number" name="applicants_limit" onkeyPress="InputOnlyNumber(this);"/>&nbsp;명</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td><span class="necessary">&nbsp;</span>파일첨부</td> -->
+<!-- 				<td colspan="3"><input type="file" name="file_name"/></td> -->
+<!-- 			</tr> -->
 		</table>
+		
+		
 		<br/>	
 		<div class="eduReqBtn">
 			<input type="submit" value="교육신청" class="w3-button w3-white w3-border"/>
@@ -353,10 +356,10 @@
 		</div>
 		<br/>
 		<br/>
-		<div align="center" class="goList">
-			<input type="button" class="w3-button w3-white w3-border" value="목록보기" onclick="location='/EducationSystem/manage/eduList.do'">
-		</div>
 	</form>
 	</div>
-<jsp:include page="../common/footer.jsp" />
+	<div align="center" class="goList">
+		<input type="button" class="w3-button w3-white w3-border" value="목록보기" onclick="location='/EducationSystem/manage/eduList.do'">
+	</div>
+		
 </body>
