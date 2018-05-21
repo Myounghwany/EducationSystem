@@ -1,6 +1,8 @@
 package com.es.handler;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +114,35 @@ public class ManagerHandler {
 	@RequestMapping("manage/empDetail")
 	public ModelAndView empDetail(HttpServletRequest request, HttpServletResponse response) {
 		String emp_no = request.getParameter("emp_no");
-		Map<String, String> emp = managerDao.getEmpDetail(emp_no);
+		EmpListDto emp = managerDao.getEmpDetail(emp_no);
+		List<EduHistoryDto> eduHistory = managerDao.getEmpEduList(emp_no);
+		for(EduHistoryDto dto : eduHistory) {
+			Date tempDate = dto.getEnd_date();	// end date 가져온다
+			
+			// end date에 7일 더한다
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(tempDate);
+			cal.add(Calendar.DATE, 15);
+			
+			// 현재 날짜 가져 온다
+			Date curDate = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(curDate);
+			
+			// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
+			if( c.getTime().before(cal.getTime()) ) { //c:현재 날짜 < cal:평가마감일 (버튼 생성)
+				// 비교해서 현재 날짜가 더 전이면
+				dto.setButtonFlag(1); 
+			} else {
+				// 비교해서 현재 날짜가 이 후면
+				dto.setButtonFlag(0);
+			}
+		}
+		
+		Date date = new Date();//현재날짜 보내기
+		request.setAttribute("date", date);
 		request.setAttribute("emp", emp);
+		request.setAttribute("eduHistory", eduHistory);
 		return new ModelAndView("manage/empDetail");
 	}
 	
@@ -180,7 +209,7 @@ public class ManagerHandler {
 	}
 	
 	/* 나현 - 교육목록 - 교육리스트 */
-	@RequestMapping(value="manage/eduList")
+	/*@RequestMapping(value="manage/eduList")
 	public String eduList(Model model, HttpServletRequest request, HttpServletRequest response) {
 		
 		PagingDto pageDao = new PagingDto();
@@ -196,9 +225,9 @@ public class ManagerHandler {
 		model.addAttribute("paging", pageDao);
 		
 		return "manage/eduList";
-	}
+	}*/
 	/* 나현 - 교육목록 - 교육디테일*/
-	@RequestMapping(value="manage/edu_detail", method = RequestMethod.GET, produces="application/json")
+	/*@RequestMapping(value="manage/edu_detail", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public Map<String, Object> eduDetail(Model model, HttpSession session, @RequestParam("edu_no") int edu_no) throws ParseException, UnsupportedEncodingException {
 		System.out.println("해당 edu_no : " + edu_no);
@@ -263,7 +292,7 @@ public class ManagerHandler {
 		resultMap.put("manager", eduListDetail.getManager());
 		resultMap.put("note", eduListDetail.getNote());
 		return resultMap;
-	}
+	}*/
 	
 }
 
