@@ -304,29 +304,18 @@
 								</div>
 								
 								
-								<form id="searchForm" action="/EducationSystem/manage/eduList.do" method="post">
-									<select name="search_belong">
-										<option value="belong">소속</option>
-										<c:forEach items="${belong}" var="item">
-											<option value="${item.belong_no }">${item.name }</option>
-										</c:forEach>
-									</select>
-									<select name="search_edu_code">
-										<option value="edu_code">교육분야</option>
-										<c:forEach items="${edu_code}" var="item">
-											<option value="${item.edu_code}" >${item.edu_name}</option>
-										</c:forEach>
-									</select>
-									<select name="search_manager">
-										<option value="manager">강사명</option>
-										<c:forEach items="${instructor}" var="item">
-											<option value="${item.instructor_no}" >${item.name}</option>
-										</c:forEach>
-									</select>
-									
-									<input name="keyword" type="text" value="${map.keyword}">
-									<input type="submit" value="검색" >
-								</form>
+								<div id="search" style="text-align:center;">
+									<form id="searchForm" action="/EducationSystem/manage/eduList.do" method="post">
+										<select name="searchOption">
+											<option value="all" <c:out value="${map.searchOption == 'all'?'selected':''}"/>>--전체--</option>
+											<option value="edu_name" <c:out value="${map.searchOption == 'writer'?'selected':''}"/>>교육명</option>
+											<option value="manager" <c:out value="${map.searchOption == 'writer'?'selected':''}"/>>담당자</option>
+											<option value="instructor_no" <c:out value="${map.searchOption == 'title'?'selected':''}"/>>강사번호</option>
+										</select>
+										<input name="keyword" type="text" value="${map.keyword}">
+										<input type="submit" value="검색" class="w3-button w3-white w3-border">
+									</form>
+								</div>
 							</td>
 						</tr>
 					</tbody>

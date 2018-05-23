@@ -56,38 +56,18 @@ public class ManagerEduHandler {
 		page = (page-1) * pageDao.getPageSize();
 
 		//검색하기 로직
-		String search_belong = null, search_edu_code = null, search_manager = null, keyword = null;
-		if(null != request.getParameter("search_belong")
-				|| null != request.getParameter("search_edu_code")
-				|| null != request.getParameter("search_manager")) {
-			search_belong = request.getParameter("search_belong");
-			search_edu_code = request.getParameter("search_edu_code");
-			search_manager = request.getParameter("search_manager");
-			keyword = request.getParameter("keyword");
-			request.setAttribute("search_belong", search_belong);
-			request.setAttribute("search_edu_code", search_edu_code);
-			request.setAttribute("search_manager", search_manager);
-			request.setAttribute("keyword", keyword);
-		}
+		String searchOption = request.getParameter("searchOption");
+		String keyword = request.getParameter("keyword");
 		
 		List<EduListDto> eduList = managerEduDao.eduList(page, pageDao.getPageSize());
-		model.addAttribute("eduList", eduList);
-
-		if(keyword != null) {
-			System.out.println("search_belong : " + search_belong +"\n" + "keyword : " + keyword);
-			System.out.println("search_edu_code : " + search_edu_code +"\n" + "keyword : " + keyword);
-			System.out.println("search_manager : " + search_manager +"\n" + "keyword : " + keyword);
-//			eduList = managerEduDao.searchAll(searchOption, keyword);
-			model.addAttribute("eduList", eduList);
-		}
-//		----------------------------------------------------------------------
-		List<InstructorDto> belong = instructorDao.selectBelongNo();
-		List<InstructorDto> edu_code = instructorDao.selectEduCode();
-		List<InstructorDto> instructor = instructorDao.selectInstructor();
+		request.setAttribute("eduList", eduList);
 		
-		model.addAttribute("belong", belong);
-		model.addAttribute("edu_code", edu_code);
-		model.addAttribute("instructor", instructor);
+		if(keyword != null) {
+			System.out.println("searchOption : " + searchOption + ",keyword : " + keyword);
+			eduList = managerEduDao.searchAll(searchOption, keyword);
+			request.setAttribute("eduList", eduList);
+		}
+
 		model.addAttribute("paging", pageDao);
 		model.addAttribute("totalCount", totalCount);
 		return "manage/eduList";

@@ -23,18 +23,21 @@
 	</select>
 	<!-- 교육검색  -->
 	<select id="searchAll" resultType="com.es.manager.EduListDto" parameterType="hashmap">
-		select * from education_list
+		select l.*, c.edu_name as edu_code_name, b.name as belong_name
+		from education_list l, education_code c, belong b
 		<include refid="search"></include>
 	</select>
 	<sql id="search">
 		<choose>
 		<when test="searchOption == 'all'">
-			where belong_no like '%'||#{keyword}||'%'
-			or title like '%'||#{keyword}||'%'
-			or content like '%'||#{keyword}||'%'
+			where l.belong_no = b.belong_no and l.edu_code = c.edu_code
+			and (manager like CONCAT('%', #{keyword}, '%')
+			or instructor_no like CONCAT('%', #{keyword}, '%')
+			or l.edu_name like CONCAT('%', #{keyword}, '%'))
 		</when> 
 		<otherwise>
-			where ${searchOption} like '%'||#{keyword}||'%'
+			where l.${searchOption} like CONCAT('%', #{keyword}, '%')
+			and l.belong_no = b.belong_no and l.edu_code = c.edu_code
 		</otherwise>
 		</choose>
 	</sql>
