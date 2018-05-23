@@ -309,13 +309,10 @@ public class ManagerEduHandler {
 				dto.setButtonFlag(1);
 				dto.setClosing_judge(cal.getTime());
 				System.out.println("Flag 1 전송.... 심사해야되는 기간");
-
 			} else {
 				dto.setButtonFlag(0);
+				System.out.println("Flag 0 전송.... 심사기간 마감");
 			}
-			String closing_date2 = new SimpleDateFormat("yyyy.MM.dd").format(closing_date);
-			String closing_judge = new SimpleDateFormat("yyyy.MM.dd").format(cal.getTime());
-			System.out.println(closing_judge + "/" + closing_date2); //  승인마감 / 신청마감 3주전
 		}
 		
 		//현재시각
@@ -329,7 +326,7 @@ public class ManagerEduHandler {
 	}
 	
 	/* 심사현황 수정하는 페이지 */
-	@RequestMapping(value="manage/eduState")
+	@RequestMapping(value="manage/eduState", method=RequestMethod.GET)
 	public String eduState(Model model, @RequestParam("edu_no") int edu_no) {
 		EduListDto eduDetail = managerEduDao.eduDetailStatus(edu_no);
 		

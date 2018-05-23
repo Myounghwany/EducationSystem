@@ -85,11 +85,45 @@
 				}
 			});
 		});
+		
 	});
 	
 	function PageMove(page){
 		location.href="eduJudge.do?page="+page;
 	}
+	function realtimeClock() {
+	  document.rtcForm.rtcInput.value = getTimeStamp();
+	  setTimeout("realtimeClock()", 1000);
+	}
+
+
+	function getTimeStamp() { // 24시간제
+	  var d = new Date();
+
+	  var s =
+	    leadingZeros(d.getFullYear(), 4) + '-' +
+	    leadingZeros(d.getMonth() + 1, 2) + '-' +
+	    leadingZeros(d.getDate(), 2) + ' ' +
+
+	    leadingZeros(d.getHours(), 2) + ':' +
+	    leadingZeros(d.getMinutes(), 2) + ':' +
+	    leadingZeros(d.getSeconds(), 2);
+
+	  return s;
+	}
+
+
+	function leadingZeros(n, digits) {
+	  var zero = '';
+	  n = n.toString();
+
+	  if (n.length < digits) {
+	    for (i = 0; i < digits - n.length; i++)
+	      zero += '0';
+	  }
+	  return zero + n;
+	}
+
 </script>
 <style>
 	table {
@@ -144,7 +178,7 @@
 			font-size: 1.4em;
 		}
 </style>
-<body>
+<body onload="realtimeClock()">
 <h2>교육과정 관리</h2>
 <div id='container'>
 	<div>
@@ -164,11 +198,15 @@
 						<thead>
 							<tr>
 								<td colspan="5" style="text-align:left; color: #033c73;">
-								* 강의승인여부는 신청마감일 20일 전까지 완료해주세요 /
-								오늘 날짜 : <fmt:formatDate var="date" value="${date}" pattern="yyyy-MM-dd"/>​ ${date}
+									* 강의승인여부는 신청마감일 20일 전까지 완료해주세요 /
 								</td>
 								<td colspan="4" style="text-align: right;">
-								* 총 심사현황 개수 : ${totalCount}</td>
+									* 총 심사현황 개수 : ${totalCount}
+									<form name="rtcForm">
+										<input type="text" name="rtcInput" size="17" readonly="readonly"
+											style="border:none;" />
+									</form>
+								</td>		
 							</tr>		
 							<tr>
 								<th class="no">교육번호</th>
@@ -193,12 +231,13 @@
 									<td>${eduList.edu_schedule}</td> <!-- 교육일시 -->
 									<td> <!-- 수강자 신청마감일 /승인마감일  -->
 										<fmt:formatDate var="closing_date" value="${eduList.closing_date}" pattern="yyyy-MM-dd" /> 
-										
-										<script>
-										var date = new Date('${closing_date}');
-										date.setDate (date.getDate() - 14);
-										document.write("<span style='color:red;'>"+ date.toISOString().substr(0,10) + "</span>");
-										</script>
+										<span id="judge_script">
+											<script>
+											var date = new Date('${closing_date}');
+											date.setDate (date.getDate() - 14);
+											document.write("<span style='color:red;'>"+ date.toISOString().substr(0,10) + "</span>");
+											</script>
+										</span>
 										 / 
 										<span id="closing_date">${closing_date}</span>
 									
@@ -206,19 +245,28 @@
 									<td>${eduList.manager}</td> <!-- 담당자 -->
 									<td>${eduList.instructor_name}(${eduList.instructor_no})</td> <!-- 강사명 -->
 									<!-- 심사현황 // 1 - 승인대기, 2 - 승인심사 3 - 승인완료 4-거절-->
-									<td onclick="event.cancelBubble = true;">
-										<button onclick="window.open('/EducationSystem/manage/eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
-											'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200');">
-											<c:if test="${eduList.approval_state eq 1}">
+									<td onclick="event.cancelBubble = true;"><!-- tr:hover효과에서 배제 -->
+										<c:if test="${eduList.approval_state eq 1 and eduList.buttonFlag eq 1}">
+											<button onclick="window.open('eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
+											'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200')">
 												<span>승인대기</span>
-											</c:if>
-											<c:if test="${eduList.approval_state eq 2}">
+											</button>
+										</c:if>
+										<c:if test="${eduList.approval_state eq 2 and eduList.buttonFlag eq 1}">
+											<button onclick="window.open('eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
+										'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200')">
 												<span style="color:blue">승인심사</span>
-											</c:if>
-											<c:if test="${eduList.approval_state eq 4}">
+											</button>
+										</c:if>
+										<c:if test="${eduList.approval_state eq 4 and eduList.buttonFlag eq 1}">
+											<button onclick="window.open('eduState.do?edu_no=${eduList.edu_no}', '심사현황 변경',
+										'width=600,height=340,location=no,status=no,scrollbars=yes,resizeable=no,left=600,top=200')">
 												<span style="color:red">승인거절</span>
-											</c:if>
-										</button>
+											</button>
+										</c:if>
+										<c:if test="${eduList.buttonFlag eq 0 }">
+											<span>기간마감</span>
+										</c:if>
 									</td> 
 								</tr>
 							</c:forEach>

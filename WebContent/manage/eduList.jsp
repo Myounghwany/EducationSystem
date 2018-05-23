@@ -13,12 +13,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-	$('document').ready(function() {
-		//alert($(location).attr('href')); //http://localhost:8080/EducationSystem/manageEmpList.do
-		
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	
 		$('#title tr th').click(function() {
-			var title_value = $(this).attr('title_value');
+		var title_value = $(this).attr('title_value');
 			switch(title_value) {
 			case 'emp':
 				location.href='empList.do';
@@ -82,8 +82,8 @@
 				}
 			});
 		});
+		
 	});
-	
 	function checkSubmit() {
 		if(srchWord.value == '') {
 			alert('검색어를 입력해주세요.');
@@ -197,7 +197,7 @@
 <h2>교육과정 관리</h2>
 <div id='container'>
 	<div>
-		<table id="title">
+		<table id="title" >
 			<tr>
 				<th title_value="emp" id="title_value">강사 및 직원관리</th>
 				<th title_value="edu" id="title_value">교육과정 관리</th>
@@ -209,7 +209,7 @@
 			<tr>
 				<th menu_value="eduList" id="menu_value">교육목록</th>
 				<td rowspan="4">
-					<table frame="void" class="sortingT">
+					<table frame="void" id="myTable" class="tablesorter">
 						<thead>
 							<tr><td colspan="7" style="text-align: right;">
 								*총 강의 개수 : ${totalCount}</td></tr>		
