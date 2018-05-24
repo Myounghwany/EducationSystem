@@ -147,7 +147,7 @@ $(document).ready(function() {
 			<tr>
 				<td>교육명</td>
 				<td>${detail.edu_name}</td>
-				<td>교육대상</td>
+				<td>필수교육대상</td>
 				<td id="edu_target">${detail.edu_target}</td>
 			</tr>
 			<tr>

@@ -60,7 +60,7 @@ public class UserHandler {
 			} else if(getUser.getNo().substring(0, 1).equals("I")) {
 				System.out.println("외부강사 로그인");
 				session.setAttribute("account", "inst"); //외부강사 표시 세션 등록
-			}
+			} 
 			System.out.println("세션 등록..");
 			rttr.addFlashAttribute("result", "success");
 //			System.out.println("case 1");

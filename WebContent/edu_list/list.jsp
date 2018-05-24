@@ -216,10 +216,10 @@ function deleteBtn(no){
 			<th>교육명</th>
 			<th>소속번호</th>
 			<th>교육분야</th>
-			<th>교육대상</th>
+			<th>필수교육대상</th>
 			<th>담당자</th>
 			<th>교육일정</th>
-			<th>강사명</th>
+			<th width="7%">강사명</th>
 			<th>교육인원</th>
 			<th>마감일</th>
 			<th>교육신청</th>
@@ -312,31 +312,65 @@ function deleteBtn(no){
     </div>
   </div>
   
-  <div align="center">
-	<c:if test="${startPage != 1}">
-		<a href='EducationList.do?page=${startPage-1}'>[ 이전 ]</a>
-	</c:if>
 
-	<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
-		<c:if test="${pageNum == spage}">
-                ${pageNum}&nbsp;
-            </c:if>
-		<c:if test="${pageNum != spage}">
-			<a href='EducationList.do?page=${pageNum}'>${pageNum}&nbsp;</a>
-		</c:if>
-	</c:forEach>
 
-	<c:if test="${endPage != maxPage }">
-		<a href='EducationList.do?page=${endPage+1 }'>[다음]</a>
-	</c:if>
+		
+		<!-- paging -->
+		<div align="center" class="paging">
+			
+			<!-- 검색 X 페이징 -->
+			<c:if test="${condition == null}">
+		
+				<c:if test="${startPage != 1}">
+					<a href='EducationList.do?page=${startPage-1}' class="page_btn">이전</a>
+				</c:if>
+				
+				<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+					<c:if test="${pageNum == spage}" >
+				              <span class="page_btn">${pageNum}</span>
+				          </c:if>
+					<c:if test="${pageNum != spage}">
+						<a href='EducationList.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+					</c:if>
+				</c:forEach>
+				
+				<c:if test="${endPage != maxPage }">
+					<a href='EducationList.do?page=${endPage+1}' class="page_btn">다음</a>
+				</c:if>
+			
+			</c:if>
 
-<c:if test="${condition != null}">
-	<p align="center">
-		<b><a href="EducationList.do">되돌아가기</a></b>
-	</p>
-</c:if>
-
+			<!-- 검색 O 페이징 -->
+			<c:if test="${condition != null}">
+		
+				<c:if test="${startPage != 1}">
+					<a href='EducationList.do?page=${startPage-1}&opt=${opt}&condition=${condition}' class="page_btn">이전</a>
+				</c:if>
+				
+				<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+					<c:if test="${pageNum == spage}" >
+				              <span class="page_btn">${pageNum}</span>
+				          </c:if>
+					<c:if test="${pageNum != spage}">
+						<a href='EducationList.do?page=${pageNum}&opt=${opt}&condition=${condition}' class="page_btn">${pageNum}</a>
+					</c:if>
+				</c:forEach>
+				
+				<c:if test="${endPage != maxPage }">
+					<a href='EducationList.do?page=${endPage+1}&opt=${opt}&condition=${condition}' class="page_btn">다음</a>
+				</c:if>
+			
+			</c:if>
+		
+			<c:if test="${condition != null}">
+				<p align="center">
+					<b><a href="EducationList.do">되돌아가기</a></b>
+				</p>
+			</c:if>
 		</div>
+		
+		
+		
 	</div>
 	
 </body>

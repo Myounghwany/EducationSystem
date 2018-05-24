@@ -51,7 +51,7 @@
 					<option value="0">제목</option>
 					<option value="1">내용</option>
 					<option value="2">제목+내용</option>
-					<option value="3">글쓴이</option>
+					<option value="3">작성자</option>
 				</select> 
 				<input type="text" size="20" name="condition" />&nbsp; 
 				<input type="submit" value="검색" />
@@ -93,25 +93,54 @@
 		
 		<!-- paging -->
 		<div align="center" class="paging">
-			<c:if test="${startPage != 1}">
-				<a href='ProjectCommunity.do?page=${startPage-1}' class="page_btn">이전</a>
-			</c:if>
 			
-			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
-				<c:if test="${pageNum == spage}" >
-			              <span class="page_btn">${pageNum}</span>
-			          </c:if>
-				<c:if test="${pageNum != spage}">
-					<a href='ProjectCommunity.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+			<!-- 검색 X 페이징 -->
+			<c:if test="${condition == null}">
+		
+				<c:if test="${startPage != 1}">
+					<a href='ProjectCommunity.do?page=${startPage-1}' class="page_btn">이전</a>
 				</c:if>
-			</c:forEach>
+				
+				<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+					<c:if test="${pageNum == spage}" >
+				              <span class="page_btn">${pageNum}</span>
+				          </c:if>
+					<c:if test="${pageNum != spage}">
+						<a href='ProjectCommunity.do?page=${pageNum}' class="page_btn">${pageNum}</a>
+					</c:if>
+				</c:forEach>
+				
+				<c:if test="${endPage != maxPage }">
+					<a href='ProjectCommunity.do?page=${endPage+1}' class="page_btn">다음</a>
+				</c:if>
 			
-			<c:if test="${endPage != maxPage }">
-				<a href='ProjectCommunity.do?page=${endPage+1}' class="page_btn">다음</a>
 			</c:if>
+
+			<!-- 검색 O 페이징 -->
+			<c:if test="${condition != null}">
+		
+				<c:if test="${startPage != 1}">
+					<a href='ProjectCommunity.do?page=${startPage-1}&opt=${opt}&condition=${condition}' class="page_btn">이전</a>
+				</c:if>
+				
+				<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+					<c:if test="${pageNum == spage}" >
+				              <span class="page_btn">${pageNum}</span>
+				          </c:if>
+					<c:if test="${pageNum != spage}">
+						<a href='ProjectCommunity.do?page=${pageNum}&opt=${opt}&condition=${condition}' class="page_btn">${pageNum}</a>
+					</c:if>
+				</c:forEach>
+				
+				<c:if test="${endPage != maxPage }">
+					<a href='ProjectCommunity.do?page=${endPage+1}&opt=${opt}&condition=${condition}' class="page_btn">다음</a>
+				</c:if>
+			
+			</c:if>
+
 		</div>
 		
-		<!-- 검색결과 시 없을 때 -->
+		<!-- 검색시 되돌아가기 -->
 		<div align="center">
 			<c:if test="${condition != null}">
 				<input type="button" class="w3-button w3-white w3-border" value="되돌아가기" onclick="location='ProjectCommunity.do'">

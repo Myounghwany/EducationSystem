@@ -58,9 +58,13 @@ public class ProjectCommunityHandler {
 			String opt = request.getParameter("opt");
 			String condition = request.getParameter("condition");
 			request.setAttribute("condition", condition);
+			request.setAttribute("opt", opt);
 			map.put("opt",opt);
 			map.put("condition",condition);
+			System.out.println(" opt :"+opt+ " condition"+condition);
+			
 			list = projectDao.projectList(map);
+			System.out.println("list :"+list);
 			
 		}
 		

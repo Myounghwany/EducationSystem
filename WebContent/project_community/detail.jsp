@@ -19,6 +19,7 @@ $(document).ready(function(){
 
 	var project_no=${result.project_no};
 	var emp_no = '<c:out value="${sessionScope.no}"/>';
+	var account = '<c:out value="${sessionScope.account}"/>';
 	var likeCheck = ${likeCheck};
 	var v_mempplist = $('#mempplist');
 		
@@ -117,7 +118,10 @@ $(document).ready(function(){
 			                a += '<div align="right"><button style="font-size: 12px;" class="btn btn-default commentWriteRBtn" value='+value.reply_no+' >답글</button>';
 			                if(value.writer == emp_no){
 				                a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
-				                a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
+			                }
+
+			                if(value.writer == emp_no || account =='hr'){
+					            a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
 			                }
 			                a += '</div></div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
 						}else{
@@ -129,8 +133,11 @@ $(document).ready(function(){
 						  	a += '<span id="replyContent'+value.reply_no+'"> '+value.content+'</span>' ;
 			                a += '<div align="right"><button style="font-size: 12px;" class="btn btn-default commentWriteRBtn" value='+value.reply_no+' >답글</button>';
 			                if(value.writer == emp_no){
-			               		 a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
-			               	 	 a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
+				                a += '<button style="font-size: 12px;" class="btn btn-default commentUpdateRBtn" value='+value.reply_no+' >수정</button>';
+			                }
+
+			                if(value.writer == emp_no || account =='hr'){
+					            a += '<button style="font-size: 12px;" class="btn btn-default commentDeleteRBtn" value='+value.reply_no+' >삭제</button>';
 			                }
 			                a += '</div></div></div></div><div id="commentWriteR'+value.reply_no+'"></div>'; 
 						}
@@ -328,14 +335,16 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 				<td colspan="4"><strong> 추천 <i id="fa-heart" class="fas fa-heart" title="추천합니다"></i> <span class="likeSpan"> ${projectLikeCount} 개 </span></strong>
-			<c:if test="${result.writer eq sessionScope.no}">
-					
 					<div align="right">
+			<c:if test="${result.writer eq sessionScope.no}">
 						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/ProjectCommunity/modify.do?project_no=${result.project_no}'">
+			</c:if>
+
+			<c:if test="${result.writer eq sessionScope.no || sessionScope.account eq 'hr'}">
 						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
 						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/ProjectCommunity/delete.do?project_no=${result.project_no}'}">
-					</div>
 			</c:if>
+					</div>
 				</td>
 		</tr>
 		

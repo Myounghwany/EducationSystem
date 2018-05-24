@@ -58,7 +58,6 @@ public class ProjectCommunityDBBean implements ProjectCommunityDao {
 		if(map.get("opt")==null){//전체
 			return SqlMapClient.getSession().selectOne("ProjectCommunity.projectListCount");
 		}else if(map.get("opt").equals("0")){ //제목
-			System.out.println("제목으로 검색");
 			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectTitleListCount",map);
 		}else if(map.get("opt").equals("1")) {//내용
 			return SqlMapClient.getSession().selectOne("ProjectCommunity.selectContentListCount",map);

@@ -86,6 +86,7 @@ public class EducationHandler {
 			String opt = request.getParameter("opt");
 			String condition = request.getParameter("condition");
 			request.setAttribute("condition", condition);
+			request.setAttribute("opt", opt);
 			
 			System.out.println("Handler opt : "+opt+" condition : "+condition);
 			
@@ -119,8 +120,13 @@ public class EducationHandler {
 			int tmp_edu_no = edu_list.get(i).getEdu_no();
 			
 	        try {
+	        	if(edu_list.get(i).getEdu_target() != null) {
 	        	eduTarget = new String(edu_list.get(i).getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
 	        	eduTargetList.add(i, eduTarget);
+	        	
+	        	}else {
+	        		eduTargetList.add(i, "");
+	        	}
 	        } catch (UnsupportedEncodingException e) {
 	           e.printStackTrace();
 	        }
@@ -152,12 +158,10 @@ public class EducationHandler {
 	public ModelAndView EducationDetail(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("handler educationDetail ");
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
-		System.out.println(edu_no);
 		
 		//해당 edu_no에 관한 커리큘럼 등 상세정보
 		
 		EducationListDto edu_detail = edDao.EducationListDetail(edu_no);
-		System.out.println("edu_detail : "+edu_detail);
 		
 		/*세션*/
 		HttpSession httpSession = request.getSession();
@@ -176,8 +180,6 @@ public class EducationHandler {
 		}
 		
 		request.setAttribute("apCheck", apCheck); // 수강한 교육을 찾기위해
-		System.out.println("apCheck : "+apCheck);
-		System.out.println("emp_no : "+emp_no);
 
 		
 		
@@ -186,7 +188,9 @@ public class EducationHandler {
 		
 		String eduTarget = null; 
         try {
-        	eduTarget = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+        	if(edu_detail.getEdu_target() != null) {
+        		eduTarget = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+        	}
         } catch (UnsupportedEncodingException e) {
            e.printStackTrace();
         }
