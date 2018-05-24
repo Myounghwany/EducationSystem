@@ -69,4 +69,13 @@
 	<insert id = "insertEduRegistDetail" parameterType = "com.es.instructor.InstructorDto">
 		insert into education_detail values(NULL, LAST_INSERT_ID(), STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), #{input_time}, NULL, #{file_path}, #{file_ori_name}, #{file_save_name})
 	</insert>
+	<!-- 교육 삭제  -->
+	<delete id="EduDelete" parameterType="int">
+		delete from education_list
+		where edu_no = #{edu_no}
+	</delete>
+	<delete id="EduDetailDelete" parameterType="int">
+		delete from education_detail
+		where edu_no = #{edu_no}
+	</delete>
 </mapper>

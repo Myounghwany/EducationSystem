@@ -32,6 +32,10 @@ public interface ManagerEduDao {
 	/*강의 등록*/
 	int insertEduReq(InstructorDto instructorDto);
 	int insertEduReqDetail(InstructorDto instructorDto);
+	
+	/* 교육목록중 해당 강의, detail 모두 삭제*/
+	int eduDelete(int edu_no);
+	int eduDetailDelete(int edu_no);
 
 
 }

@@ -33,6 +33,15 @@
 	text-decoration: none;
 	background-color: #FFFFF6;
 }
+.manage:hover{
+	color: #FF5E00;
+	text-decoration: none;
+	font-weight: bold;
+}
+.manage{ 
+	color : black;
+	background-color: yellow;
+}
 </style>
 </head>
 <body style="width: 70%; margin: 10px auto;">
@@ -55,6 +64,9 @@
 			      <p><a class="headAtag" href="/EducationSystem/user/logout.do">로그아웃</a></p>
 			    </div>
 		  </div>
+		  <c:if test="${sessionScope.account eq 'hr'}">
+			<a href="/EducationSystem/manage/empList.do" class="manage">관리자 페이지</a>
+		  </c:if>
 
 		  </c:otherwise>
 		</c:choose>

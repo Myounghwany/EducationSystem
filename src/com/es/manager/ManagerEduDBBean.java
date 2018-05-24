@@ -80,4 +80,14 @@ public class ManagerEduDBBean implements ManagerEduDao{
 	public int insertEduReqDetail(InstructorDto instructorDto) {
 		return SqlMapClient.getSession().insert("ManagerEdu.insertEduRegistDetail", instructorDto);
 	}
+	
+	/*교육목록 중 해당 강의 , detail 삭제*/
+	@Override
+	public int eduDelete(int edu_no) {
+		return SqlMapClient.getSession().delete("ManagerEdu.EduDelete", edu_no);
+	}
+	@Override
+	public int eduDetailDelete(int edu_no) {
+		return SqlMapClient.getSession().delete("ManagerEdu.EduDetailDelete", edu_no);
+	}
 }

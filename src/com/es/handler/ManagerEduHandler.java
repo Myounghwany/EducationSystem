@@ -277,6 +277,22 @@ public class ManagerEduHandler {
 		return "redirect:/manage/eduList.do";
 	}
 	
+	/*교육목록 - 강의계획서 삭제 로직*/
+	@RequestMapping(value = "manage/eduDelete", method = RequestMethod.GET)
+	public String EduDelete( @RequestParam("edu_no") int edu_no) throws Exception{
+		System.out.println("삭제할 강의 번호 : " + edu_no);
+		int result = managerEduDao.eduDelete(edu_no);
+		
+		if (result == 1) {
+			System.out.println("강의 삭제 성공");
+			int result2 = managerEduDao.eduDetailDelete(edu_no);
+			if(result2 == 1) {
+				System.out.println("강의 디테일도 삭제 성공");
+			}
+		}
+		
+		return "redirect:/manage/eduList.do";
+	}
 	/* 교육심사 */
 	@RequestMapping(value="manage/eduJudge", method=RequestMethod.GET)
 	public String eduAuditPost(Model model, HttpServletRequest request) throws Exception {

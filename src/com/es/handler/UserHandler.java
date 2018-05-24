@@ -35,11 +35,9 @@ public class UserHandler {
 		switch(result) {
 		case -1 :
 			rttr.addAttribute("result", "fail");
-//			System.out.println("case -1");
 			break;
 		case 0:
 			rttr.addFlashAttribute("result", "fail");
-//			System.out.println("case 0");
 			break;
 		case 1:
 			System.out.println("emp_no : " + emp_no + "passwd : " + passwd);
@@ -48,6 +46,7 @@ public class UserHandler {
 			session.setAttribute("no", getUser.getNo());
 			session.setAttribute("password", getUser.getPasswd());
 			session.setAttribute("name",  getUser.getName());
+			
 			if(getUser.getNo().substring(0, 1).equals("E")) {
 				System.out.println("직원 로그인");
 				session.setAttribute("account", "emp"); //직원 혹은 내부강사
@@ -55,9 +54,14 @@ public class UserHandler {
 				System.out.println("외부강사 로그인");
 				session.setAttribute("account", "inst"); //외부강사 표시 세션 등록
 			}
-			System.out.println("세션 등록..");
+			if(getUser.getBelong_no()==400) {
+				System.out.println("HR직원");
+				session.setAttribute("account", "hr");
+			} else {
+				System.out.println("HR직원이 아닙니다");
+			}
+//			System.out.println("세션 등록..");
 			rttr.addFlashAttribute("result", "success");
-//			System.out.println("case 1");
 			break;
 		}
 

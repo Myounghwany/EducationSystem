@@ -112,6 +112,15 @@
 		}
 	}
 	
+	function eduDelete(edu_no){
+		var edu_no=document.getElementById("edu_no").innerHTML;
+		if(confirm("해당 강의를 삭제하시겠습니까?")==true){
+			location.href="/EducationSystem/manage/eduDelete.do?edu_no="+edu_no;
+		}else{
+			return;
+		}
+	}
+	
 	//검색
 	function selectBelong(belong_no) {
 		if (belong_no == '0') {
@@ -243,6 +252,8 @@
 								</code>
 								<button id="eduModify" onclick="eduModify()" style="float:right;"
 								class="w3-button w3-green w3-border">강의계획서 수정</button>
+								<button id="eduDelete" onclick="eduDelete()" style="float:right;">삭제</button>
+								
 							</p>
 							<div style="height: auto;">
 								<div style="width: 50%; float:left;">
