@@ -331,34 +331,37 @@ public class EducationHandler {
 		model.addAttribute("eduhistory_detail", eduhistory_detail);
 
 		//---json data (교육대상)
-		String target = new String(eduhistory_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
-
-		// String을 JSON으로 파싱
-		JSONParser jsonParser = new JSONParser();
-
-		JSONArray arr = (JSONArray) jsonParser.parse(target);
-
-		//----- 형변환 잘 되었는지 확인  ------
-		if( arr instanceof JSONArray) {
-			//System.out.println("arr은 JSONArray 입니다.");
-		} else {
-			System.out.println("arr은 문자열");
-		}
-		//-----------------------------
-
-		String aaa = "";
-		for(int i=0; i<arr.size(); i++) {
-			JSONObject tmp = (JSONObject)arr.get(i);
-
-			String dept_name = (String)tmp.get("dept_name");
-			String belong_name  = (String)tmp.get("belong_name");
-			String position_name = (String)tmp.get("position_name");
-
-			aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
-
-		}
-		System.out.println("강의 대상(target) : " + aaa);
-		model.addAttribute("edu_target", aaa);
+		String target = eduhistory_detail.getEdu_target();
+		if (target !=null) {
+			target = new String(eduhistory_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
+			// String을 JSON으로 파싱
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONArray arr = (JSONArray) jsonParser.parse(target);
+			
+			//----- 형변환 잘 되었는지 확인  ------
+			if( arr instanceof JSONArray) {
+				//System.out.println("arr은 JSONArray 입니다.");
+			} else {
+				System.out.println("arr은 문자열");
+			}
+			//-----------------------------
+			
+			String aaa = "";
+			for(int i=0; i<arr.size(); i++) {
+				JSONObject tmp = (JSONObject)arr.get(i);
+				
+				String dept_name = (String)tmp.get("dept_name");
+				String belong_name  = (String)tmp.get("belong_name");
+				String position_name = (String)tmp.get("position_name");
+				
+				aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
+				
+			}
+			System.out.println("강의 대상(target) : " + aaa);
+			model.addAttribute("edu_target", aaa);
+		} 
+		
 		return "edu_history/detail";
 	}
 

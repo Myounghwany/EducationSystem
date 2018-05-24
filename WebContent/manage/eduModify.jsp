@@ -46,29 +46,52 @@
 				$(this).val($(this).val().substr(0, textCountLimit));
 			}
 		});
+		$('#checkTarget').change(function(){
+			if($('#checkTarget').is(':checked')){
+				$('#target :input').attr("disabled", "true");
+				 var form = document.eduForm;
+				 var o = form.elements['select1'];
+			     if(o.length == 0) return;
+				 var loop = o.length;
+			     for (var i=0 ; i < loop ; i++){
+			         o.options.remove(0);
+			     }
+			}else{
+				$('#target :input').removeAttr('disabled');
+			}
+		});
+		$('#target :input').attr("disabled", "true");
 	});
 	$(function() {
-		$("#startDate").datepicker(
-				{
-					dateFormat : "yy.mm.dd",
-					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일' ],
-					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
-					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ]
-				});
-		$("#endDate").datepicker(
-				{
-					dateFormat : "yy.mm.dd",
-					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일' ],
-					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
-					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ]
-				});
-		$("#closingDate").datepicker(
-				{
-					dateFormat : "yy.mm.dd",
-					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일' ],
-					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
-					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ]
-				});
+		 $( "#startDate" ).datepicker({
+		    	dateFormat: "yy.mm.dd",
+		    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+		        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+		        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		        minDate: 0,
+		        onClose: function( selectedDate ) {
+	                $("#endDate").datepicker( "option", "minDate", selectedDate );
+	            }
+		    });
+		    $( "#endDate" ).datepicker({
+		    	dateFormat: "yy.mm.dd",
+		    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+		        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+		        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		        onClose: function( selectedDate ) {
+	                $("#startDate").datepicker( "option", "maxDate", selectedDate );
+		        },
+	            onClose: function( selectedDate ) {
+	                $("#closingDate").datepicker( "option", "maxDate", selectedDate );
+	            }
+		    });
+		    $( "#closingDate" ).datepicker({
+		    	dateFormat: "yy.mm.dd",
+		    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+		        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+		        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		        minDate: 0 
+		    });
 	});
 
 	function selectBelong(belong_no) {
@@ -97,14 +120,13 @@
 				}
 			},
 			error : function(request, status, error) {
-				alert("code:" + request.status + "\n" + "message:"
-						+ request.responseText + "\n" + "error:" + error);
+				alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 			}
 		});
 	}
 
-	function addTarget() {
-		var form = document.eduModifyForm;
+	function addTarget(){
+		var form = document.eduForm;
 		var belong = form.target_belong;
 		var department = form.target_department;
 		var position = form.target_position;
@@ -113,18 +135,13 @@
 		var position_name = position.options[position.selectedIndex].text;
 		var belong_no = belong.options[belong.selectedIndex].value;
 		var department_no = department.options[department.selectedIndex].value;
-		var position_no = position.options[position.selectedIndex].value;
-		form.elements['select1'].options.add(new Option(
-				belong.options[belong.selectedIndex].text + '-'
-						+ department.options[department.selectedIndex].text
-						+ '-' + position.options[position.selectedIndex].text,
-				belong_no + '!' + belong_name + '@' + department_no + '#'
-						+ department_name + '$' + position_no + '%'
-						+ position_name));
+		var position_no  = position.options[position.selectedIndex].value;
+		form.elements['select1'].options.add(new Option(belong.options[belong.selectedIndex].text + '-' + department.options[department.selectedIndex].text + '-' + position.options[position.selectedIndex].text, belong_no + '!' + belong_name + '@' + department_no + '#' + department_name + '$' + position_no + '%' + position_name));
+		/* alert(belong.options[belong.selectedIndex].value + '-' + department.options[department.selectedIndex].value + '-' + position.options[position.selectedIndex].value); */
 		$('#select1 option').prop('selected', true);
 	}
 	function removeTarget() {
-		var form = document.eduModifyForm;
+		var form = document.eduForm;
 		var o = form.elements['select1'];
 		var idx = o.selectedIndex;
 		if (idx == -1)
@@ -134,45 +151,74 @@
 		if (idx - 1 < 0)
 			o.selectedIndex = 0;
 	}
-	function inputCheck() {
-		if (!document.eduModifyForm.edu_way.value) {
+	function inputCheck(){
+		if(!document.eduForm.edu_code.value || document.eduForm.edu_code.value == ""){
+			alert('교육코드를 선택하세요');
+			document.eduForm.edu_code.focus();
+			return false;
+		}else if(!document.eduForm.belong_no.value || document.eduForm.belong_no.value == ""){
+			alert('소속을 선택하세요');
+			document.eduForm.belong_no.focus();
+			return false;
+		}else if(!document.eduForm.edu_field.value){
+			alert('교육분야를 입력하세요');
+			document.eduForm.belong_no.focus();
+			return false;
+		}else if(!document.eduForm.edu_name.value){
+			alert('교육명을 입력하세요');
+			document.eduForm.edu_name.focus();
+			return false;
+		}else if(!document.eduForm.edu_way.value){
 			alert('교육방법을 입력하세요');
-			document.eduModifyForm.edu_way.focus();
+			document.eduForm.edu_way.focus();
 			return false;
-		} else if (!document.eduModifyForm.startDate.value) {
+		}else if(!document.eduForm.startDate.value){
 			alert('교육일정을 입력하세요');
-			document.eduModifyForm.startDate.focus();
+			document.eduForm.startDate.focus();
 			return false;
-		} else if (!document.eduModifyForm.endDate.value) {
+		}else if(!document.eduForm.endDate.value){
 			alert('교육일정을 입력하세요');
-			document.eduModifyForm.endDate.focus();
+			document.eduForm.endDate.focus();
 			return false;
-		} else if (!document.eduModifyForm.edu_date.value) {
+		}else if(!document.eduForm.edu_date.value){
 			alert('교육일시를 입력하세요');
-			document.eduModifyForm.edu_date.focus();
+			document.eduForm.edu_date.focus();
 			return false;
-		} else if (!document.eduModifyForm.input_time.value) {
+		}else if(!document.eduForm.input_time.value){
 			alert('소요시간을 입력하세요');
-			document.eduModifyForm.input_time.focus();
+			document.eduForm.input_time.focus();
 			return false;
-		} else if (!document.eduModifyForm.closing_date.value) {
+		}else if(!document.eduForm.closing_date.value){
 			alert('신청마감일을 입력하세요');
-			document.eduModifyForm.input_time.focus();
+			document.eduForm.input_time.focus();
 			return false;
-		} else if (!document.eduModifyForm.edu_location.value) {
+		}else if(!document.eduForm.edu_location.value){
 			alert('교육장소를 입력하세요');
-			document.eduModifyForm.edu_location.focus();
+			document.eduForm.edu_location.focus();
 			return false;
-		} else if (!document.eduModifyForm.select1.value) {
-			alert('교육대상을 선택하세요');
-			document.eduModifyForm.select1.focus();
+		}else if(!document.eduForm.manager.value){
+			alert('담당자를 입력하세요');
+			document.eduForm.manager.focus();
 			return false;
-		} else if (!document.eduModifyForm.applicants_limit.value) {
+		}else if(!document.eduForm.checkTarget.checked){
+			if(!document.eduForm.select1.value){
+				alert('교육대상을 선택하세요');
+				document.eduForm.select1.focus();
+				return false;
+			}
+		}else if(!document.eduForm.applicants_limit.value){
 			alert('신청자제한수를 입력하세요');
-			document.eduModifyForm.applicants_limit.focus();
+			document.eduForm.applicants_limit.focus();
 			return false;
 		}
-
+	}
+	function InputOnlyNumber(obj) {
+		if (event.keyCode >= 48 && event.keyCode <= 57) { //숫자키만 입력
+			return true;
+		} else {
+			alert('숫자만 입력가능합니다');
+			event.returnValue = false;
+		}
 	}
 </script>
 <body>
@@ -244,10 +290,10 @@
 					</c:forEach>
 				</c:forEach>
 				<tr>
-					<td><span class="necessary">*</span>교육대상</td>
-					<td>
-					소속 :<select name="target_belong"
-							onChange="javascript:selectBelong(this.value)">
+					<td><span class="necessary">*</span>필수교육대상</td>
+					<td><input type="checkbox" checked id="checkTarget" name="checkTarget" value="noTarget"> &nbsp;없음<br/>
+					<div id="target">
+					소속 :<select name="target_belong" onChange="javascript:selectBelong(this.value)" id="belong">
 								<option value="0">전체</option>
 								<c:forEach items="${belong_no }" var="item">
 									<option value="${item.belong_no }">${item.name }</option>
@@ -256,10 +302,10 @@
 					 부서 :<select name="target_department" id="department">
 							<option value="0">전체</option>
 						 </select>
-					직급 : <select name="target_position">
+					직급 : <select name="target_position"  id="position">
 							<option value="0">전체</option>
 							<c:forEach items="${position }" var="item">
-								<option value="${item.position_no }">${item.position_name }</option>
+								<option value="${item.position_no }">${item.position_name}</option>
 							</c:forEach>
 						</select>
 						
@@ -326,5 +372,4 @@
 			</div>
 		</form>
 	</div>
-<jsp:include page="../common/footer.jsp" />
 </body>

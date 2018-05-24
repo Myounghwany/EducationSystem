@@ -186,6 +186,5 @@
 		</table>
 	</div>
 </div>
-<jsp:include page="../common/fixedFooter.jsp" />
 </body>
 <!-- holder.js -->

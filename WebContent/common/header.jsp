@@ -9,6 +9,17 @@
 <link rel="StyleSheet" href="/EducationSystem/css/bootstrap.min.css">
 <!-- 로그인모달 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	$('document').ready(function() {
+		console.log('${sessionScope.account}');
+		if ( "${sessionScope.account}" == 'inst'){
+			$('.disable').click(function() {
+				alert('외부강사는 이용하실 수 없습니다.');
+				return false;
+			});
+		}
+	});
+</script>
 <style>
 .dropdown {
     position: relative;
@@ -31,7 +42,6 @@
 .headAtag:hover{
 	color: green;
 	text-decoration: none;
-	background-color: #FFFFF6;
 }
 .manage:hover{
 	color: #FF5E00;
@@ -82,11 +92,11 @@
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="/EducationSystem/notice.do">공지사항</a></li>
-				<li><a href="/EducationSystem/EducationList.do">교육목록/신청</a></li>
-				<li><a href="/EducationSystem/PetitionList.do">청원</a></li>
+				<li><a href="/EducationSystem/EducationList.do" class="disable">교육목록/신청</a></li>
+				<li><a href="/EducationSystem/PetitionList.do" class="disable">청원</a></li>
 				<li><a href="/EducationSystem/eduhistory.do">수강목록</a></li>
 				<li><a href="/EducationSystem/instructor/main.do">강사</a></li>
-				<li><a href="/EducationSystem/ProjectCommunity.do">프로젝트공유</a></li>
+				<li><a href="/EducationSystem/ProjectCommunity.do"  class="disable">프로젝트공유</a></li>
 			</ul>
 		</div>
 	</div>

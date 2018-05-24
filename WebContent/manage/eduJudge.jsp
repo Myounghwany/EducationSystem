@@ -198,7 +198,7 @@
 						<thead>
 							<tr>
 								<td colspan="5" style="text-align:left; color: #033c73;">
-									* 강의승인여부는 신청마감일 20일 전까지 완료해주세요 /
+									* 강의승인여부는 신청마감일 14일 전까지 완료해주세요
 								</td>
 								<td colspan="4" style="text-align: right;">
 									* 총 심사현황 개수 : ${totalCount}
@@ -356,5 +356,4 @@
 <script type='text/javascript' src='../js/jquery.js'></script>
 <script type='text/javascript' src='../js/jquery.simplemodal.js'></script>
 <script type='text/javascript' src='../js/basic.js'></script>
-<jsp:include page="../common/fixedFooter.jsp" />
 </body>

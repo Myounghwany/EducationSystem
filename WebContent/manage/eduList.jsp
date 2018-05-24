@@ -250,9 +250,10 @@
 							<p><code>교육번호 : <span id="edu_no"> </span> | 
 									  교육명 : <span id="edu_name"> </span>
 								</code>
+								<button id="eduDelete" onclick="eduDelete()" style="float:right;"
+								class="w3-button w3-red">삭제</button>
 								<button id="eduModify" onclick="eduModify()" style="float:right;"
-								class="w3-button w3-green w3-border">강의계획서 수정</button>
-								<button id="eduDelete" onclick="eduDelete()" style="float:right;">삭제</button>
+								class="w3-button w3-yellow w3-border"> 수정</button>
 								
 							</p>
 							<div style="height: auto;">
@@ -348,5 +349,4 @@
 <script type='text/javascript' src='../js/jquery.simplemodal.js'></script>
 <script type='text/javascript' src='../js/basic.js'></script>
 
-<jsp:include page="../common/fixedFooter.jsp" />
 </body>

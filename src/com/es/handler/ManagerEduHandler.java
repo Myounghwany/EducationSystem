@@ -83,27 +83,31 @@ public class ManagerEduHandler {
 		EduListDto eduListDetail = managerEduDao.eduListDetail(edu_no);
 
 		//---json data (교육대상)
-		String target = new String(eduListDetail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
-
-		// String을 JSON으로 파싱
-		JSONParser jsonParser = new JSONParser();
-
-		JSONArray arr = (JSONArray) jsonParser.parse(target);
-
-		String aaa = "";
-		for(int i=0; i<arr.size(); i++) {
-			JSONObject tmp = (JSONObject)arr.get(i);
-
-			String dept_name = (String)tmp.get("dept_name");
-			String belong_name  = (String)tmp.get("belong_name");
-			String position_name = (String)tmp.get("position_name");
-
-			aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
+		String target = eduListDetail.getEdu_target();
+		if (target !=null) {
+			target = new String(eduListDetail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
+			// String을 JSON으로 파싱
+			JSONParser jsonParser = new JSONParser();
+			
+			JSONArray arr = (JSONArray) jsonParser.parse(target);
+			
+			String aaa = "";
+			for(int i=0; i<arr.size(); i++) {
+				JSONObject tmp = (JSONObject)arr.get(i);
+				
+				String dept_name = (String)tmp.get("dept_name");
+				String belong_name  = (String)tmp.get("belong_name");
+				String position_name = (String)tmp.get("position_name");
+				
+				aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
+			}
+			System.out.println("강의 대상(target) : " + aaa);
+			resultMap.put("edu_target", aaa); //강의대상
+		} else {
+			resultMap.put("edu_target", "제한없음");
 		}
-		System.out.println("강의 대상(target) : " + aaa);
 		System.out.println("closing_date(신청마감일): " + eduListDetail.getClosing_date());
 		model.addAttribute("edu_no", eduListDetail.getEdu_no());
-		resultMap.put("edu_target", aaa); //강의대상
 		resultMap.put("edu_no", eduListDetail.getEdu_no());
 		resultMap.put("belong_no", eduListDetail.getBelong_no());
 		resultMap.put("belong_name", eduListDetail.getBelong_name());
@@ -187,7 +191,8 @@ public class ManagerEduHandler {
 	
 	/*교육목록 - 강의계획서 수정 로직*/
 	@RequestMapping(value = "manage/eduModify", method = RequestMethod.POST)
-	public String EduModify(HttpServletRequest request, HttpServletResponse response, @RequestParam("file_name") MultipartFile file) throws Exception{
+	public String EduModify(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("file_name") MultipartFile file, InstructorDto instructorDto) throws Exception{
 		String file_ori_name = file.getOriginalFilename();
 		String file_path = null;
 		String file_save_name = null;
@@ -220,40 +225,46 @@ public class ManagerEduHandler {
 		
 		System.out.println(edu_way + '/'+ startDate 
 				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ budget + '/'+ note + '/'+ applicants_limit );
-		String[] select1 = request.getParameterValues("select1");
-		int length = select1.length;
-		String[] belong_no1 = new String[length];
-		String[] belong_name = new String[length];
-		String[] dept_no = new String[length];
-		String[] dept_name = new String[length];
-		String[] position_no = new String[length];
-		String[] position_name = new String[length];
-		
-		JSONArray arr = new JSONArray();
-		for(int i=0; i<select1.length; i++) {
-			JSONObject obj = new JSONObject();
-			int idx1 = select1[i].indexOf("!");
-			int idx2 = select1[i].indexOf("@");
-			int idx3 = select1[i].indexOf("#");
-			int idx4 = select1[i].indexOf("$");
-			int idx5 = select1[i].indexOf("%");
-			belong_no1[i] = select1[i].substring(0, idx1);
-			belong_name[i] = select1[i].substring(idx1+1, idx2);
-			dept_no[i] = select1[i].substring(idx2+1, idx3);
-			dept_name[i] = select1[i].substring(idx3+1, idx4);
-			position_no[i] = select1[i].substring(idx4+1, idx5);
-			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
-			obj.put("belong_no", belong_no1[i]);
-			obj.put("belong_name", belong_name[i]);
-			obj.put("dept_no", dept_no[i]);
-			obj.put("dept_name", dept_name[i]);
-			obj.put("position_no", position_no[i]);
-			obj.put("position_name", position_name[i]);
-			/*arr.add(obj);*/
-			arr.add(obj);
+		//필수교육대상
+		String checkTarget = request.getParameter("checkTarget");
+		if(checkTarget.equals("noTarget")) {//필수교육대상 없을 때
+			instructorDto.setEdu_target(null);
+		} else {
+			String[] select1 = request.getParameterValues("select1");
+			int length = select1.length;
+			String[] belong_no1 = new String[length];
+			String[] belong_name = new String[length];
+			String[] dept_no = new String[length];
+			String[] dept_name = new String[length];
+			String[] position_no = new String[length];
+			String[] position_name = new String[length];
+			
+			JSONArray arr = new JSONArray();
+			for(int i=0; i<select1.length; i++) {
+				JSONObject obj = new JSONObject();
+				int idx1 = select1[i].indexOf("!");
+				int idx2 = select1[i].indexOf("@");
+				int idx3 = select1[i].indexOf("#");
+				int idx4 = select1[i].indexOf("$");
+				int idx5 = select1[i].indexOf("%");
+				belong_no1[i] = select1[i].substring(0, idx1);
+				belong_name[i] = select1[i].substring(idx1+1, idx2);
+				dept_no[i] = select1[i].substring(idx2+1, idx3);
+				dept_name[i] = select1[i].substring(idx3+1, idx4);
+				position_no[i] = select1[i].substring(idx4+1, idx5);
+				position_name[i] = select1[i].substring(idx5+1, select1[i].length());
+				obj.put("belong_no", belong_no1[i]);
+				obj.put("belong_name", belong_name[i]);
+				obj.put("dept_no", dept_no[i]);
+				obj.put("dept_name", dept_name[i]);
+				obj.put("position_no", position_no[i]);
+				obj.put("position_name", position_name[i]);
+				/*arr.add(obj);*/
+				arr.add(obj);
+				System.out.println("target : " + arr.toString());
+			}
+			instructorDto.setEdu_target(arr.toString());
 		}
-		System.out.println("target : " + arr.toString());
-		InstructorDto instructorDto = new InstructorDto();
 		instructorDto.setEdu_no(Integer.parseInt(request.getParameter("edu_no")));
 		instructorDto.setEdu_way(edu_way);
 		instructorDto.setEdu_schedule(startDate+"~"+endDate);
@@ -263,14 +274,13 @@ public class ManagerEduHandler {
 		instructorDto.setInput_time(Integer.parseInt(input_time));
 		instructorDto.setClosing_date(closing_date);
 		instructorDto.setEdu_location(edu_location);
-		instructorDto.setEdu_target(arr.toString());
 		instructorDto.setBudget(budget);
 		instructorDto.setNote(note);
 		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
 		instructorDto.setFile_ori_name(file_ori_name);
 		instructorDto.setFile_save_name(file_save_name);
 		instructorDto.setFile_path(file_path);;
-		
+	
 		int result = instructorDao.modifyEdu(instructorDto);
 		int result2 = instructorDao.modifyEduDetail(instructorDto);
 		
@@ -389,13 +399,14 @@ public class ManagerEduHandler {
 	
 	/* 강의등록 로직 */
 	@RequestMapping(value = "manage/regist", method = RequestMethod.POST)
-	public String EduRegist(HttpServletRequest request, HttpServletResponse response, Model model,
+	public String EduRegist(InstructorDto instructorDto2, HttpServletRequest request, HttpServletResponse response, Model model,
 			 @RequestParam("file_name") MultipartFile file) throws Exception{
 		System.out.println("들어오나...." + request.getParameter("instructor_no"));
 		String file_ori_name = file.getOriginalFilename();
 		String file_path = null;
 		String file_save_name = null;
-
+		System.out.println(instructorDto2.getEdu_code());
+		System.out.println("belong_no : " + instructorDto2.getBelong_no());
 		if(file_ori_name.length() != 0) {
 	         file_path = request.getServletContext().getRealPath("/save");
 	         file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
@@ -432,39 +443,6 @@ public class ManagerEduHandler {
 		System.out.println(edu_code + '/'+ belong_no + '/'+ edu_field + '/'+ edu_name + '/'+ edu_way + '/'+ startDate 
 				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ instructor_no 
 				+ '/'+ manager + '/'+ budget + '/'+ note + '/'+ applicants_limit + '/' + file_name);
-		String[] select1 = request.getParameterValues("select1");
-		int length = select1.length;
-		String[] belong_no1 = new String[length];
-		String[] belong_name = new String[length];
-		String[] dept_no = new String[length];
-		String[] dept_name = new String[length];
-		String[] position_no = new String[length];
-		String[] position_name = new String[length];
-		
-		JSONArray arr = new JSONArray();
-		for(int i=0; i<select1.length; i++) {
-			JSONObject obj = new JSONObject();
-			int idx1 = select1[i].indexOf("!");
-			int idx2 = select1[i].indexOf("@");
-			int idx3 = select1[i].indexOf("#");
-			int idx4 = select1[i].indexOf("$");
-			int idx5 = select1[i].indexOf("%");
-			belong_no1[i] = select1[i].substring(0, idx1);
-			belong_name[i] = select1[i].substring(idx1+1, idx2);
-			dept_no[i] = select1[i].substring(idx2+1, idx3);
-			dept_name[i] = select1[i].substring(idx3+1, idx4);
-			position_no[i] = select1[i].substring(idx4+1, idx5);
-			position_name[i] = select1[i].substring(idx5+1, select1[i].length());
-			obj.put("belong_no", belong_no1[i]);
-			obj.put("belong_name", belong_name[i]);
-			obj.put("dept_no", dept_no[i]);
-			obj.put("dept_name", dept_name[i]);
-			obj.put("position_no", position_no[i]);
-			obj.put("position_name", position_name[i]);
-			/*arr.add(obj);*/
-			arr.add(obj);
-		}
-		System.out.println("target : " + arr.toString());
 		InstructorDto instructorDto = new InstructorDto();
 		instructorDto.setEdu_code(Integer.parseInt(edu_code));
 		instructorDto.setBelong_no(Integer.parseInt(belong_no));
@@ -480,13 +458,57 @@ public class ManagerEduHandler {
 		instructorDto.setEdu_location(edu_location);
 		instructorDto.setInstructor_no(instructor_no);
 		instructorDto.setManager(manager);
-		instructorDto.setEdu_target(arr.toString());
 		instructorDto.setBudget(budget);
 		instructorDto.setNote(note);
 		instructorDto.setApplicants_limit(Integer.parseInt(applicants_limit));
 		instructorDto.setFile_ori_name(file_ori_name);
 		instructorDto.setFile_save_name(file_save_name);
 		instructorDto.setFile_path(file_path);;
+		
+		//필수교육대상
+		String checkTarget = request.getParameter("checkTarget");
+		JSONArray arr = new JSONArray();
+		if(checkTarget.equals("noTarget")) {//필수교육대상 없을 때
+			
+			/*instructorDto.setEdu_target(arr.toString());*/
+			
+		}else {//필수교육대상 있을 때
+			String[] select1 = request.getParameterValues("select1");
+			int length = select1.length;
+			String[] belong_no1 = new String[length];
+			String[] belong_name = new String[length];
+			String[] dept_no = new String[length];
+			String[] dept_name = new String[length];
+			String[] position_no = new String[length];
+			String[] position_name = new String[length];
+			
+			
+			for(int i=0; i<select1.length; i++) {
+				JSONObject obj = new JSONObject();
+				int idx1 = select1[i].indexOf("!");
+				int idx2 = select1[i].indexOf("@");
+				int idx3 = select1[i].indexOf("#");
+				int idx4 = select1[i].indexOf("$");
+				int idx5 = select1[i].indexOf("%");
+				belong_no1[i] = select1[i].substring(0, idx1);
+				belong_name[i] = select1[i].substring(idx1+1, idx2);
+				dept_no[i] = select1[i].substring(idx2+1, idx3);
+				dept_name[i] = select1[i].substring(idx3+1, idx4);
+				position_no[i] = select1[i].substring(idx4+1, idx5);
+				position_name[i] = select1[i].substring(idx5+1, select1[i].length());
+				obj.put("belong_no", belong_no1[i]);
+				obj.put("belong_name", belong_name[i]);
+				obj.put("dept_no", dept_no[i]);
+				obj.put("dept_name", dept_name[i]);
+				obj.put("position_no", position_no[i]);
+				obj.put("position_name", position_name[i]);
+				/*arr.add(obj);*/
+				arr.add(obj);
+			}
+			System.out.println("target : " + arr.toString());
+			instructorDto.setEdu_target(arr.toString());
+		}
+		System.out.println("checkTarget : " + checkTarget);
 		
 		int result = managerEduDao.insertEduReq(instructorDto);
 		int result2 = managerEduDao.insertEduReqDetail(instructorDto);

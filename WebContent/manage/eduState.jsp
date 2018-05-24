@@ -32,6 +32,22 @@
  		}
 	}
 </script>
+<style>
+select {
+	width: 200px;
+	height: 20px;
+	padding-left: 10px;
+	font-size: 12px;
+	color: #006fff;
+	border: 1px solid #006fff;
+	border-radius: 3px;
+}
+
+.disabled {
+	background-color: gray;
+	color: white;
+}
+</style>
 </head>
 <body>
 <div align="center">
@@ -58,7 +74,7 @@
 				<td>승인여부</td>
 				<td><!-- 심사현황 // 1 - 승인대기, 2 - 승인심사 3 - 승인완료 4-거절-->
 					<select id="approval_state" name = "approval_state">
-							<option value = "${eduDetail.approval_state}">
+							<option value = "${eduDetail.approval_state}" class="disabled" disabled="disabled">
 								<c:if test="${eduDetail.approval_state eq 1}">
 									<span>승인대기</span>
 								</c:if>

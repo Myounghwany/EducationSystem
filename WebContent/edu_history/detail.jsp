@@ -88,6 +88,5 @@ function action(val){
 		<button style="margin-top: 5%;" class="w3-button w3-white w3-border"
 			onclick="location.href='${path}/eduhistory.do'" >목록</button>
 	</div>
-<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

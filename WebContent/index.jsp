@@ -22,5 +22,4 @@
 index 페이지 입니다.
 
 
-<jsp:include page="common/footer.jsp" />
 </body>
