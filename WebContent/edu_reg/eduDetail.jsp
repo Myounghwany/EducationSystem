@@ -99,7 +99,7 @@ $(document).ready(function(){
 				<td>${item.instructor_no }</td>
 			</tr>
 			<tr>
-				<th>교육대상</th>
+				<th>필수교육대상</th>
 				<td>
 					<c:forEach items = "${edu_target }" var = "item1">
 						${item1 } <br/>
@@ -117,9 +117,10 @@ $(document).ready(function(){
 			<tr>
 				<th>신청마감일</th>
 				<td>
-					<fmt:parseDate value="${item.closing_date }" pattern="yyyy-MM-dd HH:mm:ss" var="closing_date" /> 
+					${item.closing_date }
+					<%-- <fmt:parseDate value="${item.closing_date }" pattern="yyyy-MM-dd HH:mm:ss" var="closing_date" /> 
 					<fmt:formatDate value="${closing_date }" pattern="yyyy.MM.dd" var="date" /> 
-					${date }
+					${date } --%>
 				</td>
 			</tr>
 			<tr>
@@ -166,7 +167,7 @@ $(document).ready(function(){
 			<c:choose>
 				<c:when test="${empty edu_history}">
 					<tr>
-						<td colspan="4" style="text-align: center;">수강자가 존재하지 않습니다</td>
+						<td colspan="5" style="text-align: center;">수강자가 존재하지 않습니다</td>
 					</tr>
 				</c:when>
 				<c:otherwise>

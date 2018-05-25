@@ -13,6 +13,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 <!-- 나현 로그인모달 & 드롭다운-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -33,6 +34,10 @@
 .studentNum{
 	color : red;
 }
+#name{
+	font-weight:bold;
+	font-size: 20px;
+}
 </style>
 <script type="text/javascript">
 	function isntRegBtn(account_no){
@@ -49,7 +54,7 @@
 	function isntEvalBtn(edu_no, deadLine){
 		window.name = "parentForm";
 		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no + "&deadLine=" + deadLine, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
-	}
+	}	
 </script>
 <jsp:include page="../common/header.jsp" />
 <body>
@@ -58,6 +63,7 @@
 	<c:choose>
 		<c:when test='${instructor_no=="null"}'>
 			<div id="info">${result }</div>
+
 			<table class="w3-table w3-bordered">
 				<tr>
 					<th>
@@ -69,8 +75,40 @@
 		<c:otherwise>
 			<c:choose>
 				<c:when test='${approval_state == 3}'>
-				
-					강사번호 : ${instructor_no}
+					<a href="#" data-target="#layerpop" data-toggle="modal"><i class="fas fa-info-circle"></i></a><span id="name">&nbsp;${name }</span> 강사님 ( ${instructor_no} ) 환영합니다!
+						<div class="modal fade" id="layerpop" >
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <!-- header -->
+						      <div class="modal-header">
+						        <!-- 닫기(x) 버튼 -->
+						        <button type="button" class="close" data-dismiss="modal">×</button>
+						        <!-- header title -->
+						        <h4 class="modal-title">강사 정보</h4>
+						      </div>
+						      <!-- body -->
+						      <div class="modal-body">
+						            <c:forEach items="${instInfo }" var = "item">
+						            	강사명 : ${item.name }<br/>
+						            	<c:if test='${account_no!=null}'>
+							            	사원번호 : ${item.emp_no}<br/>
+						            		소속 : ${item.belong_name }<br/>
+						            		부서 : ${item.dept_name }<br/>
+						            		직급 : ${item.position_name }<br/>
+						            	</c:if>
+						            	주민번호 : ${item.identity_no }<br/>
+						            	주소지 : ${item.address } <br/>
+						            	휴대폰 : ${item.phone }<br/>
+						            	이메일 : ${item.email }
+						            </c:forEach>
+						      </div>
+						      <!-- Footer -->
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
 						<c:choose>
 							<c:when test='${account_no!=null}'>
 							<table class="w3-table w3-bordered">
@@ -134,6 +172,9 @@
 							<th colspan="7" style="background-color: #CCCCCC;">강의목록</th>
 						</tr>
 						<tr>
+							<th colspan="7" style="font-size: 15px; text-align: right;">현재 강의평가 기간에 해당하는 강의는 총 <span style="color: red;">${evalCnt }</span>개입니다.</th>
+						</tr>
+						<tr>
 							<td style="background-color: #EAEAEA;">소속</td>
 							<td style="background-color: #EAEAEA;">교육분야</td>
 							<td style="background-color: #EAEAEA;">교육코드</td>
@@ -148,6 +189,8 @@
 						<fmt:formatDate value="${end_date }" pattern="yyyy-MM-dd HH:mm:ss" var="end" /> 
 						<fmt:parseDate value="${item.deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="deadLine" /> 
 						<fmt:formatDate value="${deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="dead" /> 
+						<fmt:parseDate value="${item.start_date}" pattern="yyyy-MM-dd HH:mm:ss" var="start_date" /> 
+						<fmt:formatDate value="${start_date }" pattern="yyyy-MM-dd HH:mm:ss" var="start" /> 
 							<tr>
 								<td>${item.belong_name }</td>
 								<td>${item.edu_field }</td>
@@ -162,7 +205,10 @@
 									<c:if test="${dead < now_date}">
 										<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료" class="w3-button w3-white w3-border">
 									</c:if>
-									<c:if test="${end > now_date}">
+									<c:if test="${start > now_date }">
+										강의대기중
+									</c:if>
+									<c:if test="${start < now_date && end > now_date}">
 										강의진행중
 									</c:if>
 									
