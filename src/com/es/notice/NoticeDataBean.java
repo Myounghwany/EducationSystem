@@ -8,6 +8,7 @@ public class NoticeDataBean {
 	private String title;
 	private String content;
 	private String writer;
+	private String writer_name;
 	private Timestamp write_time;
 	private int hit;
 	private String file_path;
@@ -38,6 +39,12 @@ public class NoticeDataBean {
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;
+	}
+	public String getWriter_name() {
+		return writer_name;
+	}
+	public void setWriter_name(String writer_name) {
+		this.writer_name = writer_name;
 	}
 	public Timestamp getWrite_time() {
 		return write_time;
@@ -75,6 +82,7 @@ public class NoticeDataBean {
 	public void setNotice_state(String notice_state) {
 		this.notice_state = notice_state;
 	}
+	
 	
 	
 }

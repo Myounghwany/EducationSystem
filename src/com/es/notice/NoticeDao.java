@@ -1,24 +1,24 @@
 package com.es.notice;
 
+import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-
 public interface NoticeDao {
-
-	public List<NoticeDataBean> sellectAll(NoticeDataBean noticedto);
+	
+	public List<NoticeDataBean> noticetList(HashMap<String, Object> map);
 	
 	public int insertNotice(NoticeDataBean noticeDto);
 	
-	public int check(String notice_no);
+	public NoticeDataBean detailnotice(int notice_no);
 	
-	public NoticeDataBean selectOne(String notice_no);
+	public int updateHit(NoticeDataBean noticeDto);
 	
-	public int updateNotice(NoticeDataBean noticeDto);
+	public int modifyNotice(NoticeDataBean noticeDto);
 	
-	public int deleteNotice(NoticeDataBean noticeDto);
+	public int deleteNotice(int notice_no);
 	
-	public List<NoticeDataBean> search (NoticeDataBean noticeDto) throws DataAccessException;
+	public int noticeListCount(HashMap<String, Object> map);
+	
 
 	
 }
