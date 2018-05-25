@@ -59,7 +59,7 @@
 				<th width="40%">교육명</th>
 				<th width="10%">강사명</th>
 				<th width="25%">교육일</th>
-				<c:if test="${sessionScope.account eq 'emp'}">
+				<c:if test="${sessionScope.account eq 'emp' or sessionScope.account eq 'hr'}">
 					<th width="8%">이수여부</th>
 					<th>강의평가</th>
 				</c:if>
@@ -92,7 +92,7 @@
 								</c:choose>
 								</td>
 							</c:if>
-							<c:if test="${sessionScope.account eq 'emp'}">
+							<c:if test="${sessionScope.account eq 'emp' or sessionScope.account eq 'hr'}">
 								<td>${HistoryList.edu_state}</td>
 								<td>
 									<c:if test="${date < HistoryList.start_date}">
