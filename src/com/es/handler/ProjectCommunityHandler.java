@@ -168,6 +168,8 @@ public class ProjectCommunityHandler {
 		String file_save_name= "";
 		String file_ori_name= "";
 		
+		content = content.replace("\r\n", "<br>");
+		
 		projectDto.setClassification(classification);
 		projectDto.setTitle(title);
 		projectDto.setContent(content);

@@ -23,6 +23,7 @@ $(document).ready(function(){
 	var likeCheck = ${likeCheck};
 	var v_mempplist = $('#mempplist');
 		
+	
 	$("span.likeSpan").mouseenter(function(){
 		
 		if(${likePersonSize} != 0){
@@ -325,7 +326,7 @@ $(document).ready(function(){
 		</tr>
 		<tr height="100">
 			<td colspan="4" height="400">
-			<div style="word-break:break-all;">${result.content}</div>
+			<div id="contentText" style="word-break:break-all;">${result.content}</div>
 			</td>
 		</tr>
 		<tr>

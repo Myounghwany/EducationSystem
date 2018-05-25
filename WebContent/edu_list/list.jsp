@@ -222,7 +222,7 @@ function deleteBtn(no){
 		<tr>
 			<th>교육번호</th>
 			<th>교육명</th>
-			<th>소속번호</th>
+			<th>소속명</th>
 			<th>교육분야</th>
 			<th>필수교육대상</th>
 			<th>담당자</th>
@@ -243,7 +243,7 @@ function deleteBtn(no){
 					<tr id="tr${edulist.edu_no}">
 						<td id="ed_no" class="ed_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_no}</td>
 						<td id="ed_name" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_name}</td>
-						<td id="be_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.belong_no}</td>
+						<td id="be_no" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.belong_name}</td>
 						<td id="ed_field" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.edu_field}</td>
 						<td id="ed_target" class='${state.index}' onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'"></td>
 						<td id="ma" onclick="location.href='EducationList/detail.do?edu_no=${edulist.edu_no}'">${edulist.manager}</td>

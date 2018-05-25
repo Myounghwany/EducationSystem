@@ -88,7 +88,7 @@ function checkValtext() {
 			<tr>
 				<td>게시글</td>
 				<td>	
-					<textarea class="form-control" rows="10" name="text" style="width: 700px; height: 50%;"></textarea>
+					<textarea class="form-control" rows="10" name="text" style="width: 700px; height: 50%;" ></textarea>
 					<span style="float: right;"> 
 						(<span id="textCount" class="textCount">0</span>/1000)
 					</span>
