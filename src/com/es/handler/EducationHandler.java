@@ -59,7 +59,14 @@ public class EducationHandler {
 
 		if(emp_no != null) {
 
+		List<EduHistoryDto> edu_history = eduhistoryDao.eduHistoryList(emp_no);
+		System.out.println(" edu_history : "+edu_history);
+		request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
+		request.setAttribute("historySize", edu_history.size()); // 수강한 교육을 찾기위해
 		
+		System.out.println("emp_no : "+emp_no);
+			
+			
 		/*페이징*/
 		
 		int totalList = 0;
