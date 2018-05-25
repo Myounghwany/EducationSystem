@@ -49,18 +49,26 @@ $(document).ready(function() {
 		    });
 		});
 
-
+	console.log('edu_target : '+edu_target);	
+	console.log('edu_target.length : '+edu_target.length);	
+	 
 	for(var i=0; edu_target.length>i ; i++){
 		index = $("."+(i)).text();
 		
 		var str ="";
+		console.log(' [i] : '+i);
+		console.log('edu_target[i] : '+edu_target[i]);
 		
+		if(edu_target[i] != -1){
+			
 		for(var j=0; edu_target[i].length > j ; j++){
 			str += edu_target[i][j].belong_name+' , '+edu_target[i][j].dept_name+' , '+edu_target[i][j].position_name;
 			
 			$("."+(i)).text(str);
 		
+			}
 		}
+
 	} 
 
  	

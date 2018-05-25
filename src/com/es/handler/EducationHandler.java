@@ -116,7 +116,7 @@ public class EducationHandler {
 	        	eduTargetList.add(i, eduTarget);
 	        	
 	        	}else {
-	        		eduTargetList.add(i, "");
+	        		eduTargetList.add(i, -1);
 	        	}
 	        } catch (UnsupportedEncodingException e) {
 	           e.printStackTrace();
@@ -363,7 +363,10 @@ public class EducationHandler {
 			}
 			System.out.println("강의 대상(target) : " + aaa);
 			model.addAttribute("edu_target", aaa);
-		} 
+		}else {
+			model.addAttribute("edu_target", "제한없음");
+		}
+		
 		
 		return "edu_history/detail";
 	}
