@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -45,6 +46,10 @@ public class PetitionHandler {
 	public String writePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {
 		
 		String emp_no = "test1";
+		
+//		HttpSession httpSession = request.getSession();
+//		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";
@@ -141,9 +146,12 @@ public class PetitionHandler {
 		 
 		String emp_no = "test0";    // 현재 세션꺼로 변경
 		
+//		HttpSession httpSession = request.getSession();
+//		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		
 		PetitionLikeDto petitionLikeDto = new PetitionLikeDto();
 		petitionLikeDto.setPetition_no(petition_no);
-		petitionLikeDto.setEmp_no(emp_no); // 현재 세션꺼로 변경 xml도!
+		petitionLikeDto.setEmp_no(emp_no);  
 		
 		int state = petitionDao.petitionState(petition_no); // 청원 상태 체크
 		
@@ -167,7 +175,7 @@ public class PetitionHandler {
 		
 	    int count =  petitionLikeDao.countCheck(petition_no); // 청원 참여 개수 체크
 	     
-		if(count > 2) {   // 갯수 10개로 수정 
+		if(count > 10) {  
 			petitionLikeDao.approvalUpdate(petition_no); // 심사중 업데이트
 		}
 		

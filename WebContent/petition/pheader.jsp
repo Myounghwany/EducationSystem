@@ -20,7 +20,9 @@
 				<li><a href="${path}/EvaluateList.do">심사중</a></li> 
 				<li><a href="${path}/AnswerList.do">심사완료</a></li>
 				<li><a href="${path}/ExpireList.do">기간만료</a></li>
+				<c:if test=""> 
 				<li><a href="${path}/ManageList.do">청원관리</a></li>
+				</c:if>
 			</ul>
 		</div> 
 </body>
