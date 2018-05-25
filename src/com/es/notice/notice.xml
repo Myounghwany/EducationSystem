@@ -3,36 +3,83 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="notice">
-	<select id="selectAll" resultType="com.es.notice.NoticeDataBean">
-		select * from notice ORDER BY notice_no DESC
+	<select id="noticetList" parameterType="hashmap"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice order by write_time desc limit
+		#{start}, 10
 	</select>
-	
 	<insert id="insertNotice" parameterType="com.es.notice.NoticeDataBean">
-		insert into notice(title, content, writer, file_path, file_save_name, file_ori_name) 
-		values(#{title}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name})
+		insert into
+		notice( title, content, writer, 
+		write_time, file_path, file_save_name, file_ori_name)
+		values(#{title},#{content},#{writer},now(),#{file_path},#{file_save_name},#{file_ori_name})
 	</insert>
-	
-	<select id="check" resultType="int" parameterType="String">
-		select count(*) from notice where no=#{notice_no}
-	</select>
-	
-	<select id="selectOne" resultType="com.es.notice.NoticeDataBean">
-		select * from notice where
-		notice_no=#{notice_no}
-	</select>
-
-	<update id="updateNotice" parameterType="com.es.notice.NoticeDataBean">
-		update notice set
-		title=#{title}, content=#{content}, password=#{password} where
+	<update id="updateHit" parameterType="com.es.notice.NoticeDataBean">
+		update notice set hit=#{hit}+1 where notice_no=#{notice_no}
+	</update>
+	<update id="modifyNotice" parameterType="com.es.notice.NoticeDataBean">
+		update notice set title=#{title},
+		content=#{content}, writer=#{writer}, file_path=#{file_path},
+		file_save_name=#{file_save_name}, file_ori_name=#{file_ori_name} where
 		notice_no=#{notice_no}
 	</update>
-
-	<delete id="deleteNotice" parameterType="com.es.notice.NoticeDataBean">
-		delete from notice where
-		notice_no=#{notice_no} and password=#{password}
+	<delete id="deleteNotice" parameterType="int">
+		delete from notice where notice_no=#{notice_no}
 	</delete>
-
-	<select id="search" resultType="com.es.notice.NoticeDataBean" parameterType="com.es.notice.NoticeDataBean">
-		select * from notice where ${searchName} like '%${searchValue}%' order by no DESC
+	<select id="noticeListCount" resultType="int">
+		select count(*)
+		from notice
 	</select>
+	<select id="selectTitleList" parameterType="hashmap"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice where title like
+		CONCAT('%',#{condition},'%') order by write_time desc limit #{start},
+		10
+	</select>
+	<select id="selectTitleListCount" parameterType="hashmap"
+		resultType="int">
+		select count(*) from notice where title like
+		CONCAT('%',#{condition},'%')
+	</select>
+	<select id="selectContentList" parameterType="hashmap"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice where content like
+		CONCAT('%',#{condition},'%') order by write_time desc limit #{start},
+		10
+	</select>
+	<select id="selectContentListCount" parameterType="hashmap"
+		resultType="int">
+		select count(*) from notice where content like
+		CONCAT('%',#{condition},'%')
+	</select>
+	<select id="selectTCList" parameterType="hashmap"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice where content like
+		CONCAT('%',#{condition},'%')
+		or title like CONCAT('%',#{condition},'%')
+		order by write_time desc limit #{start}, 10
+	</select>
+	<select id="selectTCListCount" parameterType="hashmap"
+		resultType="int">
+		select count(*) from notice where content like
+		CONCAT('%',#{condition},'%')
+		or title like CONCAT('%',#{condition},'%')
+	</select>
+	<select id="selectWriterList" parameterType="hashmap"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice where writer like
+		CONCAT('%',#{condition},'%') order by write_time desc limit #{start},
+		10
+	</select>
+	<select id="selectWriterListCount" parameterType="hashmap"
+		resultType="int">
+		select count(*) from notice where writer like
+		CONCAT('%',#{condition},'%')
+	</select>
+
+	<select id="detailnotice" parameterType="int"
+		resultType="com.es.notice.NoticeDataBean">
+		select * from notice where notice_no=#{notice_no}
+	</select>
+
 </mapper>
