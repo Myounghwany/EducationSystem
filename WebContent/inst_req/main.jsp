@@ -172,6 +172,9 @@
 							<th colspan="7" style="background-color: #CCCCCC;">강의목록</th>
 						</tr>
 						<tr>
+							<th colspan="7" style="font-size: 15px; text-align: right;">현재 강의평가 기간에 해당하는 강의는 총 <span style="color: red;">${evalCnt }</span>개입니다.</th>
+						</tr>
+						<tr>
 							<td style="background-color: #EAEAEA;">소속</td>
 							<td style="background-color: #EAEAEA;">교육분야</td>
 							<td style="background-color: #EAEAEA;">교육코드</td>

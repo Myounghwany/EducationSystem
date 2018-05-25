@@ -49,6 +49,21 @@
 				$(this).val($(this).val().substr(0, textCountLimit));
 			}
 		});
+		$('#checkTarget').change(function(){
+			if($('#checkTarget').is(':checked')){
+				$('#target :input').attr("disabled", "true");
+				 var form = document.eduForm;
+				 var o = form.elements['select1'];
+			     if(o.length == 0) return;
+				 var loop = o.length;
+			     for (var i=0 ; i < loop ; i++){
+			         o.options.remove(0);
+			     }
+			}else{
+				$('#target :input').removeAttr('disabled');
+			}
+		});
+		$('#target :input').attr("disabled", "true");
 	});
 	$(function() {
 	    $( "#startDate" ).datepicker({
@@ -161,10 +176,12 @@
 			alert('교육장소를 입력하세요');
 			document.eduModifyForm.edu_location.focus();
 			return false;
-		}else if(!document.eduModifyForm.select1.value){
-			alert('교육대상을 선택하세요');
-			document.eduModifyForm.select1.focus();
-			return false;
+		}else if(!document.eduModifyForm.checkTarget.checked){
+			if(!document.eduModifyForm.select1.value){
+				alert('교육대상을 선택하세요');
+				document.eduModifyForm.select1.focus();
+				return false;
+			}
 		}else if(!document.eduModifyForm.applicants_limit.value){
 			alert('신청자제한수를 입력하세요');
 			document.eduModifyForm.applicants_limit.focus();
@@ -240,8 +257,10 @@
 		</c:forEach>
 		</c:forEach>
 			<tr>
-				<td><span class="necessary">*</span>교육대상</td>
-				<td>소속 : 
+				<td><span class="necessary">*</span>필수교육대상</td>
+				<td><input type="checkbox" checked id="checkTarget" name="checkTarget" value="noTarget"> &nbsp;없음<br/>
+				<div id="target">
+				소속 : 
 					<select name = "target_belong" onChange="javascript:selectBelong(this.value)">
 						<option value = "0">전체</option>
 						<c:forEach items = "${belong_no }" var = "item">
@@ -275,6 +294,7 @@
 			                </td>
 			            </tr>
 		        	</table>
+		        	</div>
 				</td>
 					
 			</tr>

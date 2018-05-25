@@ -49,6 +49,21 @@
 				$(this).val($(this).val().substr(0, textCountLimit));
 			}
 		});
+		$('#checkTarget').change(function(){
+			if($('#checkTarget').is(':checked')){
+				$('#target :input').attr("disabled", "true");
+				 var form = document.eduForm;
+				 var o = form.elements['select1'];
+			     if(o.length == 0) return;
+				 var loop = o.length;
+			     for (var i=0 ; i < loop ; i++){
+			         o.options.remove(0);
+			     }
+			}else{
+				$('#target :input').removeAttr('disabled');
+			}
+		});
+		$('#target :input').attr("disabled", "true");
 	});
 	$(function() {
 	    $( "#startDate" ).datepicker({
@@ -184,10 +199,12 @@
 			alert('담당자를 입력하세요');
 			document.eduForm.manager.focus();
 			return false;
-		}else if(!document.eduForm.select1.value){
-			alert('교육대상을 선택하세요');
-			document.eduForm.select1.focus();
-			return false;
+		}else if(!document.eduForm.checkTarget.checked){
+			if(!document.eduForm.select1.value){
+				alert('교육대상을 선택하세요');
+				document.eduForm.select1.focus();
+				return false;
+			}
 		}else if(!document.eduForm.applicants_limit.value){
 			alert('신청자제한수를 입력하세요');
 			document.eduForm.applicants_limit.focus();
@@ -277,9 +294,11 @@
 				<td><input type="text" name = "manager"/></td>
 			</tr>
 			<tr>
-				<td><span class="necessary">*</span>교육대상</td>
-				<td>소속 : 
-					<select name = "target_belong" onChange="javascript:selectBelong(this.value)">
+				<td><span class="necessary">*</span>필수교육대상</td>
+				<td><input type="checkbox" checked id="checkTarget" name="checkTarget" value="noTarget"> &nbsp;없음<br/>
+				<div id="target">
+					소속 : 
+					<select name = "target_belong" onChange="javascript:selectBelong(this.value)" id="belong">
 						<option value = "0">전체</option>
 						<c:forEach items = "${belong_no }" var = "item">
 							<option value = "${item.belong_no }">${item.name }</option>
@@ -290,7 +309,7 @@
 						<option value = "0">전체</option>
 					</select>
 					직급 : 
-					<select name = "target_position">
+					<select name = "target_position" id="position">
 						<option value = "0">전체</option>
 						<c:forEach items = "${position }" var = "item">
 							<option value = "${item.position_no }">${item.position_name }</option>
@@ -312,6 +331,7 @@
 			                </td>
 			            </tr>
 		        	</table>
+				</div>
 				</td>
 					
 			</tr>

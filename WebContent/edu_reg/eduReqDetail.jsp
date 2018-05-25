@@ -113,7 +113,7 @@ option {
 				<td>${item.instructor_no }</td>
 			</tr>
 			<tr>
-				<th>교육대상</th>
+				<th>필수교육대상</th>
 				<td>
 					<c:forEach items = "${edu_target }" var = "item1">
 						${item1 } <br/>

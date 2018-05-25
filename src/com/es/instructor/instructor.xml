@@ -84,6 +84,9 @@
 		delete from education_list where edu_no = #{edu_no};
 		delete from education_detail where edu_no = #{edu_no};
 	</delete>
+	<select id="selectEvalCnt" parameterType="String" resultType="String">
+		select count(*)from education_detail A join education_list B on A.edu_no = B.edu_no where (date(end_date) <![CDATA[<=]]> date(now())) and (date(now()) <![CDATA[<=]]> date(end_date + interval 7 day)) and B.instructor_no = #{account_no} and B.approval_state = 3
+	</select>
 	
 	
 	<select id="InstructorCount" resultType="int">
