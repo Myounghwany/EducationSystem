@@ -9,11 +9,14 @@ public class PetitionDto {
 	private String content; // 내용
 	private String writer; // 작성자
 	private Timestamp write_time; // 작성시간
+	private Timestamp closing_date; // 청원 마감시간
+	private int agree; // 청원찬성
+	private int approval_state; // 청원진행상태 0 - 진행 중, 1 - 심사시작, 2 - 청원수용, 3 - 청원거부, 4 - 기간만료 
+	private String comment; // 답변글
 	private String file_path;
 	private String file_save_name;
 	private String file_ori_name;
-	private int approval_state; // 청원진행상태 0 - 진행 중, 1 - 심사시작, 2 - 청원수용, 3 - 청원거부, 4 - 기간만료 
-	 
+ 
 	public int getPetition_no() {
 		return petition_no;
 	}
@@ -74,8 +77,24 @@ public class PetitionDto {
 	public void setApproval_state(int approval_state) {
 		this.approval_state = approval_state;
 	}
-	
-	
+	public Timestamp getClosing_date() {
+		return closing_date;
+	}
+	public void setClosing_date(Timestamp closing_date) {
+		this.closing_date = closing_date;
+	}
+	public int getAgree() {
+		return agree;
+	}
+	public void setAgree(int agree) {
+		this.agree = agree;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 	
 
 }
