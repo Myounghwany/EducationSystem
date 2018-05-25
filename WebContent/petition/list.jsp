@@ -23,6 +23,7 @@
 	 <table>
 	 	<thead>
 	 		<tr>
+	 			<th> 상태 </th>
 	 			<th> 번호 </th>
 	 			<th> 분류 </th>
 	 			<th> 제목 </th>
@@ -35,17 +36,27 @@
 	 	  <c:choose>
 		   <c:when test="${empty requestScope.elist}">
 				<tr>
-					<td colspan="6">현재 답변 대기중인 청원이 없습니다.</td>
+					<td colspan="7">현재 답변 대기중인 청원이 없습니다.</td>
 				</tr>
 		   </c:when>
 		   <c:otherwise>
 				<c:forEach items="${requestScope.elist}" var="list" varStatus="state" begin="0" end="2" >
 					 <tr>
+					  <td> 
+					  <c:choose>
+					  	<c:when test="${list.approval_state == 1}" >
+					  		<span> 심사중 </span>
+					  	</c:when>
+					  	<c:when test="${list.approval_state == 2}" >
+					  		<span> 심사중/만료 </span>
+					  	</c:when>
+					  </c:choose>
+					  </td>
 		              <td>${list.petition_no}</td>
 					  <td>${list.classification}</td>
 					  <td><a href="PetitionDetail.do?petition_no=${list.petition_no}&list=PetitionList ">${list.title}</a></td>
 					  <td>${list.writer}</td>
-					  <td>${list.write_time} ~ </td> 		<!-- 청원기간 -->
+					  <td>${list.write_time} ~ ${list.closing_date} </td>
 					  <td>${list.agree}</td> 			 
 				 	 </tr>
 				</c:forEach>
@@ -63,6 +74,7 @@
 	 <table>
 	 	<thead>
 	 		<tr>
+	 			<th> 상태 </th>
 	 			<th> 번호 </th>
 	 			<th> 분류 </th>
 	 			<th> 제목 </th>
@@ -75,17 +87,18 @@
 	 	  <c:choose>
 		   <c:when test="${empty requestScope.olist}">
 				<tr>
-					<td colspan="6">현재 진행중인 청원이 없습니다.</td>
+					<td colspan="7">현재 진행중인 청원이 없습니다.</td>
 				</tr>
 		   </c:when>
 		   <c:otherwise>
 				<c:forEach items="${requestScope.olist}" var="list" varStatus="state" begin="0" end="5" >
 					 <tr>
+					  <td> <span>진행중</span> </td>
 		              <td>${list.petition_no}</td>
 					  <td>${list.classification}</td>
 					  <td><a href="PetitionDetail.do?petition_no=${list.petition_no}&list=PetitionList ">${list.title}</a></td>
 					  <td>${list.writer}</td>
-					  <td>${list.write_time} ~ </td> 		<!-- 청원기간 -->
+					  <td>${list.write_time} ~ ${list.closing_date}</td>
 					  <td>${list.agree}</td>				 
 				 	 </tr>
 				</c:forEach>

@@ -110,17 +110,29 @@ public class PetitionHandler {
 	@RequestMapping("/PetitionDetail")
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
 		System.out.println("Detail Handler");
-		petitionDao.closingEvaluate();
 		
 		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
 		String list = request.getParameter("list");
 		
 		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
+		String content = (petitionDto.getContent()).replace("\r\n", "<br>");
 		
 		request.setAttribute("list",list);
+		request.setAttribute("content",content);
 		request.setAttribute("result", petitionDto);  
 		
 		return new ModelAndView("petition/detail");  
+	}
+	
+	@RequestMapping("/PetitionDelete")
+	public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
+		System.out.println("PetitionDelete");
+		
+		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
+		
+		petitionDao.petitionDelete(petition_no);
+
+		return new ModelAndView("petition/manageList");  
 	}
 	
 	@RequestMapping("/PetitionAgree")
@@ -128,17 +140,18 @@ public class PetitionHandler {
 		System.out.println("Agree Handler");
 		
 		int petition_no = Integer.parseInt( request.getParameter("petition_no")) ; 
-		String emp_no = "test2";
+		String list = request.getParameter("list");
+		String emp_no = "test3";
 		
 		PetitionLikeDto petitionLikeDto = new PetitionLikeDto();
 		petitionLikeDto.setPetition_no(petition_no);
 		petitionLikeDto.setEmp_no(emp_no);
 		
-		int state = petitionDao.petitionState(petition_no);  // 기간만료 확인
-		if(state == 4 || state == 2) {
+		int state = petitionDao.petitionState(petition_no);  // 기간만료 확인   -> 이거 그냥 when으로 막아놓기 
+		if(state == 2 || state == 3 || state == 4 || state == 5) {
 			response.setContentType("text/html; charset=UTF-8"); 
 			PrintWriter out = response.getWriter();
-			out.println("<script>alert('기간이 만료된 청원입니다.'); history.go(-1); </script>"); 
+			out.println("<script>alert('만료된 청원입니다.'); history.go(-1); </script>"); 
 			out.flush(); 
 			return null;
 		}
@@ -159,7 +172,7 @@ public class PetitionHandler {
 			petitionLikeDao.approvalUpdate(petition_no);
 		}
 		
-		return "redirect:PetitionDetail.do?petition_no="+petition_no;
+		return "redirect:PetitionDetail.do?petition_no="+petition_no+"&list="+list;
 	}
 
 	
@@ -194,11 +207,9 @@ public class PetitionHandler {
 	@RequestMapping("/PetitionList")
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("List Handler");
-		petitionDao.closingEvaluate();
 		
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("start",0);
-		map.put("sort","list");
 		
 		List<PetitionDto> ongoinglist = petitionDao.ongoingList(map);
 		List<PetitionDto> evaluatelist = petitionDao.evaluateList(map);
@@ -212,10 +223,8 @@ public class PetitionHandler {
 	@RequestMapping("/AllList")
 	public ModelAndView all(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("All");
-		petitionDao.closingEvaluate();
-		
+
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
-		map.put("sort","all");
 		
 		int totalList = 0;
 		int spage = 1;
@@ -232,6 +241,7 @@ public class PetitionHandler {
 		if(request.getParameter("src") !=null) { 
 			String src = request.getParameter("src");
 			String search = request.getParameter("search");
+			request.setAttribute("src", src);
 			request.setAttribute("search", search);
 			map.put("src",src);
 			map.put("search",search);
@@ -259,8 +269,7 @@ public class PetitionHandler {
 	@RequestMapping("/OngoingList")
 	public ModelAndView ongoing(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Ongoing");
-		petitionDao.closingEvaluate();
-		
+	
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("sort","ongoing");
 		
@@ -279,6 +288,7 @@ public class PetitionHandler {
 		if(request.getParameter("src") !=null) { 
 			String src = request.getParameter("src");
 			String search = request.getParameter("search");
+			request.setAttribute("src", src);
 			request.setAttribute("search", search);
 			map.put("src",src);
 			map.put("search",search);
@@ -308,7 +318,6 @@ public class PetitionHandler {
 	@RequestMapping("/ExpireList") // 마감
 	public ModelAndView expire(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Expire");
-		petitionDao.closingEvaluate();
 		
 		HashMap<String, Object> map = new HashMap<String,Object>();
 		map.put("sort","expire");
@@ -328,6 +337,7 @@ public class PetitionHandler {
 		if(request.getParameter("src") !=null) { 
 			String src = request.getParameter("src");
 			String search = request.getParameter("search");
+			request.setAttribute("src", src);
 			request.setAttribute("search", search);
 			map.put("src",src);
 			map.put("search",search);
@@ -335,6 +345,7 @@ public class PetitionHandler {
 			
 			totalList = list.size();
 		}
+		totalList = petitionDao.petitionListCount(map);
   
 		int maxPage = (int)(totalList/10.0+0.9);  
 		int startPage = (int)(spage/5.0+0.8)*5-4;  
@@ -353,7 +364,6 @@ public class PetitionHandler {
 	@RequestMapping("/EvaluateList")
 	public ModelAndView evaluate(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		System.out.println("Evaluate");
-		petitionDao.closingEvaluate();
 		
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("sort","evaluate");
@@ -373,6 +383,7 @@ public class PetitionHandler {
 		if(request.getParameter("src") !=null) { 
 			String src = request.getParameter("src");
 			String search = request.getParameter("search");
+			request.setAttribute("src", src);
 			request.setAttribute("search", search);
 			map.put("src",src);
 			map.put("search",search);
@@ -380,6 +391,7 @@ public class PetitionHandler {
 			
 			totalList = list.size();
 		}
+		totalList = petitionDao.petitionListCount(map);
   
 		int maxPage = (int)(totalList/10.0+0.9);  
 		int startPage = (int)(spage/5.0+0.8)*5-4;  
@@ -395,7 +407,148 @@ public class PetitionHandler {
 		return new ModelAndView("petition/evaluate");
 	} 
 	
+	@RequestMapping("/AnswerList")
+	public ModelAndView accept(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		System.out.println("Answer");
+		
+		HashMap<String, Object> map = new HashMap<String,Object>(); 
+		map.put("sort","answer");
+		
+		int totalList = 0;
+		int spage = 1;
+		
+		if(request.getParameter("page") != null) 
+			spage = Integer.parseInt( request.getParameter("page") );
+		
+		int start =spage*10-9;
+		
+		map.put("start",start-1);
+		  
+		List<PetitionDto> list = petitionDao.answerList(map);
+		
+		if(request.getParameter("src") !=null) { 
+			String src = request.getParameter("src");
+			String search = request.getParameter("search");
+			request.setAttribute("src", src);
+			request.setAttribute("search", search);
+			map.put("src",src);
+			map.put("search",search);
+			list = petitionDao.answerList(map);
+			
+			totalList = list.size();
+		}
+		
+		totalList = petitionDao.petitionListCount(map);
+  
+		int maxPage = (int)(totalList/10.0+0.9);  
+		int startPage = (int)(spage/5.0+0.8)*5-4;  
+		int endPage= startPage+4; 
+		if(endPage > maxPage) endPage = maxPage; 
+ 
+		request.setAttribute("spage", spage);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
+		request.setAttribute("list", list);
+
+		return new ModelAndView("petition/answer");
+	} 
+	
+	@RequestMapping("/ManageList")
+	public ModelAndView manage(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		System.out.println("Manage");
+	
+		HashMap<String, Object> map = new HashMap<String,Object>(); 
+		List<PetitionDto> list; 
+		int totalList = 0;
+		int spage = 1;
+		
+		if(request.getParameter("page") != null) 
+			spage = Integer.parseInt( request.getParameter("page") );
+		
+		int start =spage*10-9;
+		
+		map.put("start",start-1);
+		
+		if(request.getParameter("sort") != null ) {
+			map.put("sort","evaluate");
+			list = petitionDao.evaluateList(map);	 
+			request.setAttribute("sort", "1");
+		}
+		else 
+			list = petitionDao.allList(map);
+		
+		
+		if(request.getParameter("src") !=null) { 
+			String src = request.getParameter("src");
+			String search = request.getParameter("search");
+			request.setAttribute("src", src);
+			request.setAttribute("search", search);
+			map.put("src",src);
+			map.put("search",search);
+			
+			if(request.getParameter("sort") != null ) {
+				list = petitionDao.evaluateList(map);
+			}else 
+				list = petitionDao.allList(map);
+			
+			totalList = list.size();
+		}
+		
+		totalList = petitionDao.petitionListCount(map);
+		
+		int maxPage = (int)(totalList/10.0+0.9);  
+		int startPage = (int)(spage/5.0+0.8)*5-4;  
+		int endPage= startPage+4; 
+		if(endPage > maxPage) endPage = maxPage; 
+ 
+		request.setAttribute("spage", spage);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
+		request.setAttribute("list", list);
+		return new ModelAndView("petition/manageList");
+	} 
 	
 	
+	@RequestMapping("/ReplyWrite")
+	public ModelAndView replyWrite(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {  // String IOException
+		System.out.println("ReplyWrite Handler");
+	
+		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
+		String list = request.getParameter("list");
+		
+		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
+		
+		String content = (petitionDto.getContent()).replace("\r\n", "<br>");
+		
+		request.setAttribute("content",content);
+		request.setAttribute("list",list);
+		request.setAttribute("result", petitionDto);  
+	
+		return new ModelAndView("petition/replyWrite");
+	}
+	
+	@RequestMapping("/ReplyWritePro")
+	public String replyWritePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {  // String IOException
+		System.out.println("ReplyWritePro"); 
+
+		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
+		System.out.println(request.getParameter("category"));
+		String category = request.getParameter("category");
+		 
+		PetitionDto petitionDto = new PetitionDto();
+		petitionDto.setPetition_no(petition_no);
+		petitionDto.setComment(request.getParameter("comment")); 
+		petitionDao.replyWrite(petitionDto);
+		
+		if (category.equals("Y")) {
+			petitionDao.acceptUpdate(petition_no);
+		}else {
+			petitionDao.refusalUpdate(petition_no);
+		}
+ 
+		return "redirect:ManageList.do"; 
+	}
 	
 }

@@ -16,10 +16,11 @@
 			<ul class="nav navbar-nav">
 				<li><a href="${path}/PetitionList.do">청원</a></li>
 				<li><a href="${path}/AllList.do">모든 청원</a></li> 
-			    <li><a href="${path}/OngoingList.do">진행중인 청원</a></li> 
-				<li><a href="${path}/EvaluateList.do">심사중인 청원</a></li> 
-				<li><a href="${path}/ExpireList.do">만료된 청원</a></li>
-				<li><a href="${path}/AcceptList.do">채택된 청원</a></li>
+			    <li><a href="${path}/OngoingList.do">진행 청원</a></li> 
+				<li><a href="${path}/EvaluateList.do">심사중 청원</a></li> 
+				<li><a href="${path}/AnswerList.do">심사완료 청원</a></li>
+				<li><a href="${path}/ExpireList.do">기간만료 청원</a></li>
+				<li><a href="${path}/ManageList.do">청원관리</a></li>
 			</ul>
 		</div> 
 </body>

@@ -1,8 +1,6 @@
 package com.es.education;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 public class EduHistoryDto {
 	private String emp_no;
@@ -24,7 +22,7 @@ public class EduHistoryDto {
 	private int applicants_limit;//신청자제한수
 	private String closing_date; //신청마감일
 	private int approval_state;  //승인여부
-
+	
 	/* 교육번호로 교육명, 강사번호로 강사명, 교육번호로 일정 알아내기 추가 */
 	private String emp_eval; //직원평가
 	private String edu_state; //이수여부
@@ -33,7 +31,16 @@ public class EduHistoryDto {
 	private String file_save_name;
 	private String file_ori_name;
 	private Date end_date; //교육종료일
+	private int buttonFlag;
 	
+	public int getButtonFlag() {
+		return buttonFlag;
+	}
+
+	public void setButtonFlag(int buttonFlag) {
+		this.buttonFlag = buttonFlag;
+	}
+
 	public Date getEnd_date() {
 		return end_date;
 	}

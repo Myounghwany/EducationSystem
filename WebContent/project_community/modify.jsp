@@ -14,16 +14,14 @@
 
 		var tmp = $('[name="selected"]').val();
 
+		console.log('tmp : '+tmp);
+		
 		$("select option[value=" + tmp + "]").attr("selected", true);
 
 		$('#resultTransfer').css('display', "none");
 
-		$('#writeBtn').click(function() {
-			location = "ProjectWrite.do";
-		});
-
 	});
-
+	
 	function checkValtext() {
 		var f = window.document.insertForm;
 
@@ -75,7 +73,7 @@
 <div style="width: 70%; margin: 20px auto">
 
 	<form name=insertForm method="post"
-		action="ProjectModify.do" enctype="multipart/form-data"
+		action="${path}/ProjectCommunity/modify.do" enctype="multipart/form-data"
 		onSubmit="return checkValtext()">
 		<table class="w3-table w3-bordered">
 			<tr>
@@ -109,7 +107,7 @@
 			<tr>
 				<td>첨부파일</td>
 				<td>
-					<a href="ProjectFileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a>
+					<a href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.project_no}">${result.file_ori_name}</a>
 				</td>
 			</tr>
 			<tr>
@@ -130,7 +128,7 @@
 		</table>
 		<div align="center" class="goList">
 			<input type="button" value="뒤로가기" class="w3-button w3-white w3-border" 
-				onclick="location='ProjectDetail.do?project_no=${result.project_no}'">
+				onclick="location='${path}/ProjectCommunity/detail.do?project_no=${result.project_no}'">
 		</div>
 	</form>
 </div>

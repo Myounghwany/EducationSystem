@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Petition">
+
 	<insert id="petitionWrite" parameterType="com.es.petition.PetitionDto">
-		insert into petition(title, write_time, classification, content, writer, file_path, file_save_name, file_ori_name,approval_state) 
-		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0) 
+		insert into petition(title, write_time, classification, content, writer, file_path, file_save_name, file_ori_name,approval_state,closing_date) 
+		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0,sysdate()+interval 6 month) 
 	</insert>
  
  	<select id="petitionDetail" parameterType="Integer" resultType="com.es.petition.PetitionDto">
@@ -13,178 +14,148 @@
 	
 	<select id="ongoingList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where
-	   <choose> 
-	    <when test='src == null'>
-	      approval_state=0
-	    </when>
-        <when test='src == 0'>
-       	  approval_state=0 AND title like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 1'>
-       	  approval_state=0 AND content like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 2'>
-       	  approval_state=0 AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
-       	</when>
-        <when test='src == 3'>
-       	  approval_state=0 AND writer like CONCAT('%',#{search},'%')
-       	</when>
-       </choose>
+		   <choose> 
+		    <when test='src == null'>
+		      approval_state=0
+		    </when>
+	        <when test='src == 0'>
+	       	  approval_state=0 AND title like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 1'>
+	       	  approval_state=0 AND content like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 2'>
+	       	  approval_state=0 AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
+	       	</when>
+	        <when test='src == 3'>
+	       	  approval_state=0 AND writer like CONCAT('%',#{search},'%')
+	       	</when>
+	       </choose>
 		order by write_time desc limit #{start}, 10
 	</select>  
 	
 	<select id="evaluateList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where 
-		 <choose> 
-	    <when test='src == null'>
-	      approval_state=1 or approval_state=2 
-	    </when>
-        <when test='src == 0'>
-       	 ( approval_state=1 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 1'>
-       	 ( approval_state=1 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 2'>
-       	 ( approval_state=1 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
-       	</when>
-        <when test='src == 3'>
-       	 ( approval_state=1 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
-       	</when>
-       </choose>
+		   <choose> 
+		    <when test='src == null'>
+		      approval_state=1 or approval_state=2 
+		    </when>
+	        <when test='src == 0'>
+	       	 ( approval_state=1 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 1'>
+	       	 ( approval_state=1 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 2'>
+	       	 ( approval_state=1 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
+	       	</when>
+	        <when test='src == 3'>
+	       	 ( approval_state=1 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
+	       	</when>
+	       </choose>
 		order by write_time desc limit #{start}, 10
 	</select>  
+	
 	<select id="expireList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where 
-	   <choose> 
-	    <when test='src == null'>
-	      approval_state=4 or approval_state=2 
-	    </when>
-        <when test='src == 0'>
-       	  ( approval_state=4 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 1'>
-       	  ( approval_state=4 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 2'>
-       	  ( approval_state=4 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
-       	</when>
-        <when test='src == 3'>
-       	  ( approval_state=4 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
-       	</when>
-       </choose>
+		   <choose> 
+		    <when test='src == null'>
+		      approval_state=5 or approval_state=2 
+		    </when>
+	        <when test='src == 0'>
+	       	  ( approval_state=5 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 1'>
+	       	  ( approval_state=5 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 2'>
+	       	  ( approval_state=5 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
+	       	</when>
+	        <when test='src == 3'>
+	       	  ( approval_state=5 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
+	       	</when>
+	       </choose>
+		order by write_time desc limit #{start}, 10
+	</select>  
+	
+	<select id="answerList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
+		select * from petition where
+		   <choose> 
+		    <when test='src == null'>
+		      approval_state=3 or approval_state=4
+		    </when>
+	        <when test='src == 0'>
+	       	  ( approval_state=3 or approval_state=4 ) AND title like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 1'>
+	       	  ( approval_state=3 or approval_state=4 ) AND content like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 2'>
+	       	   ( approval_state=3 or approval_state=4 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
+	       	</when>
+	        <when test='src == 3'>
+	       	   ( approval_state=3 or approval_state=4 ) AND writer like CONCAT('%',#{search},'%')
+	       	</when>
+	       </choose>
 		order by write_time desc limit #{start}, 10
 	</select>  
 	
 	<select id="allList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition where
-	   <choose> 
-	    <when test='src == null'>
-	      ((approval_state=0 or approval_state=1) or (approval_state=2 or approval_state=4))
-	    </when>
-        <when test='src == 0'>
-       	  title like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 1'>
-       	  content like CONCAT('%',#{search},'%')
-       	</when>
-       	<when test='src == 2'>
-       	  ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
-       	</when>
-        <when test='src == 3'>
-       	  writer like CONCAT('%',#{search},'%')
-       	</when>
-       </choose>
+		select * from petition
+		   <where> 
+		   <choose> 
+	        <when test='src == 0'>
+	       	  title like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 1'>
+	       	  content like CONCAT('%',#{search},'%')
+	       	</when>
+	       	<when test='src == 2'>
+	       	  ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
+	       	</when>
+	        <when test='src == 3'>
+	       	  writer like CONCAT('%',#{search},'%')
+	       	</when>
+	       </choose>
+	       </where>
 		order by write_time desc limit #{start}, 10
 	</select>  
 	
-	
- 
-	
 	<select id="petitionListCount" parameterType="hashmap" resultType="int" >
-		select count(*) from petition where
-		<choose>
-			<when test='src==null'>
-				<choose> 
-				<when test='sort == "ongoing"'>
-					approval_state=0
-				</when>
-				<when test='sort == "all"'>
-					((( approval_state=0 or approval_state=1 ) or  approval_state=2 )or approval_state=4 )
-				</when>
-				<when test='sort == "evaluate"'>
-					 approval_state=1 or approval_state=2
-				</when>
-				<when test='sort == "expire"'>
-					 approval_state=4 or approval_state=2
-				</when>
-				</choose>
-			</when>
-			<when test='src==0'>
-			<choose> 
-				<when test='sort == "ongoing"'>
-					 approval_state=0 AND title like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "all"'>
-					title like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "evaluate"'>
-					( approval_state=1 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "expire"'>
-					( approval_state=4 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
-				</when>
-				</choose>
-			</when>
-			<when test='src==1'>
-				<choose>
-				<when test='sort == "ongoing"'>
-				 approval_state=0 AND content like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "all"'>
-				 content like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "evaluate"'>
-				 ( approval_state=1 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "expire"'>
-				 ( approval_state=4 or approval_state=2 ) AND content like CONCAT('%',#{search},'%')
-				</when>
-				</choose>
-			</when>
-			<when test='src==2'>
+		select count(*) from petition
+		<where>
 			<choose>
-				<when test='sort == "ongoing"'>
-					  approval_state=0 AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
-				</when>
-				<when test='sort == "all"'>
-				  ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
-				</when>
-				<when test='sort == "evaluate"'>
-				  ( approval_state=1 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
-				</when>
-				<when test='sort == "expire"'>
-					  ( approval_state=4 or approval_state=2 ) AND ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
-				</when>
-				</choose>
+			<when test='sort == "evaluate"'>
+				( approval_state=1 or approval_state=2 )
 			</when>
-			<when test='src==3'>
-			<choose>
-				<when test='sort == "ongoing"'>
-					   approval_state=0 AND writer like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "all"'>
-					   writer like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "evaluate"'>
-				 ( approval_state=1 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
-				</when>
-				<when test='sort == "expire"'>
-				 ( approval_state=4 or approval_state=2 ) AND writer like CONCAT('%',#{search},'%')
-				</when>
-				</choose>
+			<when test='sort == "ongoing"'>
+				approval_state=0 
+			</when>
+			<when test='sort == "expire"'>
+				( approval_state=5 or approval_state=2 ) 
+			</when>
+			<when test='sort == "answer"'>
+				( approval_state=3 or approval_state=4 ) 
 			</when>
 		</choose>
+		<if test='src != null'> 
+			AND
+		</if>
+		<choose>
+			<when test='src == 0'>
+				title like CONCAT('%',#{search},'%') 
+			</when>
+			<when test='src == 1'>
+				content like CONCAT('%',#{search},'%') 
+			</when>
+			<when test='src == 2'>
+				( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') ) 
+			</when>
+			<when test='src == 3'>
+				writer like CONCAT('%',#{search},'%') 
+			</when>
+		</choose>
+	  </where>
 	</select> 
 	
 	
@@ -195,14 +166,13 @@
 	<insert id="petitionAgree" parameterType="com.es.petition.PetitionLikeDto">
 		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
 	</insert>
-	
  
 	<select id="countCheck" parameterType="Integer" resultType="Integer">
 		select count(*) from petition_like where petition_no=#{petition_no}
 	</select>
 	
 	<update id="approvalUpdate" parameterType="Integer"> 
-		update petition set approval_state=1 where petition_no=#{petition_no}
+		update petition set approval_state=1 where petition_no=#{petition_no} and approval_state != 2
 	</update>
   	 
   	<select id="petitionState" parameterType="Integer" resultType="Integer">
@@ -212,10 +182,21 @@
   	<update id="agreeUpdate" parameterType="com.es.petition.PetitionDto" > 
         update petition set agree=#{agree}+1  where petition_no = #{petition_no}
     </update> 
-  	 
- 
-  	<update id="closingEvaluate" > 
-		update petition set approval_state=2 where approval_state=4 and agree>2;
+
+	<update id="replyWrite" parameterType="com.es.petition.PetitionDto"> 
+        update petition set comment=#{comment} where petition_no =#{petition_no}
+    </update> 
+    
+    <update id="acceptUpdate" parameterType="Integer"> 
+		update petition set approval_state=3 where petition_no= #{petition_no}
+	</update>
+	
+	<update id="refusalUpdate" parameterType="Integer"> 
+		update petition set approval_state=4 where petition_no= #{petition_no}
+	</update>
+	
+	<update id="petitionDelete" parameterType="Integer"> 
+		delete from petition where petition_no= #{petition_no}
 	</update>
 	  
 </mapper>

@@ -67,11 +67,11 @@ function writecheck() {
 <form name="writeForm"  action="PetitionWrite.do" method="post" enctype="multipart/form-data" onsubmit="return writecheck()"> 
 	<table style="width: 70%" >
 		<tr>
-		  <th> 청원제목 </th>
+		  <td> 청원제목 </td>
 		  <td><input class="input" type="text" name="title"></td>
 		</tr>
 		<tr>
-		  <th> 분류 </th>
+		  <td> 분류 </td>
 		  <td>
 		  	<select class="input" name="classification">
 		  		<option value=""> 분류 </option>
@@ -84,18 +84,18 @@ function writecheck() {
 		  </td>
 		</tr>
 		<tr>
-		  <th> 청원개요 </th>
-		  <td><textarea class="input" name="content" rows="15"></textarea></td>
+		  <td> 청원개요 </td>
+		  <td><textarea class="input" name="content" rows="15" wrap="hard"></textarea></td>
 		</tr>
 		<tr>
 		  <td> 파일첨부: </td>
 		  <td> <input type="file" name="newfile"> </td>
 		</tr> 
 		<tr>
-		  <th colspan="2">
+		  <td colspan="2">
 		    <input class="inputbutton" type="submit" value="작성">
 			<input class="inputbutton" type="button" value="목록" onclick="location='PetitionList.do'">
-		  </th>
+		  </td>
 		</tr>			
 	</table>
  

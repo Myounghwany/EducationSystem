@@ -36,7 +36,7 @@ tr th {
 	background-color: #EBF7FF; 
 	font-size : 11px;
 	border-bottom : 2px solid #D9E5FF;	 
-	padding : 3px;
+	padding : 4px;
 	height: 35px; 
 	text-align: center;  
 }
@@ -44,7 +44,7 @@ td {
 	background-color: #EBF7FF;  
 	font-size : 11px;
 	border-bottom : 1px solid #D9E5FF;	 
-	padding : 3px;
+	padding : 4px;
 	height: 35px; 
 }
  
@@ -58,4 +58,8 @@ td {
 	width: 90%; 
 	text-align: right; 
 	margin: auto;
+}
+
+body span {
+	color:red;
 }

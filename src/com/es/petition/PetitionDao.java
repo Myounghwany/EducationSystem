@@ -17,9 +17,17 @@ public interface PetitionDao {
 	List<PetitionDto> expireList(HashMap<String, Object> map);
 	List<PetitionDto> ongoingList(HashMap<String, Object> map);
 	List<PetitionDto> evaluateList(HashMap<String, Object> map);
+	List<PetitionDto> answerList(HashMap<String, Object> map);
 	List<PetitionDto> allList(HashMap<String, Object> map);
-	
-	int closingEvaluate();
+	 
+	int replyWrite(PetitionDto petitionDto);
+ 
+	int acceptUpdate(int petition_no);
+	int refusalUpdate(int petition_no);
+
+	int petitionDelete(int petition_no);
+
+	 
 
 	 
 

@@ -1,20 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application"/>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<link href="${path}/petition/petition.css" rel="stylesheet" type="text/css">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title> 만료된 청원 </title>
+<title> 기간만료 청원 </title>
+<script>
+function searchClick(){
+	if(searchform[1].value ==""){
+		alert("검색어를 입력해주세요");
+		return false;
+	} 
+	return true;
+}
+</script>
 </head>
 <jsp:include page="pheader.jsp" />
 <body>
-<div class="Petition_list" style="margin-top: 50px;">
-	 <h4> 만료된 청원 </h4>
+
+	 <h4> 기간만료 청원 </h4>
 	 
-	 <table border="1" style="width: 90%;" align="center" >
+	 <table>
 	 	<thead>
 	 		<tr>
+	 			<th> 상태 </th>
 	 			<th> 번호 </th>
 	 			<th> 분류 </th>
 	 			<th> 제목 </th>
@@ -27,18 +37,28 @@
 	 	  <c:choose>
 		   <c:when test="${empty requestScope.list}">
 				<tr>
-					<td colspan="6" align="center">현재 작성된 청원이 없습니다.</td>
+					<td colspan="7">현재 기간이 만료된 청원이 없습니다.</td>
 				</tr>
 		   </c:when>
 		   <c:otherwise>
 				<c:forEach items="${requestScope.list}" var="list" varStatus="state">
 					 <tr>
+					 <td> 
+					  <c:choose>
+					  	<c:when test="${list.approval_state == 2}" >
+					  		<span> 심사중/만료 </span>
+					  	</c:when>
+					  	<c:when test="${list.approval_state == 5}" >
+					  		<span> 기간만료 </span>
+					  	</c:when>
+					  </c:choose>
+					  </td>
 		              <td>${list.petition_no}</td>
 					  <td>${list.classification}</td>
-					  <td><a href="PetitionDetail.do?petition_no=${list.petition_no}">${list.title}</a></td>
+					  <td><a href="PetitionDetail.do?petition_no=${list.petition_no}&list=ExpireList ">${list.title}</a></td>
 					  <td>${list.writer}</td>
-					  <td>${list.write_time} ~ </td> 		<!-- 청원기간 -->
-				 	  <td>${list.agree}</td>
+					  <td>${list.write_time} ~ ${list.closing_date}</td> 
+					  <td>${list.agree}</td>		 
 				 	 </tr>
 				</c:forEach>
 		    </c:otherwise>
@@ -46,42 +66,39 @@
 	 	</tbody>
 	 </table>
 	 
-	 <div align="center">
+	<div class="srcform">
 	 
-		<form action="PetitionList.do" name="searchform" onsubmit="return searchcheck()" style="margin-top: 20px;">  		<!-- 검색 -->
+		<form action="ExpireList.do" name="searchform" onsubmit="return searchClick()">  		<!-- 검색 -->
 			<select name="src">
-				<option value="0">제목</option>
-				<option value="1">내용</option>
-				<option value="2">제목/내용</option>
-				<option value="3">글쓴이</option>
+				<option value="0" <c:if test="${src eq '0'}">selected</c:if>>제목</option>
+				<option value="1" <c:if test="${src eq '1'}">selected</c:if>>내용</option>
+				<option value="2" <c:if test="${src eq '2'}">selected</c:if>>제목/내용</option>
+				<option value="3" <c:if test="${src eq '3'}">selected</c:if>>글쓴이</option>
 			</select> 
-			<input type="text" size="17" name="search" /> <input type="submit" value="검색" />
+			<input type="text" size="17" name="search" value="${search}"/> <input type="submit" value="검색" />
 		</form>
-	  
-			<c:if test="${startPage != 1}">														<!-- 페이징 -->
-				<a href='PetitionList.do?page=${startPage-1}'>[ 이전 ]</a>
+									 														<!-- 페이징 -->
+			<c:if test="${startPage != 1}">
+				<a href='ExpireList.do?page=${startPage-1}&src=${src}&search=${search}'> 이전 </a>
 			</c:if>
-	
+			
 			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
-				<c:if test="${pageNum == spage}">
-		                ${pageNum}&nbsp;
-		        </c:if>
+				<c:if test="${pageNum == spage}" >
+			              <span> ${pageNum} </span>
+			          </c:if>
 				<c:if test="${pageNum != spage}">
-					<a href='PetitionList.do?page=${pageNum}'>${pageNum}&nbsp;</a>
+					<a href='ExpireList.do?page=${pageNum}&src=${src}&search=${search}'> ${pageNum} </a>
 				</c:if>
 			</c:forEach>
-	
+			
 			<c:if test="${endPage != maxPage }">
-				<a href='PetitionList.do?page=${endPage+1}'>[ 다음 ]</a>
+				<a href='ExpireList.do?page=${endPage+1}&src=${src}&search=${search}'> 다음 </a>
 			</c:if>
-	
+ 																						   <!-- 검색결과 x -->
 			<c:if test="${search != null}">
-				<p align="center">
-					<b><a href="PetitionList.do">되돌아가기</a></b>
-				</p>
+				<input type="button" value="되돌아가기" onclick="location='ExpireList.do'">
 			</c:if>
-		</div>
-	 
-	</div>
+	 </div>
+
 </body>
 </html>
