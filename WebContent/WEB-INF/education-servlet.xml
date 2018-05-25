@@ -48,14 +48,8 @@
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/main.do" />
 			<mvc:exclude-mapping path="/user/login.do" />
-			<mvc:exclude-mapping path="/manage/**" /><!-- 개발하느라 추가해준 것. -->
 			<bean class="com.es.interceptor.session" />
 		</mvc:interceptor> <!-- 추가로 여러개의 인터셉터 설정 가능 -->
-		<!-- 
-		<mvc:interceptor>
-			<mvc:mapping path="/manage/**" />
-			<bean class="com.es.interceptor.interceptorM" />
-		</mvc:interceptor> -->
 </mvc:interceptors>
 
 

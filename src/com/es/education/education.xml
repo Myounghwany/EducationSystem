@@ -153,7 +153,7 @@
 	<!-- 수강목록 리스트  -->
 	<select id="EduHistory" resultType="com.es.education.EduHistoryDto">
 		select l.edu_no, l.edu_name, l.instructor_no,  l.edu_schedule,
-				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+				h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date, detail.start_date
 		from education_history h, education_list l, instructor, education_detail detail
 		where h.edu_no = l.edu_no and instructor.instructor_no = l.instructor_no 
 				and detail.edu_no = l.edu_no and h.emp_no=#{emp_no}

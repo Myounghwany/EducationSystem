@@ -7,12 +7,19 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- 로그인모달 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- 드롭다운(비밀번호 변경) -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
-
+	window.onload = function() {
+		var result = '${result}';
+		console.log(result);
+		if(result == "fail") {
+			alert("아이디나 비밀번호가 일치하지 않습니다.");
+		}
+	}
 </script>
-<body>
+<body style="width: 70%; margin: 0 auto;">
 
 index 페이지 입니다.
+
+
 </body>

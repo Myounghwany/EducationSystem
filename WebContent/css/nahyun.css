@@ -20,7 +20,7 @@ a:visited {
 
 a:hover {
 	text-decoration: none;
-	color: #FF5E00;
+	color: #033c73;
 }
 
 .button {
@@ -56,7 +56,7 @@ select {
 }
 
 b {
-	color: orange;
+	color: #033c73;
 	font-size: 1.3em;
 }
 

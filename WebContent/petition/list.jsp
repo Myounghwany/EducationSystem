@@ -9,7 +9,6 @@
 <!-- 로그인모달 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- 드롭다운(비밀번호 변경) -->
 
 <title> 청원 리스트 </title> 
 <style>

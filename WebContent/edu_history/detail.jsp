@@ -34,7 +34,7 @@ function action(val){
 		<br>
 		<br>
 		<!-- 강의 계획서 테이블 -->
-		<table width="70%" >
+		<table width="70%" class="w3-table w3-bordered">
 			<tr>
 				<th colspan="4" style="font-size: 1.5em;">강의 계획서</th>
 			</tr>
@@ -75,7 +75,7 @@ function action(val){
 		</table>
 		<br>
 		<!-- 강의자료 테이블 -->
-		<table width="70%">
+		<table width="70%" class="w3-table w3-bordered">
 			<tr>
 				<th colspan="4" style="font-size: 1.5em;">강의 자료</th>
 			</tr>
@@ -85,8 +85,8 @@ function action(val){
 			</tr>
 			
 		</table>
-		<button style="margin-top: 2%;"
-			onclick="location.href='${path}/eduhistory.do'">목록</button>
+		<button style="margin-top: 5%;" class="w3-button w3-white w3-border"
+			onclick="location.href='${path}/eduhistory.do'" >목록</button>
 	</div>
 </body>
 </html>

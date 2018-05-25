@@ -211,5 +211,5 @@
 	
 	
 	</div>
-	
+<jsp:include page="../common/fixedFooter.jsp" />
 </body>

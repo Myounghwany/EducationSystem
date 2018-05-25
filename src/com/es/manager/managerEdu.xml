@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ManagerEdu">
+	<!-- 교육목록 -->
+	<select id="EduList" parameterType="hashmap" resultType="com.es.manager.EduListDto">
+		select b.name belong_name, l.edu_no, l.edu_name, c.edu_name edu_code_name, l.edu_schedule, l.manager, i.name instructor_name, i.instructor_no
+		from education_list l, belong b, education_code c, instructor i
+		where l.belong_no = b.belong_no and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no  and l.approval_state =3
+		limit #{startRow}, #{endRow}
+	</select>
+	<select id="EduListCount" parameterType="int" resultType="int">
+		select count(*)
+		from education_list
+		where approval_state =3
+	</select>
+	<select id="EduListDetail" parameterType="int" resultType="com.es.manager.EduListDto">
+		select l.edu_no, l.belong_no, b.name as belong_name, l.edu_field, l.edu_code, c.edu_name as edu_code_name, l.edu_name, l.edu_target, l.manager, 
+			l.edu_way, l.edu_schedule, l.edu_date, l.edu_location, l.instructor_no, l.budget, l.note, i.name as instructor_name, l.closing_date
+		from education_list l, instructor i, education_detail detail, belong b, education_code c
+		where l.edu_no=#{edu_no} and i.instructor_no = l.instructor_no and detail.edu_no = l.edu_no and b.belong_no = l.belong_no and c.edu_code = l.edu_code
+	</select>
+	<!-- 교육검색  -->
+	<select id="searchAll" resultType="com.es.manager.EduListDto" parameterType="hashmap">
+		select l.*, c.edu_name as edu_code_name, b.name as belong_name
+		from education_list l, education_code c, belong b
+		<include refid="search"></include>
+	</select>
+	<sql id="search">
+		<choose>
+		<when test="searchOption == 'all'">
+			where l.belong_no = b.belong_no and l.edu_code = c.edu_code
+			and (manager like CONCAT('%', #{keyword}, '%')
+			or instructor_no like CONCAT('%', #{keyword}, '%')
+			or l.edu_name like CONCAT('%', #{keyword}, '%'))
+		</when> 
+		<otherwise>
+			where l.${searchOption} like CONCAT('%', #{keyword}, '%')
+			and l.belong_no = b.belong_no and l.edu_code = c.edu_code
+		</otherwise>
+		</choose>
+	</sql>
+	<!-- 교육심사 -->
+	<select id="EduJudgeCount" parameterType="int" resultType="int">
+		select count(*) from education_list where approval_state != 3
+	</select>
+	<select id="EduJudgeList" parameterType="hashmap" resultType="com.es.manager.EduListDto">
+		select b.name belong_name, l.edu_no, l.edu_name, c.edu_name edu_code_name, l.edu_schedule, l.manager, l.approval_state, i.instructor_no, i.name instructor_name, l.closing_date
+		from education_list l, belong b, education_code c, instructor i
+		where l.belong_no = b.belong_no and l.approval_state != 3 and c.edu_code=l.edu_code and i.instructor_no=l.instructor_no
+		limit #{startRow}, #{endRow}
+	</select>
+	<select id="EduDetailStatus" parameterType="int" resultType="com.es.manager.EduListDto">
+		select *
+		from education_list
+		where edu_no=#{edu_no}
+	</select>
+	<update id="updateEduState" parameterType="hashmap">
+		update education_list
+		set approval_state = #{app}
+		where edu_no = #{edu_no}
+	</update>
+	<!-- 교육등록 -->
+	<insert id = "insertEduRegist" parameterType = "com.es.instructor.InstructorDto" >
+		insert into education_list
+		values(NULL, #{belong_no}, #{edu_field}, #{edu_code}, #{edu_name}, #{edu_target}, #{manager}, #{edu_way}, #{edu_schedule}, #{edu_date}, #{edu_location}, #{instructor_no}, #{budget}, #{note}, #{applicants_limit}, STR_TO_DATE(concat(#{closing_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), 3)
+	</insert>
+	<insert id = "insertEduRegistDetail" parameterType = "com.es.instructor.InstructorDto">
+		insert into education_detail values(NULL, LAST_INSERT_ID(), STR_TO_DATE(concat(#{start_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), STR_TO_DATE(concat(#{end_date}, ' 00:00:00'),'%Y.%m.%d %H:%i:%s'), #{input_time}, NULL, #{file_path}, #{file_ori_name}, #{file_save_name})
+	</insert>
+	<!-- 교육 삭제  -->
+	<delete id="EduDelete" parameterType="int">
+		delete from education_list
+		where edu_no = #{edu_no}
+	</delete>
+	<delete id="EduDetailDelete" parameterType="int">
+		delete from education_detail
+		where edu_no = #{edu_no}
+	</delete>
+</mapper>

@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <title>관리자 페이지 - Education System</title>
 <jsp:include page="../common/header.jsp" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$('document').ready(function() {

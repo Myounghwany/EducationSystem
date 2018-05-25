@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>직원의 강의평가 페이지</title>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script>
 	function test() {
 		var emp_eval = document.getElementById("emp_eval").value;
@@ -41,7 +42,7 @@
 <body>
 	<div align="center">
 		<form id="form" name="form">
-			<table>
+			<table class="w3-table w3-bordered" align="center">
 				<tr>
 					<th colspan="2" height="40px">강의평가하기</th>
 				</tr>
@@ -50,7 +51,7 @@
 					<td><b>${eduhistory_detail.edu_name}</b></td>
 				</tr>
 				<tr>
-					<td width="80px">교육분야</td>
+					<td width="20%">교육분야</td>
 					<td>${eduhistory_detail.edu_field}</td>
 				</tr>
 				<tr>
@@ -75,8 +76,8 @@
 					</span>
 					</td>
 				</tr>
-				<tr align="center">
-					<td colspan="2">
+				<tr>
+					<td colspan="2" style="text-align: center;">
 						<input type="button" class="w3-button w3-white w3-border" onclick="test();" value="제출">
 						<button class="w3-button w3-white w3-border" onclick="window.close();">취소</button></td>
 				</tr>

@@ -1,11 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="../common/header.jsp" />
-
+<!-- table css -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
 <title>강사 - Education System</title>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
@@ -51,28 +49,53 @@
 		});
 	});
 	$(function() {
-	    $( "#startDate" ).datepicker({
-	    	dateFormat: "yy.mm.dd",
-	    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-	        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
-	        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-	    });
-	    $( "#endDate" ).datepicker({
-	    	dateFormat: "yy.mm.dd",
-	    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-	        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
-	        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-	    });
-	    $( "#closingDate" ).datepicker({
-	    	dateFormat: "yy.mm.dd",
-	    	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-	        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
-	        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-	    });
+		$("#startDate").datepicker(
+				{
+					dateFormat : "yy.mm.dd",
+					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일',
+							'일요일' ],
+					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
+					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월',
+							'8월', '9월', '10월', '11월', '12월' ],
+					onClose : function(selectedDate) {
+						$("#endDate").datepicker("option", "minDate",
+								selectedDate);
+					}
+				});
+		$("#endDate").datepicker(
+				{
+					dateFormat : "yy.mm.dd",
+					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일',
+							'일요일' ],
+					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
+					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월',
+							'8월', '9월', '10월', '11월', '12월' ],
+					onClose : function(selectedDate) {
+						$("#startDate").datepicker("option", "maxDate",
+								selectedDate);
+					},
+					onClose : function(selectedDate) {
+						$("#closingDate").datepicker("option", "maxDate",
+								selectedDate);
+					}
+				});
+		$("#closingDate").datepicker(
+				{
+					dateFormat : "yy.mm.dd",
+					dayNames : [ '월요일', '화요일', '수요일', '목요일', '금요일', '토요일',
+							'일요일' ],
+					dayNamesMin : [ '월', '화', '수', '목', '금', '토', '일' ],
+					monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월',
+							'8월', '9월', '10월', '11월', '12월' ],
+					onClose : function(selectedDate) {
+						$("#endDate").datepicker("option", "maxDate",
+								selectedDate);
+					}
+				});
 	});
-	
-	function selectBelong(belong_no){
-		if(belong_no == '0'){
+
+	function selectBelong(belong_no) {
+		if (belong_no == '0') {
 			$('#department').empty();
 			$('#department').append('<option value = "0">전체</option>');
 		}
@@ -83,24 +106,27 @@
 			data : {
 				belong_no : belong_no
 			},
-			headers: { 
-			    Accept : "application/json"
+			headers : {
+				Accept : "application/json"
 			},
-			success : function(res){
+			success : function(res) {
 				$('#department').empty();
 				$('#department').append('<option value = "0">전체</option>');
-				for(i in res){
-					$('#department').append('<option value = "'+res[i].dept_no+'">'+res[i].dept_name+'</option>');
+				for (i in res) {
+					$('#department').append(
+							'<option value = "'+res[i].dept_no+'">'
+									+ res[i].dept_name + '</option>');
 					console.log(res[i].dept_no + ' - ' + res[i].dept_name);
 				}
 			},
-			error : function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			error : function(request, status, error) {
+				alert("code:" + request.status + "\n" + "message:"
+						+ request.responseText + "\n" + "error:" + error);
 			}
 		});
 	}
-	
-	function addTarget(){
+
+	function addTarget() {
 		var form = document.eduModifyForm;
 		var belong = form.target_belong;
 		var department = form.target_department;
@@ -110,58 +136,66 @@
 		var position_name = position.options[position.selectedIndex].text;
 		var belong_no = belong.options[belong.selectedIndex].value;
 		var department_no = department.options[department.selectedIndex].value;
-		var position_no  = position.options[position.selectedIndex].value;
-		form.elements['select1'].options.add(new Option(belong.options[belong.selectedIndex].text + '-' + department.options[department.selectedIndex].text + '-' + position.options[position.selectedIndex].text, belong_no + '!' + belong_name + '@' + department_no + '#' + department_name + '$' + position_no + '%' + position_name));
+		var position_no = position.options[position.selectedIndex].value;
+		form.elements['select1'].options.add(new Option(
+				belong.options[belong.selectedIndex].text + '-'
+						+ department.options[department.selectedIndex].text
+						+ '-' + position.options[position.selectedIndex].text,
+				belong_no + '!' + belong_name + '@' + department_no + '#'
+						+ department_name + '$' + position_no + '%'
+						+ position_name));
 		$('#select1 option').prop('selected', true);
 	}
-	function removeTarget(){
+	function removeTarget() {
 		var form = document.eduModifyForm;
 		var o = form.elements['select1'];
 		var idx = o.selectedIndex;
-		if(idx == -1 ) return;
+		if (idx == -1)
+			return;
 		o.options.remove(idx);
 		o.selectedIndex = idx - 1;
-		if(idx - 1 < 0) o.selectedIndex = 0;
+		if (idx - 1 < 0)
+			o.selectedIndex = 0;
 	}
-	function inputCheck(){
-		if(!document.eduModifyForm.edu_way.value){
+	function inputCheck() {
+		if (!document.eduModifyForm.edu_way.value) {
 			alert('교육방법을 입력하세요');
 			document.eduModifyForm.edu_way.focus();
 			return false;
-		}else if(!document.eduModifyForm.startDate.value){
+		} else if (!document.eduModifyForm.startDate.value) {
 			alert('교육일정을 입력하세요');
 			document.eduModifyForm.startDate.focus();
 			return false;
-		}else if(!document.eduModifyForm.endDate.value){
+		} else if (!document.eduModifyForm.endDate.value) {
 			alert('교육일정을 입력하세요');
 			document.eduModifyForm.endDate.focus();
 			return false;
-		}else if(!document.eduModifyForm.edu_date.value){
+		} else if (!document.eduModifyForm.edu_date.value) {
 			alert('교육일시를 입력하세요');
 			document.eduModifyForm.edu_date.focus();
 			return false;
-		}else if(!document.eduModifyForm.input_time.value){
+		} else if (!document.eduModifyForm.input_time.value) {
 			alert('소요시간을 입력하세요');
 			document.eduModifyForm.input_time.focus();
 			return false;
-		}else if(!document.eduModifyForm.closing_date.value){
+		} else if (!document.eduModifyForm.closing_date.value) {
 			alert('신청마감일을 입력하세요');
 			document.eduModifyForm.input_time.focus();
 			return false;
-		}else if(!document.eduModifyForm.edu_location.value){
+		} else if (!document.eduModifyForm.edu_location.value) {
 			alert('교육장소를 입력하세요');
 			document.eduModifyForm.edu_location.focus();
 			return false;
-		}else if(!document.eduModifyForm.select1.value){
+		} else if (!document.eduModifyForm.select1.value) {
 			alert('교육대상을 선택하세요');
 			document.eduModifyForm.select1.focus();
 			return false;
-		}else if(!document.eduModifyForm.applicants_limit.value){
+		} else if (!document.eduModifyForm.applicants_limit.value) {
 			alert('신청자제한수를 입력하세요');
 			document.eduModifyForm.applicants_limit.focus();
 			return false;
 		}
-			
+
 	}
 </script>
 <body>

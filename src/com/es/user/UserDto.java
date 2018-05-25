@@ -6,9 +6,14 @@ public class UserDto {
 	private String changePasswd; //비밀번호
 	private String checkPasswd; //비밀번호
 	private String name;
+	private int belong_no; //소속번호 - 인사팀인지 구분하기 위해(HR:400)
 	
-	
-	
+	public int getBelong_no() {
+		return belong_no;
+	}
+	public void setBelong_no(int belong_no) {
+		this.belong_no = belong_no;
+	}
 	public String getNo() {
 		return no;
 	}

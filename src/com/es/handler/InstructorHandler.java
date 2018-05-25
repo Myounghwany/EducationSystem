@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +55,8 @@ public class InstructorHandler {
 		System.out.println("page : " + page);
 		System.out.println("instructor/main");
 		
-		String account_no = "E2018040001";
+		HttpSession httpSession = request.getSession();
+		String account_no = (String) httpSession.getAttribute("no");;
 		//직원일 경우
 		if(account_no.substring(0, 1).equals("E")) {
 			String instructor_check = instructorDao.selectInstructorCheck(account_no);

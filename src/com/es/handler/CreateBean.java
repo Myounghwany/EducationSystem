@@ -7,9 +7,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import com.es.instructor.InstructorDBBean;
-import com.es.instructor.InstructorDao;
-
 @Configuration
 public class CreateBean {
 	@Bean
@@ -22,10 +19,3 @@ public class CreateBean {
 	}
 	
 }
-
-
-
-
-
-
-

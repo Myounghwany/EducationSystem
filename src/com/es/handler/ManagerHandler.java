@@ -1,6 +1,8 @@
 package com.es.handler;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,28 +10,17 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.es.education.EduHistoryDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
-import com.es.manager.EduListDto;
 import com.es.manager.EmpListDto;
 import com.es.manager.InstListDto;
 import com.es.manager.ManagerDao;
-import com.es.manager.PagingDto;
 
 @Controller
 public class ManagerHandler {
@@ -112,8 +103,35 @@ public class ManagerHandler {
 	@RequestMapping("manage/empDetail")
 	public ModelAndView empDetail(HttpServletRequest request, HttpServletResponse response) {
 		String emp_no = request.getParameter("emp_no");
-		Map<String, String> emp = managerDao.getEmpDetail(emp_no);
+		EmpListDto emp = managerDao.getEmpDetail(emp_no);
+		List<EduHistoryDto> eduHistory = managerDao.getEmpEduList(emp_no);
+		for(EduHistoryDto dto : eduHistory) {
+			Date tempDate = dto.getEnd_date();	// end date 가져온다
+			
+			// end date에 7일 더한다
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(tempDate);
+			cal.add(Calendar.DATE, 15);
+			
+			// 현재 날짜 가져 온다
+			Date curDate = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(curDate);
+			
+			// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
+			if( c.getTime().before(cal.getTime()) ) { //c:현재 날짜 < cal:평가마감일 (버튼 생성)
+				// 비교해서 현재 날짜가 더 전이면
+				dto.setButtonFlag(1); 
+			} else {
+				// 비교해서 현재 날짜가 이 후면
+				dto.setButtonFlag(0);
+			}
+		}
+		
+		Date date = new Date();//현재날짜 보내기
+		request.setAttribute("date", date);
 		request.setAttribute("emp", emp);
+		request.setAttribute("eduHistory", eduHistory);
 		return new ModelAndView("manage/empDetail");
 	}
 	
@@ -177,92 +195,6 @@ public class ManagerHandler {
 		request.setAttribute("pageEnd", pageEnd);
 		request.setAttribute("next", next);
 		return new ModelAndView("manage/instList");
-	}
-	
-	/* 나현 - 교육목록 - 교육리스트 */
-	@RequestMapping(value="manage/eduList")
-	public String eduList(Model model, HttpServletRequest request, HttpServletRequest response) {
-		
-		PagingDto pageDao = new PagingDto();
-		int totalCount = managerDao.count();
-		int page = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
-		pageDao.setPageNo(page); //1
-		pageDao.setPageSize(7); //7
-		pageDao.setTotalCount(totalCount); 
-		page = (page-1) * pageDao.getPageSize() + 1;
-		
-		List<EduListDto> eduList = managerDao.eduList(page, pageDao.getPageSize());
-		model.addAttribute("eduList", eduList);
-		model.addAttribute("paging", pageDao);
-		
-		return "manage/eduList";
-	}
-	/* 나현 - 교육목록 - 교육디테일*/
-	@RequestMapping(value="manage/edu_detail", method = RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public Map<String, Object> eduDetail(Model model, HttpSession session, @RequestParam("edu_no") int edu_no) throws ParseException, UnsupportedEncodingException {
-		System.out.println("해당 edu_no : " + edu_no);
-		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		EduListDto eduListDetail = managerDao.eduListDetail(edu_no);
-		
-		System.out.println(" 교육명 : " + eduListDetail.getEdu_name());
-		System.out.println(" 교육일정 : " + eduListDetail.getEdu_schedule());
-		System.out.println(" 소속번호 : " + eduListDetail.getBelong_no());
-//		System.out.println(" 소속명 : " + eduListDetail.getBelong_name());
-		System.out.println(" 소요예산 : " + eduListDetail.getBudget());
-		System.out.println(" 신청마감일 : " + eduListDetail.getClosing_date());
-		System.out.println(" 교육코드 : " + eduListDetail.getEdu_code());
-//		System.out.println(" 교육코드명 : " + eduListDetail.getEdu_code_name());
-		System.out.println(" 교육일시 : " + eduListDetail.getEdu_date());
-		System.out.println(" 교육뷴야 : " + eduListDetail.getEdu_field());
-		System.out.println(" 교육장소 : " + eduListDetail.getEdu_location());
-		System.out.println(" 교육대상 : " + eduListDetail.getEdu_target());
-		System.out.println(" 교육방법 : " + eduListDetail.getEdu_way());
-		System.out.println(" 강사이름 : " + eduListDetail.getInstructor_name());
-		System.out.println(" 강사번호 : " + eduListDetail.getInstructor_no());
-		System.out.println(" 담당자 : " + eduListDetail.getManager());
-		System.out.println(" 비고 : " + eduListDetail.getNote());
-
-		//---json data (교육대상)
-		String target = new String(eduListDetail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8"); //한글 인코딩
-
-		// String을 JSON으로 파싱
-		JSONParser jsonParser = new JSONParser();
-
-		JSONArray arr = (JSONArray) jsonParser.parse(target);
-
-		String aaa = "";
-		for(int i=0; i<arr.size(); i++) {
-			JSONObject tmp = (JSONObject)arr.get(i);
-
-			String dept_name = (String)tmp.get("dept_name");
-			String belong_name  = (String)tmp.get("belong_name");
-			String position_name = (String)tmp.get("position_name");
-
-			aaa += belong_name + "사업부 - " + dept_name + "   직급: " + position_name + "<br>";
-
-		}
-		System.out.println("강의 대상(target) : " + aaa);
-		
-		resultMap.put("edu_target", aaa);
-		resultMap.put("edu_no", eduListDetail.getEdu_no());
-		resultMap.put("belong_no", eduListDetail.getBelong_no());
-		resultMap.put("edu_name", eduListDetail.getEdu_name());
-		resultMap.put("edu_schedule", eduListDetail.getEdu_schedule());
-		resultMap.put("budget", eduListDetail.getBudget());
-		resultMap.put("closing_date", eduListDetail.getClosing_date());
-		resultMap.put("edu_code", eduListDetail.getEdu_code());
-		resultMap.put("edu_date", eduListDetail.getEdu_date());
-		resultMap.put("edu_feild", eduListDetail.getEdu_field());
-		resultMap.put("edu_location", eduListDetail.getEdu_location());
-//		resultMap.put("edu_target", eduListDetail.getEdu_target());
-		resultMap.put("edu_way", eduListDetail.getEdu_way());
-		resultMap.put("instructor_name", eduListDetail.getInstructor_name());
-		resultMap.put("instructor_no", eduListDetail.getInstructor_no());
-		resultMap.put("manager", eduListDetail.getManager());
-		resultMap.put("note", eduListDetail.getNote());
-		return resultMap;
 	}
 	
 }

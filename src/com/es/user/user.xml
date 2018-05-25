@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="User">
+	<!-- 일반 직원 -->
 	<select id="EmpLoginCheck" parameterType="hashmap" resultType="com.es.user.UserDto">
 		select emp_no no, name, passwd
 		from employees
@@ -26,12 +27,13 @@
 	 			where instructor_no=#{emp_no} and passwd=#{passwd}
 	 		</when>
 	 		<when test="emp_no.substring(0,1) == 'E'.toString()">
-	 			select emp_no no, passwd, name
+	 			select emp_no no, passwd, name, belong_no
 	 			from employees
 	 			where emp_no=#{emp_no} and passwd=#{passwd}
 	 		</when>
 	 	</choose>
 	</select>
+	<!-- pwd 변경 -->
 	<update id="changePasswd" parameterType="com.es.user.UserDto">
 		<choose>
 	 		<when test="emp_no.substring(0,1) == 'I'.toString()">
@@ -46,6 +48,7 @@
 	 		</when>
 	 	</choose>
 	</update>
+	<!-- 기존 비밀번호 확인 -->
 	<select id="checkPassword" parameterType="com.es.user.UserDto" resultType="com.es.user.UserDto">
 		<choose>
 	 		<when test="emp_no.substring(0,1) == 'I'.toString()">

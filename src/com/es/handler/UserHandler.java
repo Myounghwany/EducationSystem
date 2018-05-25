@@ -23,12 +23,10 @@ public class UserHandler {
 
 	/*로그인 로직*/
 	@RequestMapping(value="user/login", method = RequestMethod.POST)
-	public String loginCheck(UserDto userDto, HttpSession session, Model model,
-			HttpSession request, RedirectAttributes rttr) throws Exception{
+	public String loginCheck(UserDto userDto, HttpSession session, Model model, RedirectAttributes rttr) throws Exception{
 
 //		System.out.println("login emp_no : "+ userDto.getNo());
 //		System.out.println("login password : "+ userDto.getPasswd());
-
 		String emp_no = userDto.getNo();
 		String passwd = userDto.getPasswd();
 		
@@ -36,38 +34,38 @@ public class UserHandler {
 
 		switch(result) {
 		case -1 :
-			rttr.addAttribute("msg", "fail");
-			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-//			System.out.println("case -1");
+			rttr.addAttribute("result", "fail");
 			break;
 		case 0:
-			//request.setAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-			//model.addAttribute("result", "아이디나 비밀번호가 틀렸습니다.");
-			rttr.addAttribute("msg", "fail");
-//			System.out.println("case 0");
+			rttr.addFlashAttribute("result", "fail");
 			break;
 		case 1:
 			System.out.println("emp_no : " + emp_no + "passwd : " + passwd);
 			UserDto getUser = userDao.findById(emp_no, passwd);
-//			System.out.println("getUser 객체 : " + getUser);
 			
 			session.setAttribute("no", getUser.getNo());
 			session.setAttribute("password", getUser.getPasswd());
 			session.setAttribute("name",  getUser.getName());
+			
 			if(getUser.getNo().substring(0, 1).equals("E")) {
 				System.out.println("직원 로그인");
 				session.setAttribute("account", "emp"); //직원 혹은 내부강사
 			} else if(getUser.getNo().substring(0, 1).equals("I")) {
 				System.out.println("외부강사 로그인");
 				session.setAttribute("account", "inst"); //외부강사 표시 세션 등록
-			} 
-			System.out.println("세션 등록..");
+			}
+			if(getUser.getBelong_no()==400) {
+				System.out.println("HR직원");
+				session.setAttribute("account", "hr");
+			} else {
+				System.out.println("HR직원이 아닙니다");
+			}
+//			System.out.println("세션 등록..");
 			rttr.addFlashAttribute("result", "success");
-//			System.out.println("case 1");
 			break;
 		}
 
-		return "redirect:/";
+		return "redirect:/main.do";
 	}
 
 	/*로그아웃 로직*/
@@ -87,8 +85,7 @@ public class UserHandler {
 	/* 비밀번호 변경 로직*/
 	@RequestMapping(value="user/password", method=RequestMethod.POST)
 	public String passwordPost(Model model, @RequestParam("emp_no") String emp_no,
-			@RequestParam("currentPasswd") String passwd,
-			@ModelAttribute UserDto user) {
+			@RequestParam("currentPasswd") String passwd, @ModelAttribute UserDto user) {
 		System.out.println("기존 비밀번호 : " + passwd);
 		System.out.println("변경할 비밀번호 : " + user.getCheckPasswd());
 
