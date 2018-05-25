@@ -14,17 +14,17 @@
 		
 		if($('#srchType').val() == 'nothing' && $('#srchWord').val() == '') {
 			if(pageStart > 5) {
-				$('#pagePrev').attr('href', 'instList.do?pageNum='+$('#pagePrev').attr('page-value'));
+				$('#pagePrev').attr('href', 'exInstList.do?pageNum='+$('#pagePrev').attr('page-value'));
 			}
 			
 			var length = 0;
 			for(var i=pageStart; i<=pageEnd; i++) {
 				var id = '#pageNumber' + i;
-				$(id).attr('href', 'instList.do?pageNum='+$(id).attr('page-value')); 
+				$(id).attr('href', 'exInstList.do?pageNum='+$(id).attr('page-value')); 
 			}
 			
 			if(next == 1) {
-				$('#pageNext').attr('href', 'instList.do?pageNum='+$('#pageNext').attr('page-value'));
+				$('#pageNext').attr('href', 'exInstList.do?pageNum='+$('#pageNext').attr('page-value'));
 			}
 		} else {
 			var srchType = $('#srchType').val();
@@ -32,7 +32,7 @@
 			var srchWord = $('#srchWord').val();
 			
 			if(pageStart > 5) {
-				$('#pagePrev').attr('href', 'instList.do?srchType=' + srchType +
+				$('#pagePrev').attr('href', 'exInstList.do?srchType=' + srchType +
 						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
 						'&pageNum=' + $('#pagePrev').attr('page-value'));
 			}
@@ -40,13 +40,13 @@
 			var length = 0;
 			for(var i=pageStart; i<=pageEnd; i++) {
 				var id = '#pageNumber' + i;
-				$(id).attr('href', 'instList.do?srchType=' + srchType +
+				$(id).attr('href', 'exInstList.do?srchType=' + srchType +
 						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
 						'&pageNum='+$(id).attr('page-value'));
 			}
 			
 			if(next == 1) {
-				$('#pageNext').attr('href', 'instList.do?srchType=' + srchType +
+				$('#pageNext').attr('href', 'exInstList.do?srchType=' + srchType +
 						'&srchCat' + srchCat +  '&srchWord=' + srchWord +
 						'&pageNum=' + $('#pagePrev').attr('page-value'));		
 			}
@@ -80,15 +80,19 @@
 				break;			
 			}
 		});
-		$('.inst').click(function() {
-			var instructor_no = $(this).find('.instNum').html();
-			location.href='instDetail.do?inst_no='+instructor_no;
+		$('.exInst').click(function() {
+			var exInstructor_no = $(this).find('.exInstNum').html();
+			location.href='exInstDetail.do?exInst_no='+exInstructor_no;
+		});
+		
+		$('#inputExInst').click(function() {
+			location.href='exInstRegist.do';
 		});
 	});
 	
 	function checkSubmit() {
-		if(srchType.value == 'nothing' && srchWord.value == '') {
-			alert('검색조건을 갖춰주세요.\n부서, 구분을 선택하거나 검색어 입력중 하나라도 해야 합니다.');
+		if(srchWord.value == '') {
+			alert('검색어를 입력하셔야 합니다.');
 			return false;
 		} else {
 			return true;			
@@ -135,42 +139,31 @@
 					<table>
 						<thead>
 							<tr>
-								<th>강사번호</th>
-								<th>분류</th>
+								<th style="width: 5%;">강사번호</th>
 								<th>이름</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:choose>
-								<c:when test="${fn:length(instList) > 0}">
-									<c:forEach items="${instList}" var="instList">
-										<tr class="inst">
-											<td class="instNum">${instList.instructor_no}</td>
-											<td>
-												<c:choose>
-													<c:when test="${null == instList.emp_no}">
-														외부 강사
-													</c:when>
-													<c:otherwise>
-														내부 강사
-													</c:otherwise>
-												</c:choose>
-											</td>
-											<td>${instList.name}</td>
+								<c:when test="${fn:length(exInstList) > 0}">
+									<c:forEach items="${exInstList}" var="exInstList">
+										<tr class="exInst">
+											<td class="exInstNum">${exInstList.instructor_no}</td>
+											<td>${exInstList.name}</td>
 										</tr>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td colspan="4" style="text-align: center;"><b>해당하는 강사가 없습니다.</b></td>
+										<td colspan="4" style="text-align: center;"><b>해당하는 외부강사가 없습니다.</b></td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							<tr>
 								<td colspan="4" style="text-align: center;">
-									<c:if test="${fn:length(instList) > 0}">
+									<c:if test="${fn:length(exInstList) > 0}">
 										<c:if test="${pageStart > 5}">
-											<a id="pagePrev" page-value="${pageStart-1}" href="instList.do?pageNum=${pageStart-1}">[이전]</a>
+											<a id="pagePrev" page-value="${pageStart-1}" href="exInstList.do?pageNum=${pageStart-1}">[이전]</a>
 											&nbsp;|
 										</c:if>
 										<c:forEach begin="${pageStart}" end="${pageEnd}" var="page">
@@ -181,33 +174,11 @@
 										</c:forEach>
 										<c:if test="${next == 1}">
 											&nbsp;|&nbsp;
-											<a id="pageNext" page-value="${pageEnd+1}" href="instList.do?pageNum=${pageEnd+1}">[다음]</a>
+											<a id="pageNext" page-value="${pageEnd+1}" href="exInstList.do?pageNum=${pageEnd+1}">[다음]</a>
 										</c:if>
 									</c:if>
 									<br />
-									<form action="instList.do" method="get" onsubmit="return checkSubmit();">
-										<select name="srchType" id="srchType">
-											<c:if test="${'nothing' == srchType}">
-												<option value="nothing" selected="selected">---구분---</option>
-											</c:if>
-											<c:if test="${'nothing' != srchType}">
-												<option value="nothing">---구분---</option>
-											</c:if>
-											<c:choose>
-												<c:when test="${'internal' == srchType}">
-													<option value="internal" selected="selected">내부강사</option>
-													<option value="external">외부강사</option>
-												</c:when>
-												<c:when test="${'external' == srchType}">
-													<option value="internal">내부강사</option>
-													<option value="external" selected="selected">외부강사</option>
-												</c:when>
-												<c:otherwise>
-													<option value="internal">내부강사</option>
-													<option value="external">외부강사</option>													
-												</c:otherwise>
-											</c:choose>
-										</select>
+									<form action="exInstList.do" method="get" onsubmit="return checkSubmit();">
 										<select name="srchCat" id="srchCat">
 											<c:choose>
 												<c:when test="${'number' == srchCat}">
@@ -227,6 +198,7 @@
 										<input type="text" name="srchWord" id="srchWord" value="${srchWord}" style="width: 110px;"/>
 										<input type="submit" id="srch" value="검색"/>
 									</form>
+									<button id="inputExInst">외부강사 등록</button>
 								</td>
 							</tr>
 						</tbody>

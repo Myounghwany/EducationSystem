@@ -13,6 +13,7 @@
 	<select id="InstMainList" parameterType="int" resultType="com.es.manager.InstListDto">
 		select emp_no, instructor_no, name
 		from Instructor
+		where approval_state = 3
 		order by instructor_no asc
 		limit #{start}, 10
 	</select>
@@ -49,12 +50,13 @@
 		</choose>
 		<choose>
 			<when test="cat == 'number'">
-				instructor_no like concat('%', #{word}, '%')
+				instructor_no like concat('%', #{word}, '%') and
 			</when>
 			<when test="cat == 'name'">
-				name like concat('%', #{word}, '%')
+				name like concat('%', #{word}, '%') and
 			</when>
 		</choose>
+		approval_state = 3
 		order by instructor_no asc
 		limit #{start}, 10
 	</select>
@@ -67,4 +69,83 @@
 		AND		e.position_no = p.position_no
 		AND 	e.emp_no = #{emp_no}
 	</select>
+	
+	<select id="InstDetail" parameterType="String" resultType="com.es.instructor.InstructorDto">
+	</select>
+	
+	<select id="ExInstructorCount" resultType="int">
+		select count(*) from external_instructor;
+	</select>
+	
+	<select id="ExInstructorCategoryCount" parameterType="hashmap" resultType="int">
+		select count(*) from external_instructor where
+		<choose>
+			<when test="cat == 'number'">
+				instructor_no like concat('%', #{word}, '%')
+			</when>
+			<when test="cat == 'name'">
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+	</select>
+	
+	<select id="ExInstMainList" parameterType="int" resultType="com.es.manager.ExInstructorDto">
+		select * from external_instructor
+		order by instructor_no asc
+		limit #{start}, 10
+	</select>
+	
+	<select id="ExInstSearchList" parameterType="hashmap" resultType="com.es.manager.ExInstructorDto">
+		select count(*) from external_instructor where
+		<choose>
+			<when test="cat == 'number'">
+				instructor_no like concat('%', #{word}, '%')
+			</when>
+			<when test="cat == 'name'">
+				name like concat('%', #{word}, '%')
+			</when>
+		</choose>
+		order by instructor_no asc
+		limit #{start}, 10
+	</select>
+	
+	<select id="ExInstDetail" parameterType="String" resultType="com.es.manager.ExInstructorDto">
+		SELECT *
+		FROM external_instructor
+		WHERE instructor_no = #{inst_no}
+	</select>
+	
+	<select id="FindInstNumber" parameterType="String" resultType="String">
+		SELECT instructor_no
+		FROM instructor
+		WHERE instructor_no like concat(#{find_no}, '%')
+		ORDER BY instructor_no DESC
+		LIMIT 1;
+	</select>
+	
+	<insert id="InsertExInst" parameterType="com.es.manager.ExInstructorDto">
+		INSERT INTO external_instructor(instructor_no, name, identity_no, address, phone, email)
+		VALUES(#{instructor_no}, #{name}, #{identity_no}, #{address}, #{phone}, #{email})		
+	</insert>
+	
+	<insert id="InsertExInInst" parameterType="hashmap">
+		INSERT INTO instructor
+		VALUES(#{inst_no}, null, now(), 3, now(), #{name})
+	</insert>
+	
+	<select id="ReqInstList" parameterType="Integer" resultType="com.es.manager.InstListDto">
+		SELECT i.instructor_no instructor_no, e.name name, e.emp_no emp_no, d.dept_name dept_name, p.position_name position_name, i.approval_date approval_date
+		FROM instructor i, employees e, department d, position p
+		WHERE i.emp_no = e.emp_no
+		AND e.dept_no = d.dept_no
+		AND e.position_no = p.position_no
+		AND i.approval_state = #{approval_state}
+		ORDER BY i.approval_date;
+	</select>
+	
+	<update id="ChangeReqInst" parameterType="hashmap">
+		UPDATE instructor
+		SET approval_state = #{approval_state}, approval_date = now()
+		WHERE emp_no = #{emp_no}
+	</update>
 </mapper>

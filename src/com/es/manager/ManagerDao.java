@@ -8,6 +8,7 @@ import com.es.education.EduHistoryDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
+import com.es.instructor.InstructorDto;
 
 public interface ManagerDao {
 
@@ -36,5 +37,27 @@ public interface ManagerDao {
 	EmpListDto getEmpDetail(String emp_no);
 
 	List<EduHistoryDto> getEmpEduList(String emp_no);
+
+	InstructorDto getInstDetail(String inst_no);
+
+	int getExInstCount();
+
+	int getExInstCount(HashMap<String, Object> srchMap);
+
+	List<InstListDto> getExInstList(int start);
+
+	List<InstListDto> getExInstList(HashMap<String, Object> srchMap);
+
+	ExInstructorDto getExInstDetail(String inst_no);
+
+	String getInstNo(String find_no);
+
+	int setExInst(ExInstructorDto inst);
+
+	int setInst(HashMap<String, String> param);
+
+	List<InstListDto> getReqInstList(int approval_state);
+
+	int changeReqInst(HashMap<String, Object> param);
 
 }
