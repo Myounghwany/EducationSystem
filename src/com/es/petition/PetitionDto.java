@@ -3,16 +3,16 @@ package com.es.petition;
 import java.sql.Timestamp;
 
 public class PetitionDto {
-	private int petition_no; // 청원 글번호
+	private int petition_no;	   // 청원 글번호
 	private String classification; // 분류
-	private String title; // 제목
-	private String content; // 내용
-	private String writer; // 작성자
-	private Timestamp write_time; // 작성시간
-	private Timestamp closing_date; // 청원 마감시간
-	private int agree; // 청원찬성
-	private int approval_state; // 청원진행상태 0 - 진행 중, 1 - 심사시작, 2 - 청원수용, 3 - 청원거부, 4 - 기간만료 
-	private String comment; // 답변글
+	private String title; 		   // 제목
+	private String content;        // 내용
+	private String writer;         // 작성자
+	private Timestamp write_time;  // 작성시간
+	private Timestamp closing_date;// 만료시간
+	private int agree; 			   // 청원찬성
+	private int approval_state;    // 청원진행상태  0 - 진행중, 1 - 심사중, 2 - 심사중(기간만료), 3 - 심사완료(채택), 4 - 심사완료(거절), 5 - 기간만료
+	private String comment; 	   // 관리자 답변
 	private String file_path;
 	private String file_save_name;
 	private String file_ori_name;

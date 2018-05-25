@@ -6,6 +6,6 @@ public interface PetitionLikeDao {
  
 	int countCheck(int petition_no);
   
-	int approvalUpdate(int petition_no);
-  
+	int approvalUpdate(int petition_no); 
+	
 }

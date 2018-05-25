@@ -7,11 +7,52 @@
 		insert into petition(title, write_time, classification, content, writer, file_path, file_save_name, file_ori_name,approval_state,closing_date) 
 		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0,sysdate()+interval 6 month) 
 	</insert>
+	
+	<update id="replyWrite" parameterType="com.es.petition.PetitionDto"> 
+        update petition set comment=#{comment} where petition_no =#{petition_no}
+    </update> 
+    
+    <update id="petitionDelete" parameterType="Integer"> 
+		delete from petition where petition_no= #{petition_no}
+	</update>
  
  	<select id="petitionDetail" parameterType="Integer" resultType="com.es.petition.PetitionDto">
 		select * from petition where petition_no=#{petition_no}
 	</select>
 	
+	<select id="petitionState" parameterType="Integer" resultType="Integer">
+		select approval_state from petition where petition_no=#{petition_no}
+	</select>
+	
+	<select id="agreeCheck" parameterType="com.es.petition.PetitionLikeDto" resultType="Integer">
+		select count(*) from petition_like where petition_no=#{petition_no} and emp_no=#{emp_no}
+	</select>
+	
+	<insert id="petitionAgree" parameterType="com.es.petition.PetitionLikeDto">
+		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
+	</insert>
+	
+	 <update id="agreeUpdate" parameterType="com.es.petition.PetitionDto" > 
+        update petition set agree=#{agree}+1  where petition_no = #{petition_no}
+    </update> 
+ 
+	<select id="countCheck" parameterType="Integer" resultType="Integer">
+		select count(*) from petition_like where petition_no=#{petition_no}
+	</select>
+	
+	<update id="approvalUpdate" parameterType="Integer"> 
+		update petition set approval_state=1 where petition_no=#{petition_no}
+	</update>
+  	   
+    <update id="acceptUpdate" parameterType="Integer"> 
+		update petition set approval_state=3 where petition_no= #{petition_no}
+	</update>
+	
+	<update id="refusalUpdate" parameterType="Integer"> 
+		update petition set approval_state=4 where petition_no= #{petition_no}
+	</update>
+	
+  
 	<select id="ongoingList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
 		select * from petition where
 		   <choose> 
@@ -157,46 +198,6 @@
 		</choose>
 	  </where>
 	</select> 
-	
-	
-	<select id="agreeCheck" parameterType="com.es.petition.PetitionLikeDto" resultType="Integer">
-		select count(*) from petition_like where petition_no=#{petition_no} and emp_no=#{emp_no}
-	</select>
-	
-	<insert id="petitionAgree" parameterType="com.es.petition.PetitionLikeDto">
-		insert into petition_like(petition_no,emp_no) values(#{petition_no},#{emp_no}) 
-	</insert>
- 
-	<select id="countCheck" parameterType="Integer" resultType="Integer">
-		select count(*) from petition_like where petition_no=#{petition_no}
-	</select>
-	
-	<update id="approvalUpdate" parameterType="Integer"> 
-		update petition set approval_state=1 where petition_no=#{petition_no} and approval_state != 2
-	</update>
-  	 
-  	<select id="petitionState" parameterType="Integer" resultType="Integer">
-		select approval_state from petition where petition_no=#{petition_no}
-	</select>
- 
-  	<update id="agreeUpdate" parameterType="com.es.petition.PetitionDto" > 
-        update petition set agree=#{agree}+1  where petition_no = #{petition_no}
-    </update> 
-
-	<update id="replyWrite" parameterType="com.es.petition.PetitionDto"> 
-        update petition set comment=#{comment} where petition_no =#{petition_no}
-    </update> 
-    
-    <update id="acceptUpdate" parameterType="Integer"> 
-		update petition set approval_state=3 where petition_no= #{petition_no}
-	</update>
-	
-	<update id="refusalUpdate" parameterType="Integer"> 
-		update petition set approval_state=4 where petition_no= #{petition_no}
-	</update>
-	
-	<update id="petitionDelete" parameterType="Integer"> 
-		delete from petition where petition_no= #{petition_no}
-	</update>
-	  
+	 
+	   
 </mapper>
