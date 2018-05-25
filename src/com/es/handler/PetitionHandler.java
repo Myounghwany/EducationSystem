@@ -44,11 +44,9 @@ public class PetitionHandler {
 	
 	@RequestMapping(value="/PetitionWrite", method=RequestMethod.POST)
 	public String writePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {
-		
-		String emp_no = "test1";
-		
-//		HttpSession httpSession = request.getSession();
-//		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		 
+		HttpSession httpSession = request.getSession();
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		String file_path= "";
 		String file_save_name= "";
@@ -143,11 +141,9 @@ public class PetitionHandler {
  
 		String list = request.getParameter("list");
 		int petition_no = Integer.parseInt( request.getParameter("petition_no")) ; 
-		 
-		String emp_no = "test0";    // 현재 세션꺼로 변경
-		
-//		HttpSession httpSession = request.getSession();
-//		String emp_no =  (String) httpSession.getAttribute("emp_no");
+		  
+		HttpSession httpSession = request.getSession();
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
 		PetitionLikeDto petitionLikeDto = new PetitionLikeDto();
 		petitionLikeDto.setPetition_no(petition_no);
