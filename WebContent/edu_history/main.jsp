@@ -92,7 +92,7 @@
 								</c:choose>
 								</td>
 							</c:if>
-							<c:if test="${sessionScope.account eq 'emp'}">
+							<c:if test="${sessionScope.account eq 'emp' or sessionScope.account eq 'hr'}">
 								<td>${HistoryList.edu_state}</td>
 								<td>
 									<c:if test="${date < HistoryList.start_date}">
