@@ -11,6 +11,7 @@ import com.es.education.EduHistoryDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
+import com.es.instructor.InstructorDto;
 
 @Configuration("ManagerDao")
 public class ManagerDBBean implements ManagerDao {
@@ -78,5 +79,60 @@ public class ManagerDBBean implements ManagerDao {
 	@Override
 	public List<EduHistoryDto> getEmpEduList(String emp_no) {
 		return SqlMapClient.getSession().selectList("Education.EduHistory", emp_no);
+	}
+
+	@Override
+	public InstructorDto getInstDetail(String inst_no) {
+		return SqlMapClient.getSession().selectOne("Manager.InstDetail", inst_no);
+	}
+
+	@Override
+	public int getExInstCount() {
+		return SqlMapClient.getSession().selectOne("Manager.ExInstructorCount");
+	}
+
+	@Override
+	public int getExInstCount(HashMap<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectOne("Manager.ExInstructorCategoryCount", srchMap);
+	}
+
+	@Override
+	public List<InstListDto> getExInstList(int start) {
+		return SqlMapClient.getSession().selectList("Manager.ExInstMainList", start);
+	}
+
+	@Override
+	public List<InstListDto> getExInstList(HashMap<String, Object> srchMap) {
+		return SqlMapClient.getSession().selectList("Manager.ExInstSearchList", srchMap);
+	}
+
+	@Override
+	public ExInstructorDto getExInstDetail(String inst_no) {
+		return SqlMapClient.getSession().selectOne("Manager.ExInstDetail", inst_no);
+	}
+
+	@Override
+	public String getInstNo(String find_no) {
+		return SqlMapClient.getSession().selectOne("Manager.FindInstNumber", find_no);
+	}
+
+	@Override
+	public int setExInst(ExInstructorDto inst) {
+		return SqlMapClient.getSession().insert("Manager.InsertExInst", inst);
+	}
+
+	@Override
+	public int setInst(HashMap<String, String> param) {
+		return SqlMapClient.getSession().insert("Manager.InsertExInInst", param);
+	}
+
+	@Override
+	public List<InstListDto> getReqInstList(int approval_state) {
+		return SqlMapClient.getSession().selectList("Manager.ReqInstList", approval_state);
+	}
+
+	@Override
+	public int changeReqInst(HashMap<String, Object> param) {
+		return SqlMapClient.getSession().update("Manager.ChangeReqInst", param);
 	}
 }

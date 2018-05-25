@@ -63,7 +63,7 @@
 					$('#belong_no').html(data.belong_no);
 					$('#belong_name').html(data.belong_name);
 					$('#edu_name_detail').html(data.edu_name);
-					$('#edu_schedule_detail').html(data.edu_schedule);
+					$('#edu_schedule').html(data.edu_schedule);
 					$('#budget').html(data.budget);
 					$('#closing_date').html(data.closing_date);
 					$('#edu_code').html(data.edu_code);
@@ -88,17 +88,15 @@
 	});
 	
 
-	function show_eval(edu_no, emp_no){
+	function show_eval(edu_no){
 		var edu_no = edu_no;
-		var emp_no = emp_no;
 		
 		$.ajax({
 			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
 			url : '/EducationSystem/eduhistory/show_eval.do',
 			type : 'get',
 			data : {
-				edu_no : edu_no,
-				emp_no : emp_no
+				edu_no : edu_no
 			},
 			headers : {
 				Accept : "application/json"
@@ -170,12 +168,8 @@
 							<td>${emp.name}</td>
 						</tr>
 						<tr>
-							<th>부서</th>
+							<th>구분</th>
 							<td>${emp.dept_name}</td>
-						</tr>
-						<tr>
-							<th>직책</th>
-							<td>${emp.position_name}</td>
 						</tr>
 						<tr>
 							<td colspan="2">
@@ -200,83 +194,97 @@
 													<td class="edu">${eduHistory.edu_name}</td>
 													<td><a href="instDetail.do?inst_no=${eduHistory.instructor_no}">${eduHistory.instructor_name}</a></td>
 													<td>${eduHistory.edu_schedule}</td>
-													<td>${eduHistory.edu_state}</td>
-													<td>
-														<!-- 현재 수강중 표시 조건
-															 1.오늘 날짜 < 강의 종료일일 때  -->
-														<c:if test="${date <= eduHistory.end_date}">
-															<span style="color:blue;">현재 수강중 </span>
-														</c:if>
-														
-														<!-- 강의평가 버튼 생성 조건 
-															 1. 직원이 강의평가 하지 않았을 때
-															 2. 종료일 < 현재시각(date)
-															 3. 강의 종료일 < 현재시각(date) < 강의종료일 +7 일 때 (= Flag가 1이 올 때)  -->
-														
-														<c:if test="${ empty eduHistory.emp_eval and eduHistory.end_date < date and eduHistory.buttonFlag eq 1}">
-															<span>평가 미제출</span>
-														</c:if>
-														
-														<!-- 기간내에 평가했다면 완료했다면 --> 
-														<c:if test="${!empty eduHistory.emp_eval}">
-															평가완료
-															<!-- 직원의 강의평가 제출내역 보기 -->
-															<button type="button"  data-toggle="modal" data-target="#myModal" onclick="show_eval(${eduHistory.edu_no}, '${emp.emp_no}');">보기</button>
-							
-															<!-- Modal -->
-														  	<div class="modal fade" id="myModal" role="dialog">
-															    <div class="modal-dialog">
-															    
-															      <!-- 내용 -->
-															      <div class="modal-content">
-															        <div class="modal-header">
-															          <button type="button" class="close" data-dismiss="modal">&times;</button>
-															          <h4 class="modal-title">강의평가  제출내역</h4>
-															        </div>
-															        <div class="modal-body">
-															        <table class="w3-table w3-bordered" >
-																        <tr>
-																        	<td>
-																         	교육번호 : <span id="edu_no"> </span>
-																        	</td>
-																        </tr>
-																        <tr>
-																        	<td>
-																          	교육명 : <span id="edu_name"> </span>
-																        	</td>
-																        </tr>
-																        <tr>
-																        	<td>
-																          	교육일정 : <span id="edu_schedule"> </span>
-																        	</td>
-																        </tr>
-																        <tr>
-																        	<td>
-																          	이수여부 : <span id="edu_state"> </span>
-																        	</td>
-																        </tr>
-																        <tr>
-																        	<td>
-																          	강의평가 제출내역 : <span id="emp_eval"> </span>
-																        	</td>
-																        </tr>
-															        </table>
-															        </div>
-															        <div class="modal-footer">
-															          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-															        </div>
-															      </div>
-															      
-															    </div>
-														 	 </div>
+													<c:if test="${sessionScope.account eq 'inst'}">
+														<td>
+														<c:choose>
+															<c:when test="${date <= eduHistory.end_date}" >
+																<span style="color:blue;">현재 교육중 </span>
+															</c:when>
+															<c:otherwise>
+																<span style="color:black;">교육 완료 </span>
+															</c:otherwise>
+														</c:choose>
+														</td>
+													</c:if>
+													<c:if test="${sessionScope.account eq 'emp'}">
+														<td>${eduHistory.edu_state}</td>
+														<td>
+															<!-- 현재 수강중 표시 조건
+																 1.오늘 날짜 < 강의 종료일일 때  -->
+															<c:if test="${date <= eduHistory.end_date}">
+																<span style="color:blue;">현재 수강중 </span>
+															</c:if>
 															
-														</c:if>
-														
-														<!-- 기간내에 평가하지 못했다면(flag 0) -->
-														<c:if test="${empty eduHistory.emp_eval and eduHistory.buttonFlag eq 0}">
-															기간내 미제출
-														</c:if>
-													</td>
+															<!-- 강의평가 버튼 생성 조건 
+																 1. 직원이 강의평가 하지 않았을 때
+																 2. 종료일 < 현재시각(date)
+																 3. 강의 종료일 < 현재시각(date) < 강의종료일 +7 일 때 (= Flag가 1이 올 때)  -->
+															
+															<c:if test="${ empty eduHistory.emp_eval and eduHistory.end_date < date and eduHistory.buttonFlag eq 1}">
+																<span>평가 미제출</span>
+															</c:if>
+															
+															<!-- 기간내에 평가했다면 완료했다면 --> 
+															<c:if test="${!empty eduHistory.emp_eval}">
+																평가완료
+																<!-- 직원의 강의평가 제출내역 보기 -->
+																<button type="button"  data-toggle="modal" data-target="#myModal" onclick="show_eval(${eduHistory.edu_no});">보기</button>
+								
+																<!-- Modal -->
+															  	<div class="modal fade" id="myModal" role="dialog">
+																    <div class="modal-dialog">
+																    
+																      <!-- 내용 -->
+																      <div class="modal-content">
+																        <div class="modal-header">
+																          <button type="button" class="close" data-dismiss="modal">&times;</button>
+																          <h4 class="modal-title">강의평가  제출내역</h4>
+																        </div>
+																        <div class="modal-body">
+																        <table class="w3-table w3-bordered" >
+																	        <tr>
+																	        	<td>
+																	         	교육번호 : <span id="edu_no"> </span>
+																	        	</td>
+																	        </tr>
+																	        <tr>
+																	        	<td>
+																	          	교육명 : <span id="edu_name"> </span>
+																	        	</td>
+																	        </tr>
+																	        <tr>
+																	        	<td>
+																	          	교육일정 : <span id="edu_schedule"> </span>
+																	        	</td>
+																	        </tr>
+																	        <tr>
+																	        	<td>
+																	          	이수여부 : <span id="edu_state"> </span>
+																	        	</td>
+																	        </tr>
+																	        <tr>
+																	        	<td>
+																	          	강의평가 제출내역 : <span id="emp_eval"> </span>
+																	        	</td>
+																	        </tr>
+																        </table>
+																        </div>
+																        <div class="modal-footer">
+																          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																        </div>
+																      </div>
+																      
+																    </div>
+															 	 </div>
+																
+															</c:if>
+															
+															<!-- 기간내에 평가하지 못했다면(flag 0) -->
+															<c:if test="${empty eduHistory.emp_eval and eduHistory.buttonFlag eq 0}">
+																기간내 미제출
+															</c:if>
+														</td>
+													</c:if>
 												</tr>
 											</c:forEach>
 										</c:otherwise>
@@ -311,7 +319,7 @@
 					<p>소속명 : <span id="belong_name"> </span></p>
 					<p>교육코드 : <span id="edu_code"> </span></p>							
 					<p>교육코드명 : <span id="edu_code_name"> </span></p>
-					<p>교육일정 : <span id="edu_schedule_detail"> </span></p>
+					<p>교육일정 : <span id="edu_schedule"> </span></p>
 					<p>신청마감일 : <span id="closing_date"> </span></p>
 					<p>교육일시 : <span id="edu_date"> </span></p>
 					<p>교육상세분야 : <span id="edu_feild"> </span></p>

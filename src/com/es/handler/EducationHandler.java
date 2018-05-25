@@ -307,10 +307,16 @@ public class EducationHandler {
 	/* 나현 - 강의평가 제출내역 보기 */
 	@RequestMapping(value="/eduhistory/show_eval", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public Map<String, Object> eduHistoryShowEval(Model model, HttpSession session, @RequestParam("edu_no") int edu_no) {
+	public Map<String, Object> eduHistoryShowEval(Model model, HttpSession session, @RequestParam("edu_no") int edu_no, @RequestParam("emp_no") String param_emp_no) {
 		System.out.println("해당 edu_no : " + edu_no);
-
-		String emp_no = (String) session.getAttribute("no");
+		
+		String emp_no;
+		//창연 - 관리자 입장에서 직원의 강의 평가 내용을 볼 수 있도록 수정
+		if(null != param_emp_no) {
+			emp_no = param_emp_no; 
+		} else {
+			emp_no = (String) session.getAttribute("no");			
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		EduHistoryDto show_eval = eduhistoryDao.EduHistoryShowEval(edu_no, emp_no); //어떤 직원인지 emp_no를 넣어줌
 

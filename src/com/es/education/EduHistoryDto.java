@@ -33,6 +33,8 @@ public class EduHistoryDto {
 	private Date start_date;
 	private Date end_date; //교육종료일
 	private int buttonFlag;
+
+	private String instructor_name;
 	
 	public Date getStart_date() {
 		return start_date;
@@ -81,8 +83,6 @@ public class EduHistoryDto {
 	public void setFile_ori_name(String file_ori_name) {
 		this.file_ori_name = file_ori_name;
 	}
-
-	private String instructor_name;
 
 	public String getEmp_no() {
 		return emp_no;
