@@ -2,11 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<title>Insert title here</title>
+<title>관리자 페이지 - Education System</title>
 <jsp:include page="../common/header.jsp" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-	$('document').ready(function() {
+	$('document').ready(function() {		
 		$('#title tr th').click(function() {
 			var title_value = $(this).attr('title_value');
 			switch(title_value) {
@@ -32,18 +33,17 @@
 				break;
 			case 'req_inst':
 				location.href='reqInstList.do';
-				break;			
+				break;	
 			case 'must_finish':
 				location.href='mustEmpList.do';
-				break;
+				break;		
 			}
 		});
-		$('#showInst').click(function() {
-			var inst_no = $('#inst_no').html();
-			location.href='instDetail.do?inst_no=' + inst_no;
+		$('.emp').click(function() {
+			var emp_no = $(this).find('.empNum').html();
+			location.href='empDetail.do?emp_no='+emp_no;
 		});
 	});
-	
 </script>
 <style>
 	table {
@@ -87,31 +87,48 @@
 				<th menu_value="emp">직원</th>
 				<td rowspan="5">
 					<table>
-						<tr>
-							<th>강사번호</th>
-							<td id="inst_no">${exInst.instructor_no}</td>
-						</tr>
-						<tr>
-							<th>이름</th>
-							<td>${exInst.name}</td>
-						</tr>
-						<tr>
-							<th>주소</th>
-							<td>${exInst.address}</td>
-						</tr>
-						<tr>
-							<th>전화번호</th>
-							<td>${exInst.phone}</td>
-						</tr>
-						<tr>
-							<th>이메일</th>
-							<td>${exInst.email}</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<button id="showInst">강의내역 보기</button>
-							</td>
-						</tr>
+						<c:forEach items="${eduList}" var="eduList">
+							<tr>
+								<th colspan="5">${eduList.edu_name}을 수강하지 않은 사원</th>
+							</tr>
+							<tr>
+									<th>사번</th>
+									<th>이름</th>
+									<th>부서</th>
+									<th>직급</th>
+									<th>수강상태</th>
+							</tr>
+							<c:choose>
+								<c:when test="${fn:length(empList) > 0}">
+									<c:forEach items="${empList}" var="empList">
+										<c:if test="${'Y' ne empList.edu_state and empList.edu_code eq eduList.edu_code}">
+											<tr class="emp">
+												<td class="empNum">${empList.emp_no}</td>
+												<td>${empList.name}</td>
+												<td>${empList.dept_name}</td>
+												<td>${empList.position_name}</td>
+												<td>
+													<c:if test="${'N' eq empList.edu_state}">
+														미수료
+													</c:if>
+													<c:if test="${'I' eq empList.edu_state}">
+														현재 수강중
+													</c:if>
+													<c:if test="${null eq empList.edu_state}">
+														수강하지 않음
+													</c:if>
+												</td>
+											</tr>
+										</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td colspan="4" style="text-align: center;"><b>해당하는 사원이 없습니다.</b></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
 					</table>
 				</td>
 			</tr>

@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.context.annotation.Configuration;
 
 import com.es.db.SqlMapClient;
+import com.es.education.EduCodeDto;
 import com.es.education.EduHistoryDto;
+import com.es.education.EducationListDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
@@ -134,5 +136,20 @@ public class ManagerDBBean implements ManagerDao {
 	@Override
 	public int changeReqInst(HashMap<String, Object> param) {
 		return SqlMapClient.getSession().update("Manager.ChangeReqInst", param);
+	}
+
+	@Override
+	public List<EduCodeDto> getMustEduList() {
+		return SqlMapClient.getSession().selectList("Manager.MustEducationList");
+	}
+
+	@Override
+	public List<EmpListDto> getMustEduEmpList(HashMap<String, Object> emp_map) {
+		return SqlMapClient.getSession().selectList("Manager.MustEduCationEmpList", emp_map);
+	}
+
+	@Override
+	public List<MustEduDto> getMustEduStateList(int edu_code) {
+		return SqlMapClient.getSession().selectList("Manager.MustEduCationStateList", edu_code);
 	}
 }

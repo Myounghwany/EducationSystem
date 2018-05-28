@@ -2,6 +2,7 @@ package com.es.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,11 +12,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.es.education.EduCodeDto;
 import com.es.education.EduHistoryDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
@@ -24,6 +30,7 @@ import com.es.manager.EmpListDto;
 import com.es.manager.ExInstructorDto;
 import com.es.manager.InstListDto;
 import com.es.manager.ManagerDao;
+import com.es.manager.MustEduDto;
 
 @Controller
 @RequestMapping("manage")
@@ -413,6 +420,69 @@ public class ManagerHandler {
 			}
 		}
 		return instEval(request, response);
+	}
+	
+	@RequestMapping("mustEmpList")
+	public ModelAndView mustList(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+		List<EduCodeDto> eduList = managerDao.getMustEduList();
+		List<MustEduDto> empList = new ArrayList<MustEduDto>(), stateList;
+		List<EmpListDto> tempList;
+		int edu_code;
+		int target_belong;
+		int target_dept;
+		int target_pos;
+		JSONParser jsonParser = new JSONParser();
+		JSONArray arr;
+		JSONObject temp;
+		HashMap<String, Object> emp_map;
+		for(EduCodeDto edu : eduList) {
+			edu_code = edu.getEdu_code();
+			arr = (JSONArray) jsonParser.parse(edu.getEdu_target());
+			if(!(arr instanceof JSONArray)) {
+				System.out.println("형변환 실패");
+				break;
+			}
+			for(int i=0; i<arr.size(); i++) {
+				temp = (JSONObject)arr.get(i);
+				emp_map = new HashMap<String, Object>();
+				target_belong = Integer.parseInt((String)temp.get("belong_no"));
+				target_dept = Integer.parseInt((String)temp.get("dept_no"));
+				target_pos = Integer.parseInt((String)temp.get("position_no"));
+				System.out.println("소속번호 : " + target_belong + ", 부서번호 : " + target_dept + ", 직책번호 : " + target_pos);
+				emp_map.put("belong", target_belong);
+				emp_map.put("dept", target_dept);
+				emp_map.put("pos", target_pos);
+				tempList = managerDao.getMustEduEmpList(emp_map);
+				stateList = managerDao.getMustEduStateList(edu_code);
+				MustEduDto tempDto;
+				for(int j=0; j<tempList.size(); j++) {
+					tempDto = new MustEduDto();
+					for(int k=0; k<stateList.size(); k++) {
+						if(tempList.get(j).getEmp_no().equals(stateList.get(k).getEmp_no())) {
+							tempDto.setEmp_no(tempList.get(j).getEmp_no());
+							tempDto.setName(tempList.get(j).getName());
+							tempDto.setDept_name(tempList.get(j).getDept_name());
+							tempDto.setPosition_name(tempList.get(j).getPosition_name());
+							tempDto.setEdu_code(stateList.get(k).getEdu_code());
+							tempDto.setEdu_state(stateList.get(k).getEdu_state());
+							break;
+						} else {
+							tempDto.setEmp_no(tempList.get(j).getEmp_no());
+							tempDto.setName(tempList.get(j).getName());
+							tempDto.setDept_name(tempList.get(j).getDept_name());
+							tempDto.setPosition_name(tempList.get(j).getPosition_name());
+							tempDto.setEdu_code(edu_code);
+							tempDto.setEdu_state(null);
+						}
+					}
+					System.out.println("사번 : " + tempDto.getEmp_no() + ", 상태 : " + tempDto.getEdu_state());
+					empList.add(tempDto);
+				}
+			}			
+		}
+		request.setAttribute("eduList", eduList);
+		request.setAttribute("empList", empList);
+		return new ModelAndView("manage/empMustFinish");
 	}
 	
 }

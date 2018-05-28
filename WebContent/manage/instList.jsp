@@ -78,6 +78,9 @@
 			case 'req_inst':
 				location.href='reqInstList.do';
 				break;			
+			case 'must_finish':
+				location.href='mustEmpList.do';
+				break;
 			}
 		});
 		$('.inst').click(function() {
@@ -131,7 +134,7 @@
 		<table id="menu">
 			<tr>
 				<th menu_value="emp">직원</th>
-				<td rowspan="4">
+				<td rowspan="5">
 					<table>
 						<thead>
 							<tr>
@@ -241,6 +244,9 @@
 			</tr>
 			<tr>
 				<th menu_value="req_inst">강사요청<br />심사관리</th>
+			</tr>
+			<tr>
+				<th menu_value="must_finish">필수과정<br />이수조회</th>
 			</tr>
 		</table>
 	</div>
