@@ -89,7 +89,7 @@
 					<table>
 						<c:forEach items="${eduList}" var="eduList">
 							<tr>
-								<th colspan="5">${eduList.edu_name}을 수강하지 않은 사원</th>
+								<th colspan="5">${eduList.edu_name} 교육 수강 목록</th>
 							</tr>
 							<tr>
 									<th>사번</th>
@@ -101,25 +101,28 @@
 							<c:choose>
 								<c:when test="${fn:length(empList) > 0}">
 									<c:forEach items="${empList}" var="empList">
-										<c:if test="${'Y' ne empList.edu_state and empList.edu_code eq eduList.edu_code}">
-											<tr class="emp">
-												<td class="empNum">${empList.emp_no}</td>
-												<td>${empList.name}</td>
-												<td>${empList.dept_name}</td>
-												<td>${empList.position_name}</td>
-												<td>
-													<c:if test="${'N' eq empList.edu_state}">
-														미수료
-													</c:if>
-													<c:if test="${'I' eq empList.edu_state}">
-														현재 수강중
-													</c:if>
-													<c:if test="${null eq empList.edu_state}">
-														수강하지 않음
-													</c:if>
-												</td>
-											</tr>
-										</c:if>
+										<tr class="emp">
+											<td class="empNum">${empList.emp_no}</td>
+											<td>${empList.name}</td>
+											<td>${empList.dept_name}</td>
+											<td>${empList.position_name}</td>
+											<td>
+												<c:choose>
+													<c:when test="${'Y' eq empList.edu_state}">
+														<span style="color: blue;">수료</span>
+													</c:when>
+													<c:when test="${'N' eq empList.edu_state}">
+														<span style="color: red;">미수료</span>
+													</c:when>
+													<c:when test="${'I' eq empList.edu_state}">
+														<span style="color: green;">현재 수강중</span>
+													</c:when>
+													<c:when test="${null eq empList.edu_state}">
+														<span style="color: red">수강하지 않음</span>
+													</c:when>
+												</c:choose>
+											</td>
+										</tr>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>

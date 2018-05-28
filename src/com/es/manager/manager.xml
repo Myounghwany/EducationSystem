@@ -71,6 +71,9 @@
 	</select>
 	
 	<select id="InstDetail" parameterType="String" resultType="com.es.instructor.InstructorDto">
+		SELECT *
+		FROM instructor
+		WHERE instructor_no = #{inst_no}
 	</select>
 	
 	<select id="ExInstructorCount" resultType="int">
