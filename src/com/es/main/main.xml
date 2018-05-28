@@ -3,16 +3,47 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="main">
-	<select id="noticeFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
+	<select id="noticeFive" resultType="com.es.main.MainDto">
+		select * from notice order by
+		notice_no desc limit 5
 	</select>
-		<select id="eductionhistoryFive" resultType="com.es.education.EduHistoryDao">
-		select * from (select * from education_history order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>		
+
+	<select id="EduHistory"
+		resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no, l.edu_schedule,
+		h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from
+		education_history h, education_list l, instructor, education_detail
+		detail
+		where h.edu_no = l.edu_no and instructor.instructor_no =
+		l.instructor_no
+		and detail.edu_no = l.edu_no and h.emp_no=#{emp_no}
+		order by h.edu_state =
+		'I' desc, l.edu_schedule desc limit 5
+	</select>
+
+	<select id="InstEduHistory"
+		resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,
+		l.edu_schedule,
+		h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from
+		education_history h, education_list l, instructor, education_detail
+		detail
+		where h.edu_no = l.edu_no and instructor.instructor_no =
+		l.instructor_no
+		and detail.edu_no = l.edu_no and h.instructor_no=#{emp_no}
+		order by
+		h.edu_state = 'I' desc, l.edu_schedule desc limit5
+	</select>
+
+	<select id="instructorFive" resultType="com.es.main.MainDto">
+		select * from instructor
+		order by instructor_no desc limit 5
+	</select>
+
+	<select id="eduFive" resultType="com.es.main.MainDto">
+		select * from education_list
+		order by edu_no desc limit 5
+	</select>
 </mapper>

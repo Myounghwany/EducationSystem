@@ -14,7 +14,7 @@ public class NoticeDBBean implements NoticeDao {
 	public List<NoticeDataBean> noticetList(HashMap<String, Object> map) {
 		
 		if(map.get("opt")==null){
-			return SqlMapClient.getSession().selectList("notice.noticetList",map);
+			return SqlMapClient.getSession().selectList("notice.noticeList",map);
 		}else if(map.get("opt").equals("0")){ 
 			System.out.println("제목으로 검색");
 			return SqlMapClient.getSession().selectList("notice.selectTitleList",map);

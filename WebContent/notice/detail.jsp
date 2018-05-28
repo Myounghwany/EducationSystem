@@ -174,9 +174,9 @@ table tr td .title:hover {
 					<td colspan="4">
 					
 					<div align="center">
-						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/ProjectCommunity/modify.do?notice_no=${result.notice_no}'">
+						<input class="w3-button w3-white w3-border" type="button" value="글수정" onclick="location='${path}/notice/modify.do?notice_no=${result.notice_no}'">
 						<input class="w3-button w3-white w3-border" type="button" value="글삭제" 
-						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/ProjectCommunity/delete.do?notice_no=${result.notice_no}'}"/>
+						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/notice/delete.do?notice_no=${result.notice_no}'}"/>
 						<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/notice.do'">
 					</div>
 				</td>

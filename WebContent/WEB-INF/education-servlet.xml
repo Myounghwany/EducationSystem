@@ -65,6 +65,7 @@
 	<context:component-scan base-package="com.es.projectCommunity" />
 	<context:component-scan base-package="com.es.interceptor" />
 	<context:component-scan base-package="com.es.user" />
+	<context:component-scan base-package="com.es.main" />
 	
 	<mvc:annotation-driven />
 

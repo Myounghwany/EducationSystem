@@ -17,10 +17,4 @@ public class DefaultHandler {
 		request.setAttribute( "result", "~" );
 		return new ModelAndView("default");
 	}
-	
-	@RequestMapping("main")
-	public ModelAndView moveMain(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		return new ModelAndView("index");
-	}
-
 }

@@ -27,9 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.es.notice.NoticeDao;
 import com.es.notice.NoticeDataBean;
 
-
-
-
 @Controller
 public class NoticeHandler {
 
@@ -98,9 +95,6 @@ public class NoticeHandler {
 		}
 		
 		int result = noticedao.deleteNotice(notice_no);
-
-		
-		
 		return "redirect:/notice.do";
 	}
 
@@ -211,7 +205,7 @@ public class NoticeHandler {
 		int hit = noticedao.updateHit(result);
 		
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+		httpSession.setAttribute("emp_no", "E2009010077");
 
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		map.put("emp_no",emp_no);
@@ -265,12 +259,11 @@ public class NoticeHandler {
 
 	@RequestMapping(value="/notice/modify", method=RequestMethod.POST)
 	public String noticeModifyForm(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
-		System.out.println("Controller noticeModify POST");
 		int notice_no = Integer.parseInt(request.getParameter("notice_no"));
 		NoticeDataBean detail = noticedao.detailnotice(notice_no);
 		
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+		httpSession.setAttribute("emp_no", "E2009010077");
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		NoticeDataBean noticeDto = new NoticeDataBean();
