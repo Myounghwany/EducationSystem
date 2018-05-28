@@ -43,7 +43,10 @@
 	width: 500px;
 	height: 300px;
 }
-th{text-align: center;}
+
+th {
+	text-align: center;
+}
 </style>
 <script>
 	
@@ -96,29 +99,29 @@ th{text-align: center;}
 
 		<div class="box2">
 			<h5>
-				<a href="${path}/EducationList.do">교육리스트</a>
+				<a href="${path}/EducationList.do">수강내역</a>
 			</h5>
 			<hr>
 			<table>
 				<tr>
 					<th align="center" style="width: 10%;">번호</th>
 					<th align="center" style="width: 40%;">교육명</th>
-					<th align="center" style="width: 40%;">교육일</th>
-					<th align="center" style="width: 10%;">장소</th>
+					<th align="center" style="width: 40%;">강사명</th>
+					<th align="center" style="width: 10%;">이수여부</th>
 				</tr>
 				<c:choose>
-					<c:when test="${empty requestScope.historyFive }">
+					<c:when test="${empty requestScope.eduhistory_list }">
 						<tr>
 							<td align="center" colspan="9">수강내역에 저장된 글이 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${requestScope.historyFive}" var="historyFive">
+						<c:forEach items="${requestScope.eduhistory_list}" var="eduhistory_list">
 							<tr>
-								<td align="center">${historyFive.edu_no }</td>
-								<td align="center">${historyFive.edu_name }</td>
-								<td align="center">${historyFive.edu_schedule }</td>
-								<td align="center">${historyFive.edu_location }</td>
+								<td align="center">${eduhistory_list.edu_no }</td>
+								<td align="center">${eduhistory_list.edu_name }</td>
+								<td align="center">${eduhistory_list.instructor_name	 }</td>
+								<td align="center">${eduhistory_list.edu_state }</td>
 
 							</tr>
 						</c:forEach>
@@ -163,36 +166,47 @@ th{text-align: center;}
 
 			<div class="box4">
 				<h5>
-					<a href="${path}/PetitionList.do">청원</a>
+					<a href="${path}/PetitionList.do">교육과정</a>
 				</h5>
 				<hr>
 				<table>
 					<tr>
 						<th align="center" style="width: 10%;">번호</th>
 						<th align="center" style="width: 40%;">제목</th>
-						<th align="center" style="width: 20%;">작성시간</th>
-						<th align="center" style="width: 20%;">마감시간</th>
+						<th align="center" style="width: 20%;">신청기간</th>
+						<th align="center" style="width: 20%;">장소</th>
 					</tr>
 
 					<c:choose>
-						<c:when test="${empty requestScope.petitionFive }">
+						<c:when test="${empty requestScope.eduFive }">
 							<tr>
-								<td align="center" colspan="9">청원에 저장된 글이 없습니다.</td>
+								<td align="center" colspan="9">교육과정에 저장된 글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise>
-							<c:forEach items="${requestScope.petitionFive}"
-								var="petitionFive">
+							<c:forEach items="${requestScope.eduFive}" var="eduFive">
 								<tr>
-									<td align="center">${petitionFive.petition_no }</td>
-									<td align="center">${petitionFive.title }</td>
-									<td align="center">${petitionFive.write_time }</td>
-									<td align="center">${petitionFive.closing_date }</td>
+									<td align="center">${eduFive.edu_no }</td>
+									<td align="center">${eduFive.edu_name }</td>
+									<td align="center">${eduFive.edu_schedule }</td>
+									<td align="center">${eduFive.edu_location }</td>
 								</tr>
 							</c:forEach>
 						</c:otherwise>
 					</c:choose>
 				</table>
+				<div align="center" class="paging">
+					<form action="EducationList.do" name="searchform"
+						onsubmit="return searchCheck()">
+						<select name="opt" class="selectDefault">
+							<option value="0">제목</option>
+							<option value="1">내용</option>
+							<option value="2">제목+내용</option>
+							<option value="3">글쓴이</option>
+						</select> <input type="text" size="10" name="condition" />&nbsp; <input
+							type="submit" value="검색" />
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
