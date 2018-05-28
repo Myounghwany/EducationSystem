@@ -40,6 +40,9 @@
 			case 'regist':
 				location.href='regist.do';
 				break;
+			case 'petition':
+				location.href='/EducationSystem/ManageList.do';
+				break;
 			}
 		});
 		$('.edu').click(function() {
@@ -201,9 +204,14 @@
 		font-weight: bold;
 		font-size: 1.4em;
 	}
+	.title{
+	display: block;
+	text-align: center;
+	color: #2fa4e7;
+	}
 </style>
 <body>
-<h2>교육과정 관리</h2>
+<span class="title">[ 교육과정 관리 ]</span>
 <div id='container'>
 	<div>
 		<table id="title" >
@@ -340,6 +348,9 @@
 			</tr>
 			<tr>
 				<th menu_value="regist" id="menu_value">강의 등록</th>
+			</tr>
+			<tr>
+				<th menu_value="petition" id="menu_value">청원관리</th>
 			</tr>
 		</table>
 	</div>

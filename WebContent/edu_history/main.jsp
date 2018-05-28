@@ -9,11 +9,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel= "stylesheet" type="text/css" href="${path}/css/nahyun.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
 <!-- 강의평가 제출내역 modal bootstrap -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
+<style>
+#name{
+	font-weight:bold;
+	font-size: 20px;
+}
+.title{
+	display: block;
+	text-align: center;
+	color: #2fa4e7;
+}
+</style>
 <script type="text/javascript">
 	function show_eval(edu_no){
 		var edu_no = edu_no;
@@ -45,10 +58,11 @@
 	
 </script>
 <body>
-<h2>수강목록 페이지</h2>
+<span class="title">[ 수강목록 페이지 ]</span>
 <div style=" margin: 20px auto">
 	
-	세션계졍 : ${sessionScope.no}, ${sessionScope.name}님 <br>
+	<i class="fas fa-info-circle"></i><span id="name">&nbsp; ${sessionScope.name}</span> (${sessionScope.no})님
+	<br>
 	<c:if test="${sessionScope.account eq 'emp'}">
 		강의평가는 수강종료일 이후 <b>7일</b> 이내에 하셔야 합니다. <br><br>
 	</c:if>
@@ -95,7 +109,7 @@
 							<c:if test="${sessionScope.account eq 'emp' or sessionScope.account eq 'hr'}">
 								<td>${HistoryList.edu_state}</td>
 								<td>
-									<c:if test="${date < HistoryList.start_date}">
+									<c:if test="${date < HistoryList.start_date && empty HistoryList.emp_eval}">
 										<span>강의대기</span>
 									</c:if>
 									
