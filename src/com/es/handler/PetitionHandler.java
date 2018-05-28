@@ -144,7 +144,7 @@ public class PetitionHandler {
 		  
 		HttpSession httpSession = request.getSession();
 		String emp_no =  (String) httpSession.getAttribute("no");
-		
+  
 		PetitionLikeDto petitionLikeDto = new PetitionLikeDto();
 		petitionLikeDto.setPetition_no(petition_no);
 		petitionLikeDto.setEmp_no(emp_no);  

@@ -13,7 +13,7 @@
 <body>
 
 	<div class="petition_text">
-		청원 기간은 30일입니다. <br>
+		청원 기간은 3개월입니다. <br>
 		한번 작성된 청원은 수정및 삭제가 불가능하며  <br>
 		관련되지 않은 글은 삭제될 수 있습니다. <br>
 		<a href="PetitionWrite.do"> 청원하기 </a>

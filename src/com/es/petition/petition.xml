@@ -5,7 +5,7 @@
 
 	<insert id="petitionWrite" parameterType="com.es.petition.PetitionDto">
 		insert into petition(title, write_time, classification, content, writer, file_path, file_save_name, file_ori_name,approval_state,closing_date) 
-		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0,sysdate()+interval 6 month) 
+		 values(#{title}, sysdate(), #{classification}, #{content}, #{writer}, #{file_path}, #{file_save_name}, #{file_ori_name},0,sysdate()+interval 3 month) 
 	</insert>
 	
 	<update id="replyWrite" parameterType="com.es.petition.PetitionDto"> 
@@ -17,7 +17,9 @@
 	</update>
  
  	<select id="petitionDetail" parameterType="Integer" resultType="com.es.petition.PetitionDto">
-		select * from petition where petition_no=#{petition_no}
+		select p.petition_no, p.classification, p.title, content, concat(e.name,'(',p.writer,')') writer, 
+      p.write_time, p.closing_date , p.file_path, p.file_save_name, p.file_ori_name, p.approval_state, p.agree, p.comment 
+         from petition p, employees e where p.writer=e.emp_no and petition_no=#{petition_no}
 	</select>
 	
 	<select id="petitionState" parameterType="Integer" resultType="Integer">
@@ -51,10 +53,11 @@
 	<update id="refusalUpdate" parameterType="Integer"> 
 		update petition set approval_state=4 where petition_no= #{petition_no}
 	</update>
-	
-  
+ 
+ 
 	<select id="ongoingList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition where
+		select p.petition_no, p.classification, p.title, concat(e.name,'(',p.writer,')') writer, p.write_time, p.closing_date , p.agree, p.approval_state
+				from petition p, employees e where (p.writer=e.emp_no) and
 		   <choose> 
 		    <when test='src == null'>
 		      approval_state=0
@@ -76,10 +79,11 @@
 	</select>  
 	
 	<select id="evaluateList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition where 
+		select p.petition_no, p.classification, p.title, concat(e.name,'(',p.writer,')') writer, p.write_time, p.closing_date , p.agree, p.approval_state
+				from petition p, employees e where (p.writer=e.emp_no) and
 		   <choose> 
 		    <when test='src == null'>
-		      approval_state=1 or approval_state=2 
+		      ( approval_state=1 or approval_state=2 )
 		    </when>
 	        <when test='src == 0'>
 	       	 ( approval_state=1 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
@@ -98,10 +102,11 @@
 	</select>  
 	
 	<select id="expireList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition where 
+		select p.petition_no, p.classification, p.title, concat(e.name,'(',p.writer,')') writer, p.write_time, p.closing_date , p.agree, p.approval_state
+				from petition p, employees e where (p.writer=e.emp_no) and
 		   <choose> 
 		    <when test='src == null'>
-		      approval_state=5 or approval_state=2 
+		      ( approval_state=5 or approval_state=2 )
 		    </when>
 	        <when test='src == 0'>
 	       	  ( approval_state=5 or approval_state=2 ) AND title like CONCAT('%',#{search},'%')
@@ -120,10 +125,11 @@
 	</select>  
 	
 	<select id="answerList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition where
+		select p.petition_no, p.classification, p.title, concat(e.name,'(',p.writer,')') writer, p.write_time, p.closing_date , p.agree, p.approval_state
+				from petition p, employees e where (p.writer=e.emp_no) and
 		   <choose> 
 		    <when test='src == null'>
-		      approval_state=3 or approval_state=4
+		      ( approval_state=3 or approval_state=4 )
 		    </when>
 	        <when test='src == 0'>
 	       	  ( approval_state=3 or approval_state=4 ) AND title like CONCAT('%',#{search},'%')
@@ -142,23 +148,22 @@
 	</select>  
 	
 	<select id="allList" parameterType="hashmap" resultType="com.es.petition.PetitionDto">
-		select * from petition
-		   <where> 
+		select p.petition_no, p.classification, p.title, concat(e.name,'(',p.writer,')') writer, p.write_time, p.closing_date , p.agree, p.approval_state
+				from petition p, employees e where p.writer=e.emp_no
 		   <choose> 
 	        <when test='src == 0'>
-	       	  title like CONCAT('%',#{search},'%')
+	       	  and title like CONCAT('%',#{search},'%')
 	       	</when>
 	       	<when test='src == 1'>
-	       	  content like CONCAT('%',#{search},'%')
+	       	  and content like CONCAT('%',#{search},'%')
 	       	</when>
 	       	<when test='src == 2'>
-	       	  ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
+	       	  and ( content like CONCAT('%',#{search},'%') or title like CONCAT('%',#{search},'%') )
 	       	</when>
 	        <when test='src == 3'>
-	       	  writer like CONCAT('%',#{search},'%')
+	       	  and writer like CONCAT('%',#{search},'%')
 	       	</when>
 	       </choose>
-	       </where>
 		order by write_time desc limit #{start}, 10
 	</select>  
 	
