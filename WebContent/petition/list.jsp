@@ -5,13 +5,15 @@
 <html>
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <title> 청원  </title> 
 </head>
 <jsp:include page="pheader.jsp" />
 <body>
 
 	<div class="petition_text">
-		청원 기간은 30일입니다. <br>
+		청원 기간은 3개월입니다. <br>
 		한번 작성된 청원은 수정및 삭제가 불가능하며  <br>
 		관련되지 않은 글은 삭제될 수 있습니다. <br>
 		<a href="PetitionWrite.do"> 청원하기 </a>
