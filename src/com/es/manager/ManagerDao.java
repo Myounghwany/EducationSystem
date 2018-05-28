@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.es.education.EduCodeDto;
 import com.es.education.EduHistoryDto;
+import com.es.education.EducationListDto;
 import com.es.employees.BelongDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
@@ -59,5 +61,11 @@ public interface ManagerDao {
 	List<InstListDto> getReqInstList(int approval_state);
 
 	int changeReqInst(HashMap<String, Object> param);
+
+	List<EduCodeDto> getMustEduList();
+
+	List<EmpListDto> getMustEduEmpList(HashMap<String, Object> emp_map);
+
+	List<MustEduDto> getMustEduStateList(int edu_code);
 
 }

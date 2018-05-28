@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<jsp:useBean id="now" class="java.util.Date" />
 <title>Insert title here</title>
 <jsp:include page="../common/header.jsp" />
 <!-- 추가 Page styles -->
@@ -41,79 +43,16 @@
 			case 'req_inst':
 				location.href='reqInstList.do';
 				break;			
+			case 'must_finish':
+				location.href='mustEmpList.do';
+				break;
 			}
 		});
-		
-		$('.eduList .edu').click(function() {
-			var edu_no = $(this).parent().find('.eduNum').html();
-			
-			$.ajax({
-				contentType : 'application/x-www-form-urlencoded; charset=utf-8',
-				url : '/EducationSystem/manage/edu_detail.do',
-				type : 'get',
-				data : {
-					edu_no : edu_no
-				},
-				headers : {
-					Accept : "application/json"
-				},
-				dataType:"json",
-				success : function(data){
-					$('#edu_no_detail').html(data.edu_no);
-					$('#belong_no').html(data.belong_no);
-					$('#belong_name').html(data.belong_name);
-					$('#edu_name_detail').html(data.edu_name);
-					$('#edu_schedule').html(data.edu_schedule);
-					$('#budget').html(data.budget);
-					$('#closing_date').html(data.closing_date);
-					$('#edu_code').html(data.edu_code);
-					$('#edu_code_name').html(data.edu_code_name);
-					$('#edu_date').html(data.edu_date);
-					$('#edu_feild').html(data.edu_feild);
-					$('#edu_location').html(data.edu_location);
-					$('#edu_target').html(data.edu_target);
-					$('#edu_way').html(data.edu_way);
-					$('#instructor_name').html(data.instructor_name);
-					$('#instructor_no').html(data.instructor_no);
-					$('#manager').html(data.manager);
-					$('#note').html(data.note);
-				},
-				error : function(request, status, error){
-					alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
-					console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
-				}
-			});
-		});
-		
 	});
 	
-
-	function show_eval(edu_no){
-		var edu_no = edu_no;
-		
-		$.ajax({
-			contentType : 'application/x-www-form-urlencoded; charset=utf-8',
-			url : '/EducationSystem/eduhistory/show_eval.do',
-			type : 'get',
-			data : {
-				edu_no : edu_no
-			},
-			headers : {
-				Accept : "application/json"
-			},
-			dataType:"json",
-			success : function(data){
-				$('#edu_no').html(data.edu_no);
-				$('#edu_name').html(data.edu_name);
-				$('#edu_schedule').html(data.edu_schedule);
-				$('#edu_state').html(data.edu_state);
-				$('#emp_eval').html(data.emp_eval);
-			},
-			error : function(request, status, error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
-				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
-			}
-		});
+	function isntEvalBtn(edu_no, deadLine){
+		window.name = "parentForm";
+		window.open("${path}/instructor/inst_eval.do?edu_no=" + edu_no + "&deadLine=" + deadLine, "evalForm", "width=570, height=350, resizable = no, scrollbars = no, top=250, left=570");
 	}
 	
 </script>
@@ -143,6 +82,19 @@
 		color: black;
 		text-decoration: none;
 	}
+	#info{
+	text-align: center;
+	}
+	#pageForm{
+		text-align: center;
+	}
+	.studentNum{
+		color : red;
+	}
+	#name{
+		font-weight:bold;
+		font-size: 20px;
+	}
 </style>
 <body>
 	<div>
@@ -153,143 +105,146 @@
 			</tr>
 		</table>
 	</div>
-	<div id="basic-modal">
+	<div>
 		<table id="menu">
 			<tr>
 				<th menu_value="emp">직원</th>
-				<td rowspan="4">
+				<td rowspan="5">
 					<table>
 						<tr>
 							<th>사번</th>
-							<td>${emp.emp_no}</td>
+							<td>${inst.instructor_no}</td>
 						</tr>
 						<tr>
 							<th>이름</th>
-							<td>${emp.name}</td>
+							<td>${inst.name}</td>
 						</tr>
 						<tr>
 							<th>구분</th>
-							<td>${emp.dept_name}</td>
+							<td>
+								<c:choose>
+									<c:when test="${null ne inst.emp_no}">
+										내부강사(${inst.emp_no})
+									</c:when>
+									<c:otherwise>
+										외부강사
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2">
-								<table>
-									<tr>
-										<th>교육명</th>
-										<th>강사명</th>
-										<th>교육일</th>
-										<th>이수여부</th>
-										<th>강의평가</th>
-									</tr>
-									<c:choose>
-										<c:when test="${empty eduHistory}">
+								<c:choose>
+									<c:when test='${inst.emp_no!=null}'>							
+									<table>
+										<tr>
+											<th colspan="7" style="background-color: #CCCCCC;">신청현황</th>
+										</tr>
+										<tr>
+											<td style="background-color: #EAEAEA;">소속</td>
+											<td style="background-color: #EAEAEA;">교육분야</td>
+											<td style="background-color: #EAEAEA;">교육코드</td>
+											<td style="background-color: #EAEAEA;">교육명</td>
+											<td style="background-color: #EAEAEA;">교육기간</td>
+											<td style="background-color: #EAEAEA;">수강제한 수</td>
+											<td style="background-color: #EAEAEA;">신청현황</td>
+										</tr>
+										<c:choose>
+										<c:when test="${empty result1}">
 											<tr>
-												<td colspan="5">수강내역이 존재하지 않습니다.</td>
+												<td colspan="7" style="text-align: center;">신청하신 교육내역이 없습니다.</td>
 											</tr>
 										</c:when>
 										<c:otherwise>
-											<c:forEach items="${eduHistory}" var="eduHistory" varStatus="state">
-												<tr class="eduList">
-													<td class="eduNum" style="display: none;">${eduHistory.edu_no}</td>
-													<td class="edu">${eduHistory.edu_name}</td>
-													<td><a href="instDetail.do?inst_no=${eduHistory.instructor_no}">${eduHistory.instructor_name}</a></td>
-													<td>${eduHistory.edu_schedule}</td>
-													<c:if test="${sessionScope.account eq 'inst'}">
-														<td>
-														<c:choose>
-															<c:when test="${date <= eduHistory.end_date}" >
-																<span style="color:blue;">현재 교육중 </span>
-															</c:when>
-															<c:otherwise>
-																<span style="color:black;">교육 완료 </span>
-															</c:otherwise>
-														</c:choose>
-														</td>
-													</c:if>
-													<c:if test="${sessionScope.account eq 'emp'}">
-														<td>${eduHistory.edu_state}</td>
-														<td>
-															<!-- 현재 수강중 표시 조건
-																 1.오늘 날짜 < 강의 종료일일 때  -->
-															<c:if test="${date <= eduHistory.end_date}">
-																<span style="color:blue;">현재 수강중 </span>
-															</c:if>
-															
-															<!-- 강의평가 버튼 생성 조건 
-																 1. 직원이 강의평가 하지 않았을 때
-																 2. 종료일 < 현재시각(date)
-																 3. 강의 종료일 < 현재시각(date) < 강의종료일 +7 일 때 (= Flag가 1이 올 때)  -->
-															
-															<c:if test="${ empty eduHistory.emp_eval and eduHistory.end_date < date and eduHistory.buttonFlag eq 1}">
-																<span>평가 미제출</span>
-															</c:if>
-															
-															<!-- 기간내에 평가했다면 완료했다면 --> 
-															<c:if test="${!empty eduHistory.emp_eval}">
-																평가완료
-																<!-- 직원의 강의평가 제출내역 보기 -->
-																<button type="button"  data-toggle="modal" data-target="#myModal" onclick="show_eval(${eduHistory.edu_no});">보기</button>
-								
-																<!-- Modal -->
-															  	<div class="modal fade" id="myModal" role="dialog">
-																    <div class="modal-dialog">
-																    
-																      <!-- 내용 -->
-																      <div class="modal-content">
-																        <div class="modal-header">
-																          <button type="button" class="close" data-dismiss="modal">&times;</button>
-																          <h4 class="modal-title">강의평가  제출내역</h4>
-																        </div>
-																        <div class="modal-body">
-																        <table class="w3-table w3-bordered" >
-																	        <tr>
-																	        	<td>
-																	         	교육번호 : <span id="edu_no"> </span>
-																	        	</td>
-																	        </tr>
-																	        <tr>
-																	        	<td>
-																	          	교육명 : <span id="edu_name"> </span>
-																	        	</td>
-																	        </tr>
-																	        <tr>
-																	        	<td>
-																	          	교육일정 : <span id="edu_schedule"> </span>
-																	        	</td>
-																	        </tr>
-																	        <tr>
-																	        	<td>
-																	          	이수여부 : <span id="edu_state"> </span>
-																	        	</td>
-																	        </tr>
-																	        <tr>
-																	        	<td>
-																	          	강의평가 제출내역 : <span id="emp_eval"> </span>
-																	        	</td>
-																	        </tr>
-																        </table>
-																        </div>
-																        <div class="modal-footer">
-																          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-																        </div>
-																      </div>
-																      
-																    </div>
-															 	 </div>
-																
-															</c:if>
-															
-															<!-- 기간내에 평가하지 못했다면(flag 0) -->
-															<c:if test="${empty eduHistory.emp_eval and eduHistory.buttonFlag eq 0}">
-																기간내 미제출
-															</c:if>
-														</td>
-													</c:if>
+											<c:forEach items = "${result1 }" var = "item">
+												<tr>
+													<td>${item.belong_name }</td>
+													<td>${item.edu_field }</td>
+													<td>${item.edu_code_name }</td>
+													<td><a href="${path}/instructor/eduReqDetail.do?edu_no=${item.edu_no }">${item.edu_name }</a></td>
+													<td>${item.edu_schedule }</td>
+													<td>${item.applicants_limit } 명</td>
+													<td>
+														<c:if test="${item.approval_state == 1}">신청완료</c:if>
+														<c:if test="${item.approval_state == 2}">심사중</c:if>
+														<c:if test="${item.approval_state == 4}">승인거부</c:if>
+													</td>
 												</tr>
 											</c:forEach>
 										</c:otherwise>
-									</c:choose>
-								</table>
+										</c:choose>
+									</table>
+							
+									</c:when>
+								</c:choose>
+							
+								<br/>
+								<hr/>
+								<br/>
+								<table>
+									<tr>
+										<th colspan="7" style="background-color: #CCCCCC;">강의목록</th>
+									</tr>
+									<tr>
+										<td style="background-color: #EAEAEA;">소속</td>
+										<td style="background-color: #EAEAEA;">교육분야</td>
+										<td style="background-color: #EAEAEA;">교육코드</td>
+										<td style="background-color: #EAEAEA;">교육명</td>
+										<td style="background-color: #EAEAEA;">교육기간</td>
+										<td style="background-color: #EAEAEA;">수강자 수</td>
+										<td style="background-color: #EAEAEA;">평가</td>
+									</tr>
+									<c:forEach items = "${result2 }" var = "item">
+										<fmt:formatDate value="${now}" pattern="yyyy-MM-dd HH:mm:ss" var="now_date" /> 
+										<fmt:parseDate value="${item.end_date }" pattern="yyyy-MM-dd HH:mm:ss" var="end_date" /> 
+										<fmt:formatDate value="${end_date }" pattern="yyyy-MM-dd HH:mm:ss" var="end" /> 
+										<fmt:parseDate value="${item.deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="deadLine" /> 
+										<fmt:formatDate value="${deadLine }" pattern="yyyy-MM-dd HH:mm:ss" var="dead" /> 
+										<fmt:parseDate value="${item.start_date}" pattern="yyyy-MM-dd HH:mm:ss" var="start_date" /> 
+										<fmt:formatDate value="${start_date }" pattern="yyyy-MM-dd HH:mm:ss" var="start" /> 
+										<tr>
+											<td>${item.belong_name }</td>
+											<td>${item.edu_field }</td>
+											<td>${item.edu_code_name }</td>
+											<td><a href="${path}/instructor/eduDetail.do?edu_no=${item.edu_no }&instructor_no=${inst.instructor_no}">${item.edu_name }</a></td>
+											<td>${item.edu_schedule }</td>
+											<td><span class="studentNum">${item.student } </span>/ ${item.applicants_limit }</td>
+											<td>
+												<c:if test="${now_date < dead && now_date > end}">
+													<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가하기" class="w3-button w3-blue w3-border">
+												</c:if>
+												<c:if test="${dead < now_date}">
+													<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료" class="w3-button w3-white w3-border">
+												</c:if>
+												<c:if test="${start > now_date }">
+													강의대기중
+												</c:if>
+												<c:if test="${start < now_date && end > now_date}">
+													강의진행중
+												</c:if>											
+											</td>
+										</tr>									
+									</c:forEach>
+								</table>								
+								<br>
+								<div id="pageForm">
+									<c:if test="${startPage != 1 }">
+										<a href ="${path}/instructor/main.do?page=${page -1}">[ 이전 ]</a> 
+									</c:if>
+									<c:forEach var="pageNum" begin="${startPage }" end="${endPage }">
+										<c:if test="${pageNum == page }">
+											${pageNum }&nbsp;
+										</c:if>
+										<c:if test="${pageNum != page }">
+											<a href="${path}/instructor/main.do?page=${pageNum}">${pageNum}&nbsp;</a>
+										</c:if>
+										
+									</c:forEach>
+									
+									<c:if test="${endPage != maxPage }">
+										<a href='${path}/instructor/main.do?page=${endPage+1 }'>[다음]</a>
+								    </c:if>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -304,50 +259,9 @@
 			<tr>
 				<th menu_value="req_inst">강사요청<br />심사관리</th>
 			</tr>
+			<tr>
+				<th menu_value="must_finish">필수과정<br />이수조회</th>
+			</tr>
 		</table>
-		
-
-		<!-- modal content -->
-		<div id="basic-modal-content">
-			<p><code>교육번호 : <span id="edu_no_detail"> </span> | 
-					  교육명 : <span id="edu_name_detail"> </span>
-				</code>
-			</p>
-			<div style="height: auto;">
-				<div style="width: 50%; float:left;">
-					<p>소속번호 : <span id="belong_no"> </span></p>
-					<p>소속명 : <span id="belong_name"> </span></p>
-					<p>교육코드 : <span id="edu_code"> </span></p>							
-					<p>교육코드명 : <span id="edu_code_name"> </span></p>
-					<p>교육일정 : <span id="edu_schedule"> </span></p>
-					<p>신청마감일 : <span id="closing_date"> </span></p>
-					<p>교육일시 : <span id="edu_date"> </span></p>
-					<p>교육상세분야 : <span id="edu_feild"> </span></p>
-					</div>
-				<div>
-					<p>교육장소 : <span id="edu_location"> </span></p>
-					<p>교육대상 : <span id="edu_target"> </span></p>
-					<p>교육방법 : <span id="edu_way"> </span></p>
-					<p>강사이름 : <span id="instructor_name"> </span></p>
-					<p>강사번호 : <span id="instructor_no"> </span></p>
-					<p>담당자 : <span id="manager"> </span></p>
-				</div>
-			</div>
-			<div style="width: 100%;">
-				<span>소요예산 :</span>
-				<pre><span id="budget"> </span></pre>
-				<p>비고: </p>
-				<pre><span id="note"> </span></pre>
-			</div>
-		</div>
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='../img/x.png' alt='' />
-		</div>
 	</div>
-	
-	<!-- 추가 Load jQuery, SimpleModal and Basic JS files -->
-	<script type='text/javascript' src='../js/jquery.js'></script>
-	<script type='text/javascript' src='../js/jquery.simplemodal.js'></script>
-	<script type='text/javascript' src='../js/basic.js'></script>
 </body>

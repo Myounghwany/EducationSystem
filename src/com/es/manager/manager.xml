@@ -12,7 +12,7 @@
 	</select>
 	<select id="InstMainList" parameterType="int" resultType="com.es.manager.InstListDto">
 		select emp_no, instructor_no, name
-		from Instructor
+		from instructor
 		where approval_state = 3
 		order by instructor_no asc
 		limit #{start}, 10
@@ -71,6 +71,9 @@
 	</select>
 	
 	<select id="InstDetail" parameterType="String" resultType="com.es.instructor.InstructorDto">
+		SELECT *
+		FROM instructor
+		WHERE instructor_no = #{inst_no}
 	</select>
 	
 	<select id="ExInstructorCount" resultType="int">
@@ -148,4 +151,48 @@
 		SET approval_state = #{approval_state}, approval_date = now()
 		WHERE emp_no = #{emp_no}
 	</update>
+	
+	<select id="MustEducationList" resultType="com.es.education.EduCodeDto">
+		SELECT *
+		FROM education_code
+		WHERE edu_target IS NOT NULL
+	</select>
+	
+	<select id="MustEduCationEmpList" parameterType="hashmap" resultType="com.es.manager.EmpListDto">
+		SELECT DISTINCT(e.emp_no) emp_no, e.name name, d.dept_name dept_name, p.position_name position_name
+		FROM employees e, department d, position p, belong b
+		<where>
+			<choose>
+				<when test="dept != 0">
+					(e.dept_no = #{dept} AND e.dept_no = d.dept_no) AND
+				</when>
+				<when test="dept == 0">
+					<choose>
+						<when test="belong != 0">
+							(d.belong_no = #{belong} AND d.belong_no = b.belong_no AND e.dept_no = d.dept_no) AND
+						</when>
+						<when test="belong == 0">
+							(d.belong_no = b.belong_no AND e.dept_no = d.dept_no) AND
+						</when>
+					</choose>
+				</when>
+			</choose>
+			<choose>
+				<when test="pos != 0">
+					(e.position_no = #{pos} AND e.position_no = p.position_no)
+				</when>
+				<when test="pos == 0">
+					(e.position_no = p.position_no)
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	<select id="MustEduCationStateList" parameterType="Integer" resultType="com.es.manager.MustEduDto">
+		SELECT h.emp_no emp_no, l.edu_code edu_code, h.edu_state edu_state
+		FROM education_history h, education_list l
+		WHERE h.edu_no = l.edu_no AND l.edu_code = #{edu_code}
+		ORDER BY h.emp_no ASC
+	</select>
+	
 </mapper>
