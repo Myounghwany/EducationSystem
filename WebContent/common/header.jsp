@@ -94,7 +94,7 @@
 				<li><a href="/EducationSystem/notice.do">공지사항</a></li>
 				<li><a href="/EducationSystem/EducationList.do" class="disable">교육목록/신청</a></li>
 				<li><a href="/EducationSystem/PetitionList.do" class="disable">청원</a></li>
-				<li><a href="/EducationSystem/eduhistory.do">수강목록</a></li>
+				<li><a href="/EducationSystem/eduhistory.do" class="disable">수강목록</a></li>
 				<li><a href="/EducationSystem/instructor/main.do">강사</a></li>
 				<li><a href="/EducationSystem/ProjectCommunity.do"  class="disable">프로젝트공유</a></li>
 			</ul>
