@@ -27,9 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.es.notice.NoticeDao;
 import com.es.notice.NoticeDataBean;
 
-
-
-
 @Controller
 public class NoticeHandler {
 
@@ -98,9 +95,6 @@ public class NoticeHandler {
 		}
 		
 		int result = noticedao.deleteNotice(notice_no);
-
-		
-		
 		return "redirect:/notice.do";
 	}
 

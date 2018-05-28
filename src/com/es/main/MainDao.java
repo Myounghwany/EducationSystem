@@ -2,9 +2,13 @@ package com.es.main;
 
 import java.util.List;
 
-import com.es.notice.NoticeDataBean;
-
 public interface MainDao {
 
-	public List<NoticeDataBean> sellectAll(NoticeDataBean noticedto);
+	public List<MainDto> noticeFive(MainDto maindto);
+	
+	public List<MainDto> historyFive(MainDto maindto);
+	
+	public List<MainDto> instructorFive(MainDto maindto);
+	
+	public List<MainDto> petitionFive(MainDto maindto);
 }

@@ -3,16 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="main">
-	<select id="noticeFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
+	<select id="noticeFive" resultType="com.es.main.MainDto">
+		select * from notice order by notice_no desc limit 5
 	</select>
-		<select id="eductionhistoryFive" resultType="com.es.education.EduHistoryDao">
-		select * from (select * from education_history order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>		
+
+	<select id="historyFive" resultType="com.es.main.MainDto">
+		select * from education_list order by edu_no desc limit 5
+	</select>
+
+	<select id="instructorFive" resultType="com.es.main.MainDto">
+		select * from instructor order by instructor_no desc limit 5
+	</select>
+	
+		<select id="petitionFive" resultType="com.es.main.MainDto">
+		select * from petition order by petition_no desc  limit 5
+	</select>
 </mapper>

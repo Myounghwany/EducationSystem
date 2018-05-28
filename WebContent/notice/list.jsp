@@ -3,12 +3,137 @@
 <c:set var="path" value="${pageContext.request.contextPath}" scope="application" />
 <html>
 <head>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <jsp:include page="../common/header.jsp" />
 <title>Notice List</title>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<style>
+table {
+	width: 80%;
+}
 
+a:link {
+	text-decoration: none;
+	color: black;
+}
+
+a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #FF5E00;
+}
+
+.button {
+	background-color: #4CAF50; /* Green */
+	border: none;
+	color: white;
+	padding: 3px 12px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	-webkit-transition-duration: 0.4s; /* Safari */
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.button2 {
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+.button2:hover {
+	background-color: #008CBA;
+	color: white;
+}
+
+select {
+	width: 70%;
+	height: 50px;
+}
+
+b {
+	color: orange;
+	font-size: 1.3em;
+}
+
+#wrapper {
+	margin-top: 5%;
+}
+
+option:hover {
+	background-color: #FAF4C0;
+}
+
+th {
+	background-color: #EAEAEA;
+}
+
+td, th {
+	vertical-align: middle;
+}
+
+table tr td pre {
+	background-color: white;
+	border: none;
+}
+
+.selectDefault {
+	width: 10%;
+	height: 25px;
+}
+
+#writeBtn {
+	float: right;
+}
+
+.title:link {
+	text-decoration: none;
+	color: black;
+}
+
+.title:visited {
+	color: black;
+	text-decoration: none;
+}
+
+table tr td .title:hover {
+	text-decoration: none;
+	color: #FF5E00;
+}
+
+.paging {
+	font-size: 1.5em;
+}
+
+.page_btn:link {
+	color: #FF5E00;
+	text-decoration: none;
+	margin: 0 5px;
+	border: 1px;
+}
+
+.page_btn:visited {
+	color: brown;
+	text-decoration: none;
+}
+
+.page_btn:hover {
+	text-decoration: none;
+	color: aqua;
+	background-color: white;
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
 	$(document).ready(function() {
 
@@ -35,9 +160,6 @@
 	<h1>Notice List</h1>
 
 	<div align="center">
-		
-			
-
 			<table class="w3-table w3-bordered">
 				<tr>
 					<th width="7%">번호</th>

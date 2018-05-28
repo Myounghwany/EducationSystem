@@ -26,5 +26,6 @@
 		<mapper resource="com/es/petition/petition.xml"/>
 		<mapper resource="com/es/projectCommunity/projectCommunity.xml"/>
 		<mapper resource="com/es/user/user.xml"/>
+		<mapper resource="com/es/main/main.xml"/>
 	</mappers>
 </configuration>
