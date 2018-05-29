@@ -4,28 +4,26 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProjectCommunity">
 	<select id="projectList" parameterType="hashmap" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name 
+		select * 
 		from project_community order by write_time desc limit #{start}, 10
 	</select> 
 	<select id="projectListCount" resultType="int" >
 		select count(*) from project_community 
 	</select> 
 	<select id="selectTitleList" parameterType="hashmap" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name  
-		from project_community where title like CONCAT('%',#{condition},'%') order by write_time desc limit #{start}, 10
+		select * from project_community where title like CONCAT('%',#{condition},'%') order by write_time desc limit #{start}, 10
 	</select>
 	<select id="selectTitleListCount" parameterType="hashmap" resultType="int">
 		select count(*) from project_community where title like CONCAT('%',#{condition},'%')
 	</select>
 	<select id="selectContentList" parameterType="hashmap" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name  
-		from project_community where content like CONCAT('%',#{condition},'%') order by write_time desc limit #{start}, 10
+		select * from project_community where content like CONCAT('%',#{condition},'%') order by write_time desc limit #{start}, 10
 	</select>
 	<select id="selectContentListCount" parameterType="hashmap" resultType="int">
 		select count(*) from project_community where content like CONCAT('%',#{condition},'%') 
 	</select>
 	<select id="selectTCList" parameterType="hashmap" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name  
+		select *  
 		from project_community where content like CONCAT('%',#{condition},'%')
 		or title like CONCAT('%',#{condition},'%')
 		order by write_time desc limit #{start}, 10
@@ -35,7 +33,7 @@
 		or title like CONCAT('%',#{condition},'%')
 	</select>
 	<select id="selectWriterList" parameterType="hashmap" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name  
+		select *  
 		from project_community where writer =#{condition} or writer_name =#{condition} order by write_time desc limit #{start}, 10
 	</select> 
 	<select id="selectWriterListCount" parameterType="hashmap" resultType="int">
@@ -43,7 +41,7 @@
 	</select> 
 	
 	<select id="projectDetail" parameterType="int" resultType="com.es.projectCommunity.ProjectCommunityDto">
-		select project_no,classification,title,content,writer,DATE_FORMAT(write_time, "%Y %c/%e %r") write_time, file_path, file_save_name,file_ori_name,hit,writer_name  
+		select * 
 		from project_community where project_no=#{project_no}
 	</select>
 	<insert id="projectWrite" parameterType="com.es.projectCommunity.ProjectCommunityDto">
