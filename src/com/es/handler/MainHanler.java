@@ -1,9 +1,12 @@
 package com.es.handler;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -18,12 +21,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.es.education.EduHistoryDao;
 import com.es.education.EduHistoryDto;
+import com.es.education.EduListDao;
+import com.es.education.EducationListDto;
 import com.es.instructor.InstructorDao;
 import com.es.instructor.InstructorDto;
 import com.es.main.MainDao;
 import com.es.main.MainDto;
 import com.es.manager.InstListDto;
 import com.es.manager.ManagerDao;
+import com.es.notice.NoticeDao;
+import com.es.notice.NoticeDataBean;
 
 @Controller
 public class MainHanler {
@@ -39,6 +46,13 @@ public class MainHanler {
 
 	@Resource
 	private ManagerDao managerDao;
+	
+	@Resource
+	private NoticeDao noticedao;
+	
+	@Resource
+	private EduListDao edDao;
+	
 		@RequestMapping("main")
 		public ModelAndView noitce(HttpServletRequest request, HttpServletResponse response, MainDto maindto, Model model, HttpSession session) throws Throwable {
 			HttpSession httpSession = request.getSession();
@@ -133,6 +147,102 @@ public class MainHanler {
 			request.setAttribute("examingList", examingList);
 			
 			//===================
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			List<EducationListDto> edu_list = null;
+			List eduTargetList = new ArrayList();
+			List applicantsList = new ArrayList();
+
+			/*세션*/
+
+			if(emp_no != null) {
+
+			List<EduHistoryDto> edu_history = eduhistoryDao.eduHistoryList(emp_no);
+			System.out.println(" edu_history : "+edu_history);
+			request.setAttribute("history", edu_history); // 수강한 교육을 찾기위해
+			request.setAttribute("historySize", edu_history.size()); // 수강한 교육을 찾기위해
+			
+			System.out.println("emp_no : "+emp_no);
+				
+				
+			/*페이징*/
+			
+			int totalList = 0;
+			int spage = 1;
+			if(request.getParameter("page") != null) 
+				spage = Integer.parseInt(request.getParameter("page")); //현재페이지
+			int start =spage*10-9; // 현재페이지 시작 페이징번호
+			
+			System.out.println("start : "+start);
+			map.put("start",start-1);
+			
+			
+			/*검색 O*/
+			if(request.getParameter("opt") !=null) { 
+				String opt = request.getParameter("opt");
+				String condition = request.getParameter("condition");
+				request.setAttribute("condition", condition);
+				request.setAttribute("opt", opt);
+				
+				System.out.println("Handler opt : "+opt+" condition : "+condition);
+				
+				map.put("opt",opt);
+				map.put("condition",condition);
+				
+			}
+			
+			edu_list = edDao.EducationList(map);
+			totalList = edDao.EducationListCount(map);
+			request.setAttribute("listCount", totalList); 
+			
+			
+			
+			
+			/*페이징 처리*/
+			int maxPage = (int)(totalList/10.0+0.9); //전체페이지수
+			int startPage = (int)(spage/5.0+0.8)*5-4; //시작페이지 번호
+			int endPage= startPage+4;			//마지막 페이지 번호
+			if(endPage > maxPage) endPage = maxPage;
+
+			
+			System.out.println("spage : "+spage+" maxPage : "+maxPage+" startPage : "+startPage+" endPage : "+endPage);
+			request.setAttribute("spage", spage);
+			request.setAttribute("maxPage", maxPage);
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
+			
+			for(int i=0; edu_list.size() > i ;i++) {
+				String eduTarget = null; 
+				int tmp_edu_no = edu_list.get(i).getEdu_no();
+				
+		        try {
+		        	if(edu_list.get(i).getEdu_target() != null) {
+		        	eduTarget = new String(edu_list.get(i).getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
+		        	eduTargetList.add(i, eduTarget);
+		        	
+		        	}else {
+		        		eduTargetList.add(i, -1);
+		        	}
+		        } catch (UnsupportedEncodingException e) {
+		           e.printStackTrace();
+		        }
+		        
+		        int applicants = edDao.EducationApplicants(tmp_edu_no);
+		        
+		        if(applicants >= edu_list.get(i).getApplicants_limit()) {
+		        	applicantsList.add(i, tmp_edu_no);
+		        }
+				
+			}
+			
+	        
+			request.setAttribute("applicantsList", applicantsList);
+			
+			
+			request.setAttribute("targetList", eduTargetList);
+			request.setAttribute("list", edu_list);
+			
+			}
+			//===================
 			return new ModelAndView("index");
 		}
 		
@@ -175,7 +285,6 @@ public class MainHanler {
 			
 		}
 		
-
 
 }
 

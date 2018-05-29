@@ -107,8 +107,6 @@ public class NoticeHandler {
 	@RequestMapping(value="/notice/write", method=RequestMethod.POST)
 	public String noticeWriteForm(HttpServletRequest req, HttpServletResponse rep) throws IllegalStateException, IOException {
 		HttpSession httpSession = req.getSession();
-		httpSession.setAttribute("emp_no", "E2009010077");
-	    httpSession.setAttribute("name", "관리자");
 		String emp_no = (String) httpSession.getAttribute("emp_no");
 		String writer_name = (String) httpSession.getAttribute("name");
 		

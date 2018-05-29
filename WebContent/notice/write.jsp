@@ -53,12 +53,6 @@ function checkValtext() {
 			 	</td>
 			</tr>
 			<tr>
-				<td>State</td>
-				<td>
-					<input type="radio" name="state" size="10"> 
-				</td>
-			</tr>
-			<tr>
 				<td colspan="2">
 				<div align="center">
 					<input type="reset" class="w3-button w3-white w3-border" value="다시작성"></input>
