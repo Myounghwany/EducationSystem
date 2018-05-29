@@ -50,7 +50,7 @@
 			<mvc:exclude-mapping path="/user/login.do" />
 			<bean class="com.es.interceptor.session" />
 		</mvc:interceptor> <!-- 추가로 여러개의 인터셉터 설정 가능 -->
-</mvc:interceptors>
+	</mvc:interceptors>
 
 
 	
