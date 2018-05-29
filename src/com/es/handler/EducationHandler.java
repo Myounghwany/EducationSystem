@@ -184,7 +184,7 @@ public class EducationHandler {
         	if(edu_detail.getEdu_target() != null) {
         		eduTarget = new String(edu_detail.getEdu_target().getBytes("ISO-8859-1"), "UTF-8");
         	}else {
-        		eduTarget = "전체수강가능";
+        		eduTarget = " '제한없음' ";
         	}
         } catch (UnsupportedEncodingException e) {
            e.printStackTrace();

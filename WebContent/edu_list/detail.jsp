@@ -48,7 +48,6 @@ $(document).ready(function() {
 				
 			},
 			error : function(request,status,error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});
@@ -73,7 +72,6 @@ $(document).ready(function() {
 					alert('취소되었습니다.');
 				},
 				error : function(request,status,error){
-					alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 					console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				}
 			});
