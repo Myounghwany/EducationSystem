@@ -10,7 +10,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
     
-	var edu_target =  ${eduTarget};  
+	
+	if($('#edu_target').text() !=""){
+		
+	
+	var edu_target = ${eduTarget};  
 	var str = JSON.stringify(edu_target);
 	var newArr = JSON.parse(str);
 	var target ="";
@@ -21,7 +25,7 @@ $(document).ready(function() {
 	
 	
 	$('#edu_target').html(target);
-
+	}
 	
 
 	$('#applicationBtn').click(function(){
@@ -44,7 +48,6 @@ $(document).ready(function() {
 				
 			},
 			error : function(request,status,error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});
@@ -69,7 +72,6 @@ $(document).ready(function() {
 					alert('취소되었습니다.');
 				},
 				error : function(request,status,error){
-					alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 					console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				}
 			});
