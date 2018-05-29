@@ -3,16 +3,60 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="main">
-	<select id="noticeFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
+	<select id="noticeFive" resultType="com.es.main.MainDto">
+		select * from notice order by
+		notice_no desc limit 5
 	</select>
-		<select id="eductionhistoryFive" resultType="com.es.education.EduHistoryDao">
-		select * from (select * from education_history order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>	
-		<select id="selectFive" resultType="com.es.notice.NoticeDataBean">
-		select * from (select * from notice order by now desc where rownum <=5);
-	</select>		
+
+	<select id="EduHistory"
+		resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no, l.edu_schedule,
+		h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from
+		education_history h, education_list l, instructor, education_detail
+		detail
+		where h.edu_no = l.edu_no and instructor.instructor_no =
+		l.instructor_no
+		and detail.edu_no = l.edu_no and h.emp_no=#{emp_no}
+		order by h.edu_state =
+		'I' desc, l.edu_schedule desc limit 5
+	</select>
+
+	<select id="InstEduHistory"
+		resultType="com.es.education.EduHistoryDto">
+		select l.edu_no, l.edu_name, l.instructor_no,
+		l.edu_schedule,
+		h.edu_state, h.emp_eval, instructor.name as instructor_name, detail.end_date
+		from
+		education_history h, education_list l, instructor, education_detail
+		detail
+		where h.edu_no = l.edu_no and instructor.instructor_no =
+		l.instructor_no
+		and detail.edu_no = l.edu_no and h.instructor_no=#{emp_no}
+		order by
+		h.edu_state = 'I' desc, l.edu_schedule desc limit5
+	</select>
+
+	<select id="selectEduList" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
+		select *, C.name belong_name, D.edu_name edu_code_name, (select count(*) from education_history where edu_no = A.edu_no) as student from education_list A join education_detail B on A.edu_no = B.edu_no left join belong C on A.belong_no = C.belong_no left join education_code D on A.edu_code = D.edu_code where instructor_no = #{account_no} and approval_state = 3 limit ${page}, 10 
+	</select>
+
+	<select id="eduFive" resultType="com.es.main.MainDto">
+		select * from education_list
+		order by edu_no desc limit 5
+	</select>
+	
+	<select id = "selectEduList2" parameterType = "String" resultType = "com.es.instructor.InstructorDto">
+		select *, B.name belong_name, C.edu_name edu_code_name, D.name instructor_name from education_list A join belong B on A.belong_no = B.belong_no left join education_code C on A.edu_code = C.edu_code left join instructor D on A.instructor_no = D.instructor_no where edu_no = #{edu_no}
+	</select>
+	
+		<select id="ReqInstList" parameterType="Integer" resultType="com.es.manager.InstListDto">
+		SELECT i.instructor_no instructor_no, e.name name, e.emp_no emp_no, d.dept_name dept_name, p.position_name position_name, i.approval_date approval_date
+		FROM instructor i, employees e, department d, position p
+		WHERE i.emp_no = e.emp_no
+		AND e.dept_no = d.dept_no
+		AND e.position_no = p.position_no
+		AND i.approval_state = #{approval_state}
+		ORDER BY i.approval_date;
+	</select>
 </mapper>

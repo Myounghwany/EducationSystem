@@ -340,6 +340,9 @@ public class ProjectCommunityHandler {
 		
 		ProjectCommunityDto result = projectDao.detailProject(project_no);
 		System.out.println(result);
+		String content = result.getContent();
+		
+		result.setContent(content.replace("<br>", "\r\n"));
 		request.setAttribute("result", result);
 		
 		return new ModelAndView("project_community/modify");
@@ -366,6 +369,7 @@ public class ProjectCommunityHandler {
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";
+		content = content.replace("\r\n", "<br>");
 		
 		projectDto.setProject_no(project_no);
 		projectDto.setClassification(classification);

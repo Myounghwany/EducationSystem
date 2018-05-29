@@ -23,6 +23,18 @@ $(document).ready(function() {
 	var applicantsList = ${applicantsList};
 	var edu_list = $(".ed_no");
 	
+	
+	if($('#optV').val() !=""){
+		var  opt = $('#optV').val();
+		var condition =$('#conditionV').val();
+		
+		console.log('opt :'+opt+' condition :'+condition);
+		
+		$(".selectDefault option:eq("+opt+")").attr("selected", "selected");
+		$("#condition").val(condition);
+		
+	}
+	
 	 $(function(){
 		    $(${applicantsList}).each(function(key, value){
 
@@ -205,13 +217,13 @@ function deleteBtn(no){
 	<div align="center">
 	<div>
 		<form action="EducationList.do" name="searchform" onsubmit="return searchCheck()">
-			<select name="opt">
+			<select name="opt" class="selectDefault">
 				<option value="0">교육명</option>
 				<option value="1">교육번호</option>
 				<option value="2">교육분야</option>
 				<option value="3">강사명</option>
 			</select> 
-			<input type="text" size="20" name="condition" />&nbsp; <input	type="submit" value="검색" />
+			<input type="text" size="20" name="condition" id="condition" />&nbsp; <input	type="submit" value="검색" />
 		</form>
 	</div>
 	
@@ -369,6 +381,9 @@ function deleteBtn(no){
 				</c:if>
 			
 			</c:if>
+		
+			<input type="hidden" value="${opt}" id="optV" name="optV">
+			<input type="hidden" value="${condition}" id="conditionV">
 		
 			<c:if test="${condition != null}">
 				<p align="center">
