@@ -79,7 +79,7 @@ public class NoticeHandler {
 	public String noticeDelte(HttpServletRequest request, HttpServletResponse response) {
 
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2018040001");
+		
 		String emp_no = (String) httpSession.getAttribute("emp_no");
 		
 		int notice_no = Integer.parseInt(request.getParameter("notice_no"));
@@ -203,7 +203,7 @@ public class NoticeHandler {
 		int hit = noticedao.updateHit(result);
 		
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2009010077");
+		
 
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		map.put("emp_no",emp_no);
@@ -261,7 +261,7 @@ public class NoticeHandler {
 		NoticeDataBean detail = noticedao.detailnotice(notice_no);
 		
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("emp_no", "E2009010077");
+		
 		String emp_no =  (String) httpSession.getAttribute("emp_no");
 		
 		NoticeDataBean noticeDto = new NoticeDataBean();

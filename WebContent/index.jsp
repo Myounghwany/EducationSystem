@@ -103,6 +103,9 @@ th {
 }
 </style>
 <body style="width: 70%; margin: 0 auto;">
+	<c:if test="${account_no == null} }">
+		<c:redirect url="${path}/main.do"></c:redirect>
+	</c:if>
 	<div class="boxA">
 		<div class="box1">
 			<h5>

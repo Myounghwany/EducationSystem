@@ -181,7 +181,7 @@ table tr td .title:hover {
 						<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/notice.do'">
 					</div>
 					</c:if>
-				</td>
+			
 			
 		</tr>	
 	</table>
