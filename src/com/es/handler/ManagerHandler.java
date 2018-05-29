@@ -471,6 +471,7 @@ public class ManagerHandler {
 				tempList = managerDao.getMustEduEmpList(emp_map);
 				stateList = managerDao.getMustEduStateList(edu_code);
 				MustEduDto tempDto;
+				int ok = 0;
 				for(int j=0; j<tempList.size(); j++) {
 					tempDto = new MustEduDto();
 					for(int k=0; k<stateList.size(); k++) {
@@ -481,15 +482,22 @@ public class ManagerHandler {
 							tempDto.setPosition_name(tempList.get(j).getPosition_name());
 							tempDto.setEdu_code(stateList.get(k).getEdu_code());
 							tempDto.setEdu_state(stateList.get(k).getEdu_state());
+							ok = 1;
 							break;
 						} else {
-							tempDto.setEmp_no(tempList.get(j).getEmp_no());
-							tempDto.setName(tempList.get(j).getName());
-							tempDto.setDept_name(tempList.get(j).getDept_name());
-							tempDto.setPosition_name(tempList.get(j).getPosition_name());
-							tempDto.setEdu_code(edu_code);
-							tempDto.setEdu_state(null);
+							ok = 0;
 						}
+					}
+					if(ok == 0) {
+						tempDto.setEmp_no(tempList.get(j).getEmp_no());
+						tempDto.setName(tempList.get(j).getName());
+						tempDto.setDept_name(tempList.get(j).getDept_name());
+						tempDto.setPosition_name(tempList.get(j).getPosition_name());
+						tempDto.setEdu_code(edu_code);
+						tempDto.setEdu_state(null);
+						ok = 0;
+					} else if(ok != 0) {
+						ok = 0;
 					}
 					System.out.println("사번 : " + tempDto.getEmp_no() + ", 상태 : " + tempDto.getEdu_state());
 					empList.add(tempDto);
