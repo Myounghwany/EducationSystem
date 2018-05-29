@@ -7,9 +7,12 @@ public class MainDto {
 	//공지사항
 	private int notice_no;
 	private String title;
+	private String content;
 	private String writer;
+	private String writer_name;
 	private Timestamp write_time;
-	private String hit;
+	private int hit;
+	private String notice_state;
 	//수강내역
 	private int edu_no; //교육 번호
 	private String edu_name;	//교육명
@@ -48,6 +51,30 @@ public class MainDto {
 	//수강자
 	private int student;//
 	
+	public int getHit() {
+		return hit;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getWriter_name() {
+		return writer_name;
+	}
+	public void setWriter_name(String writer_name) {
+		this.writer_name = writer_name;
+	}
+	public String getNotice_state() {
+		return notice_state;
+	}
+	public void setNotice_state(String notice_state) {
+		this.notice_state = notice_state;
+	}
+	public void setHit(int hit) {
+		this.hit = hit;
+	}
 	public int getStudent() {
 		return student;
 	}
@@ -77,12 +104,6 @@ public class MainDto {
 	}
 	public void setWrite_time(Timestamp write_time) {
 		this.write_time = write_time;
-	}
-	public String getHit() {
-		return hit;
-	}
-	public void setHit(String hit) {
-		this.hit = hit;
 	}
 	public int getEdu_no() {
 		return edu_no;

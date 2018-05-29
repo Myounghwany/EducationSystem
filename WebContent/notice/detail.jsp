@@ -168,7 +168,7 @@ table tr td .title:hover {
 		<tr>
 			<td>첨부파일</td>
 			<td colspan="3"><a
-				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.notice_no}">${result.file_ori_name}</a></td>
+				href="${path}/notice/fileDownload.do?notice_no=${result.notice_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
 		<c:if test="${sessionScope.account eq 'hr'}">

@@ -76,26 +76,26 @@
 
 .box1 {
 	float: left;
-	width: 500px;
-	height: 300px;
+	width: 600px;
+	height: 400px;
 }
 
 .box2 {
 	float: left;
-	width: 500px;
-	height: 300px;
+	width: 600px;
+	height: 400px;
 }
 
 .box3 {
 	float: left;
-	width: 500px;
-	height: 300px;
+	width: 600px;
+	height: 400px;
 }
 
 .box4 {
 	float: left;
-	width: 500px;
-	height: 300px;
+	width: 600px;
+	height: 400px;
 }
 
 th {
@@ -132,7 +132,7 @@ th {
 							<tr>
 								<td align="center">${result.notice_no }</td>
 								<td align="center"><a
-									href="detail.do?notice_no=${result.notice_no}">
+									href="notice/detail.do?notice_no=${result.notice_no}">
 										${result.title }</a></td>
 								<td align="center">${result.writer }</td>
 								<td align="center">${result.write_time }</td>
@@ -155,8 +155,8 @@ th {
 				<tr>
 					<th align="center" style="width: 10%;">번호</th>
 					<th align="center" style="width: 40%;">교육명</th>
-					<th align="center" style="width: 40%;">강사명</th>
-					<th align="center" style="width: 10%;">이수여부</th>
+					<th align="center" style="width: 20%;">강사명</th>
+					<th align="center" style="width: 40%;">이수여부</th>
 				</tr>
 				<c:choose>
 					<c:when test="${empty requestScope.eduhistory_list }">
@@ -181,18 +181,23 @@ th {
 			</table>
 		</div>
 		<br>
-
+	
+		
 		<div class="boxB">
 			<div class="box3">
 				<h5>
 					<a href="${path}/instructor/main.do">강사</a>
 				</h5>
 				<hr>
+
 				<table>
+
 					<tr>
 						<th align="center" style="width: 10%;">강의명</th>
 						<th align="center" style="width: 40%;">신청자수</th>
 					</tr>
+
+
 					<c:choose>
 						<c:when test="${empty requestScope.result2 }">
 							<tr>
@@ -209,7 +214,9 @@ th {
 							</c:forEach>
 						</c:otherwise>
 					</c:choose>
+
 				</table>
+
 				<br>
 				<c:if test="${sessionScope.account eq 'hr'}">
 				<table>
@@ -220,28 +227,28 @@ th {
 						<c:choose>
 							<c:when test="${fn:length(waitList) > 0}">
 								<tr>
-									<th align="center" colspan="6">심사 대기중인 직원</th>
+									<th align="center" colspan="9">심사 대기중인 직원</th>
 								</tr>
 								<tr>
-									<th align="center">이름</th>
-									<th align="center">부서</th>
+									<th align="center" style="width: 50%;">이름</th>
+									<th align="center" style="width: 50%;">부서</th>
 
 								</tr>
 								<c:forEach items="${waitList}" var="waitList">
 									<tr>
 
-										<td align="center">${waitList.name}</td>
-										<td align="center">${waitList.dept_name}</td>
+										<td align="center" style="width: 50%;">${waitList.name}</td>
+										<td align="center" style="width: 50%;">${waitList.dept_name}</td>
 
 									</tr>
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
 								<tr>
-									<th align="center">심사 대기중인 직원</th>
+									<th align="center" style="width: 50%;">심사 대기중인 직원</th>
 								</tr>								
 								<tr>
-									<td align="center">심사 대기중인 직원이 없습니다.</td>
+									<td align="center" style="width: 50%;">심사 대기중인 직원이 없습니다.</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
@@ -250,12 +257,12 @@ th {
 						<c:choose>
 							<c:when test="${fn:length(examingList) > 0}">
 								<tr>
-									<th align="center" colspan="6">심사 중인 직원</th>
+									<th align="center" colspan="9">심사 중인 직원</th>
 								</tr>
 								<tr>
 
-									<th align="center">이름</th>
-									<th align="center">부서</th>
+									<th align="center" style="width: 50%;">이름</th>
+									<th align="center" style="width: 50%;">부서</th>
 
 								</tr>
 								<c:forEach items="${examingList}" var="examingList">
@@ -292,26 +299,25 @@ th {
 						<th align="center" style="width: 10%;">번호</th>
 						<th align="center" style="width: 40%;">제목</th>
 						<th align="center" style="width: 20%;">신청기간</th>
-						<th align="center" style="width: 20%;">장소</th>
+						<th align="center" style="width: 40%;">강사</th>
 					</tr>
-
-					<c:choose>
-						<c:when test="${empty requestScope.eduFive }">
-							<tr>
-								<td align="center" colspan="9">교육과정에 저장된 글이 없습니다.</td>
-							</tr>
-						</c:when>
-						<c:otherwise>
-							<c:forEach items="${requestScope.eduFive}" var="eduFive">
-								<tr>
-									<td align="center">${eduFive.edu_no }</td>
-									<td align="center">${eduFive.edu_name }</td>
-									<td align="center">${eduFive.edu_schedule }</td>
-									<td align="center">${eduFive.edu_location }</td>
-								</tr>
-							</c:forEach>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+			<c:when test="${empty list}">
+				<tr>
+					<td colspan="11">해당하는 교육이 존재하지 않습니다.</td>
+				</tr>
+			</c:when>
+				<c:otherwise>
+				<c:forEach items="${list}" var="edulist" varStatus="state">
+					<tr id="tr${edulist.edu_no}">
+						<th align="center" class="ed_no">${edulist.edu_no}</th>
+						<th align="center" >${edulist.edu_name}</th>
+						<th align="center">${edulist.edu_schedule}</th>
+						<th align="center">${edulist.instructor_name}</th>
+ 					</tr>
+				</c:forEach>
+			</c:otherwise>
+			</c:choose>
 				</table>
 				<div align="center" class="paging">
 					<form action="EducationList.do" name="searchform"
@@ -319,8 +325,6 @@ th {
 						<select name="opt" class="selectDefault">
 							<option value="0">제목</option>
 							<option value="1">내용</option>
-							<option value="2">제목+내용</option>
-							<option value="3">글쓴이</option>
 						</select> <input type="text" size="10" name="condition" />&nbsp; <input
 							type="submit" value="검색" />
 					</form>
