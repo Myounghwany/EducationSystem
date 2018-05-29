@@ -211,7 +211,7 @@
 											<td><span class="studentNum">${item.student } </span>/ ${item.applicants_limit }</td>
 											<td>
 												<c:if test="${now_date < dead && now_date > end}">
-													<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가하기" class="w3-button w3-blue w3-border">
+													평가중
 												</c:if>
 												<c:if test="${dead < now_date}">
 													<input type="button" onclick="isntEvalBtn('${item.edu_no }', '${item.deadLine }');" value="평가완료" class="w3-button w3-white w3-border">

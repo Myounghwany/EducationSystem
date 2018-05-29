@@ -34,7 +34,7 @@
 		l.instructor_no
 		and detail.edu_no = l.edu_no and h.instructor_no=#{emp_no}
 		order by
-		h.edu_state = 'I' desc, l.edu_schedule desc limit5
+		h.edu_state = 'I' desc, l.edu_schedule desc limit 5
 	</select>
 
 	<select id="selectEduList" resultType = "com.es.instructor.InstructorDto" parameterType = "String">
