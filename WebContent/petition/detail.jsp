@@ -103,7 +103,7 @@ function deletecheck() {
 		</tr>
 		<tr>
 		  <td colspan="2"> 
-		  <c:if test=""> 
+		 <c:if test="${sessionScope.account eq 'hr'}"> 
 		  <input class="inputbutton" type="button" value="삭제" onclick="return deletecheck()"> 
 		  </c:if>
 		  <input class="inputbutton" type="button" value="목록" onclick="location='${list}.do'">

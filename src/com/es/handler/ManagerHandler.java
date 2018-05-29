@@ -2,6 +2,8 @@ package com.es.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,19 +13,27 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.es.education.EduCodeDto;
 import com.es.education.EduHistoryDto;
 import com.es.employees.DepartmentDto;
 import com.es.employees.PositionDto;
+import com.es.instructor.InstructorDBBean;
+import com.es.instructor.InstructorDao;
 import com.es.instructor.InstructorDto;
 import com.es.manager.EmpListDto;
 import com.es.manager.ExInstructorDto;
 import com.es.manager.InstListDto;
 import com.es.manager.ManagerDao;
+import com.es.manager.MustEduDto;
 
 @Controller
 @RequestMapping("manage")
@@ -202,38 +212,51 @@ public class ManagerHandler {
 	}
 	
 	@RequestMapping("instDetail")
-	public ModelAndView instDetail(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView instDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String page = request.getParameter("page");
+		if(page == null) page = "1"; 
 		String inst_no = request.getParameter("inst_no");
 		InstructorDto inst = managerDao.getInstDetail(inst_no);
-		List<EduHistoryDto> eduHistory = managerDao.getEmpEduList(inst_no);
-		for(EduHistoryDto dto : eduHistory) {
-			Date tempDate = dto.getEnd_date();	// end date 가져온다
-			
-			// end date에 7일 더한다
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(tempDate);
-			cal.add(Calendar.DATE, 15);
-			
-			// 현재 날짜 가져 온다
-			Date curDate = new Date();
-			Calendar c = Calendar.getInstance();
-			c.setTime(curDate);
-			
-			// 현재 날짜랑 end date에 7일 더한 날짜랑 비교한다
-			if( c.getTime().before(cal.getTime()) ) { //c:현재 날짜 < cal:평가마감일 (버튼 생성)
-				// 비교해서 현재 날짜가 더 전이면
-				dto.setButtonFlag(1); 
-			} else {
-				// 비교해서 현재 날짜가 이 후면
-				dto.setButtonFlag(0);
-			}
+		request.setAttribute("inst", inst);
+		EduList(inst, page, request);
+		return new ModelAndView("manage/instDetail");
+	}
+	
+	private void EduList(InstructorDto inst, String page, HttpServletRequest request) {
+		InstructorDto eduList = new InstructorDto();
+		InstructorDao instructorDao = new InstructorDBBean();
+		String account_no = inst.getInstructor_no();
+		eduList.setAccount_no(account_no);
+		eduList.setPage((Integer.parseInt(page)*10-9)-1);
+		List<InstructorDto> InstructorDto1 = instructorDao.selectEduReq(account_no);
+		List<InstructorDto> InstructorDto2 = instructorDao.selectEduList(eduList);
+		int listCount = instructorDao.selectEduListCnt(account_no);
+		System.out.println("listCount : " + listCount);
+		int maxPage = (int)(listCount/10.0 + 0.9);
+		int startPage = (int)(Integer.parseInt(page)/5.0 + 0.8)* 5-4;
+		int endPage = startPage + 4;
+		if(endPage > maxPage) endPage = maxPage;
+		System.out.println("EduList");
+		for(int i = 0; i<InstructorDto2.size(); i++) {
+			InstructorDto instructorDto = InstructorDto2.get(i);
+			String end_date = instructorDto.getEnd_date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				Date deadLine = formatter.parse(end_date);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(deadLine);
+				cal.add(Calendar.DATE, 8);
+				InstructorDto2.get(i).setDeadLine(formatter.format(cal.getTime()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
 		}
-		
-		Date date = new Date();//현재날짜 보내기
-		request.setAttribute("date", date);
-		request.setAttribute("emp", inst);
-		request.setAttribute("eduHistory", eduHistory);
-		return new ModelAndView("manage/empDetail");
+		request.setAttribute("result1", InstructorDto1);
+		request.setAttribute("result2", InstructorDto2);
+		request.setAttribute("page", page);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("endPage", endPage);
 	}
 	
 	@RequestMapping("exInstList")
@@ -413,6 +436,69 @@ public class ManagerHandler {
 			}
 		}
 		return instEval(request, response);
+	}
+	
+	@RequestMapping("mustEmpList")
+	public ModelAndView mustList(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+		List<EduCodeDto> eduList = managerDao.getMustEduList();
+		List<MustEduDto> empList = new ArrayList<MustEduDto>(), stateList;
+		List<EmpListDto> tempList;
+		int edu_code;
+		int target_belong;
+		int target_dept;
+		int target_pos;
+		JSONParser jsonParser = new JSONParser();
+		JSONArray arr;
+		JSONObject temp;
+		HashMap<String, Object> emp_map;
+		for(EduCodeDto edu : eduList) {
+			edu_code = edu.getEdu_code();
+			arr = (JSONArray) jsonParser.parse(edu.getEdu_target());
+			if(!(arr instanceof JSONArray)) {
+				System.out.println("형변환 실패");
+				break;
+			}
+			for(int i=0; i<arr.size(); i++) {
+				temp = (JSONObject)arr.get(i);
+				emp_map = new HashMap<String, Object>();
+				target_belong = Integer.parseInt((String)temp.get("belong_no"));
+				target_dept = Integer.parseInt((String)temp.get("dept_no"));
+				target_pos = Integer.parseInt((String)temp.get("position_no"));
+				System.out.println("소속번호 : " + target_belong + ", 부서번호 : " + target_dept + ", 직책번호 : " + target_pos);
+				emp_map.put("belong", target_belong);
+				emp_map.put("dept", target_dept);
+				emp_map.put("pos", target_pos);
+				tempList = managerDao.getMustEduEmpList(emp_map);
+				stateList = managerDao.getMustEduStateList(edu_code);
+				MustEduDto tempDto;
+				for(int j=0; j<tempList.size(); j++) {
+					tempDto = new MustEduDto();
+					for(int k=0; k<stateList.size(); k++) {
+						if(tempList.get(j).getEmp_no().equals(stateList.get(k).getEmp_no())) {
+							tempDto.setEmp_no(tempList.get(j).getEmp_no());
+							tempDto.setName(tempList.get(j).getName());
+							tempDto.setDept_name(tempList.get(j).getDept_name());
+							tempDto.setPosition_name(tempList.get(j).getPosition_name());
+							tempDto.setEdu_code(stateList.get(k).getEdu_code());
+							tempDto.setEdu_state(stateList.get(k).getEdu_state());
+							break;
+						} else {
+							tempDto.setEmp_no(tempList.get(j).getEmp_no());
+							tempDto.setName(tempList.get(j).getName());
+							tempDto.setDept_name(tempList.get(j).getDept_name());
+							tempDto.setPosition_name(tempList.get(j).getPosition_name());
+							tempDto.setEdu_code(edu_code);
+							tempDto.setEdu_state(null);
+						}
+					}
+					System.out.println("사번 : " + tempDto.getEmp_no() + ", 상태 : " + tempDto.getEdu_state());
+					empList.add(tempDto);
+				}
+			}			
+		}
+		request.setAttribute("eduList", eduList);
+		request.setAttribute("empList", empList);
+		return new ModelAndView("manage/empMustFinish");
 	}
 	
 }

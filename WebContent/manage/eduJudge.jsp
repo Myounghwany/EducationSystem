@@ -43,6 +43,9 @@
 			case 'regist':
 				location.href='regist.do';
 				break;
+			case 'petition':
+				location.href='/EducationSystem/ManageList.do';
+				break;
 			}
 		});
 		$('.edu').click(function() {
@@ -146,7 +149,7 @@
 	#menu tr th {
 		margin: 3px;
 		width: 20%;
-		height: 25%;
+		height: 15%;
 	}
 	a {
 		color: black;
@@ -177,9 +180,14 @@
 			font-weight: bold;
 			font-size: 1.4em;
 		}
+	.title{
+	display: block;
+	text-align: center;
+	color: #2fa4e7;
+	}
 </style>
 <body onload="realtimeClock()">
-<h2>교육과정 관리</h2>
+<span class="title">[ 교육과정 관리 ]</span>
 <div id='container'>
 	<div>
 		<table id="title">
@@ -214,8 +222,11 @@
 								<th class="name">교육명</th>
 								<th class="code">교육분야</th>
 								<th class="schedule">교육일시</th>
-								<th class="closing_date">
-									<span style="color:red;">승인마감</span>/신청마감</th>
+								<th class="closing_date" style="padding: 0px 0px">
+									<span style="color:red;">승인마감</span>
+									<hr style="border:none; border:1px dashed; color:#EAEAEA; margin: 0px 0px; ">
+									신청마감
+								</th>
 								<th class="manager">담당자</th>
 								<th class="instructor_name">강사명</th>
 								<th class="judgeStatus">심사현황</th>
@@ -238,7 +249,7 @@
 											document.write("<span style='color:red;'>"+ date.toISOString().substr(0,10) + "</span>");
 											</script>
 										</span>
-										 / 
+										<hr style="border:none; border:1px dashed; color:#EAEAEA; margin: 0px 0px; ">
 										<span id="closing_date">${closing_date}</span>
 									
 									​</td> 
@@ -348,6 +359,9 @@
 			</tr>
 			<tr>
 				<th menu_value="regist" id="menu_value">강의 등록</th>
+			</tr>
+			<tr>
+				<th menu_value="petition" id="menu_value">청원관리</th>
 			</tr>
 		</table>
 	</div>

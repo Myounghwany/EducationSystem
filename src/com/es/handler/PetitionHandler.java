@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -37,16 +38,16 @@ public class PetitionHandler {
 	  	
 	@RequestMapping(value="/PetitionWrite", method=RequestMethod.GET)
 	public ModelAndView write(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Write Handler");
+		
 		return new ModelAndView("petition/write");
 	}
 	
 	@RequestMapping(value="/PetitionWrite", method=RequestMethod.POST)
-	public String writePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {  // String IOException
-		System.out.println("WritePro Handler");
+	public String writePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {
+		 
+		HttpSession httpSession = request.getSession();
+		String emp_no =  (String) httpSession.getAttribute("no");
 		
-//		HttpSession httpSession = request.getSession();
-		String emp_no = "test1";
 		String file_path= "";
 		String file_save_name= "";
 		String file_ori_name= "";
@@ -69,18 +70,19 @@ public class PetitionHandler {
 		String fieldName = ""; 
 		
 		File dir = new File(path);
-		if(!dir.isDirectory()) {
+		
+		if( !dir.isDirectory() ) {
 			dir.mkdirs();
 		}
 		
-		while(iterator.hasNext()) {
+		while( iterator.hasNext() ) {
 			fieldName = iterator.next();
 			mfile = mhsr.getFile(fieldName);
 			String origName;
 			 
-			origName = new String(mfile.getOriginalFilename().getBytes("UTF-8"),"UTF-8"); 
+			origName = new String( mfile.getOriginalFilename().getBytes("UTF-8"),"UTF-8" ); 
 			 
-			if("".equals(origName)) {
+			if( "".equals(origName) ) {
 				continue;
 			}
 			 
@@ -103,17 +105,17 @@ public class PetitionHandler {
 		
 		return "redirect:PetitionList.do"; 
 	}
+	
 	public static String getUuid() {
 		return UUID.randomUUID().toString().replaceAll("-","");
 	}
 	
 	@RequestMapping("/PetitionDetail")
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
-		System.out.println("Detail Handler");
 		
-		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
 		String list = request.getParameter("list");
-		
+		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
+		  
 		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
 		String content = (petitionDto.getContent()).replace("\r\n", "<br>");
 		
@@ -125,39 +127,40 @@ public class PetitionHandler {
 	}
 	
 	@RequestMapping("/PetitionDelete")
-	public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
-		System.out.println("PetitionDelete");
-		
+	public String delete(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
+	 
 		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
 		
 		petitionDao.petitionDelete(petition_no);
 
-		return new ModelAndView("petition/manageList");  
+		return "redirect:ManageList.do"; 
 	}
 	
 	@RequestMapping("/PetitionAgree")
 	public String agree(HttpServletRequest request, HttpServletResponse response) throws IllegalStateException,Throwable {
-		System.out.println("Agree Handler");
-		
-		int petition_no = Integer.parseInt( request.getParameter("petition_no")) ; 
+ 
 		String list = request.getParameter("list");
-		String emp_no = "test3";
-		
+		int petition_no = Integer.parseInt( request.getParameter("petition_no")) ; 
+		  
+		HttpSession httpSession = request.getSession();
+		String emp_no =  (String) httpSession.getAttribute("no");
+  
 		PetitionLikeDto petitionLikeDto = new PetitionLikeDto();
 		petitionLikeDto.setPetition_no(petition_no);
-		petitionLikeDto.setEmp_no(emp_no);
+		petitionLikeDto.setEmp_no(emp_no);  
 		
-		int state = petitionDao.petitionState(petition_no);  // 기간만료 확인   -> 이거 그냥 when으로 막아놓기 
+		int state = petitionDao.petitionState(petition_no); // 청원 상태 체크
+		
 		if(state == 2 || state == 3 || state == 4 || state == 5) {
 			response.setContentType("text/html; charset=UTF-8"); 
 			PrintWriter out = response.getWriter();
-			out.println("<script>alert('만료된 청원입니다.'); history.go(-1); </script>"); 
+			out.println("<script>alert('기간이 만료된 청원입니다.'); history.go(-1); </script>"); 
 			out.flush(); 
 			return null;
 		}
 		
-		int agreeCheck = petitionLikeDao.petitionAgree(petitionLikeDto); // 이미 참여 여부 ( 이미 참여하면 0 return 아니면 insert )
-		System.out.println(agreeCheck);
+		int agreeCheck = petitionLikeDao.petitionAgree(petitionLikeDto); // 참여 중복 여부 체크
+
 		if ( agreeCheck == 0 ) {
 			response.setContentType("text/html; charset=UTF-8"); 
 			PrintWriter out = response.getWriter();
@@ -166,10 +169,10 @@ public class PetitionHandler {
 			return null;
 		} 
 		
-	    int count =  petitionLikeDao.countCheck(petition_no);  // 추천3개 확인  
-	    System.out.println(count);
-		if(count > 2) {
-			petitionLikeDao.approvalUpdate(petition_no);
+	    int count =  petitionLikeDao.countCheck(petition_no); // 청원 참여 개수 체크
+	     
+		if(count > 10) {  
+			petitionLikeDao.approvalUpdate(petition_no); // 심사중 업데이트
 		}
 		
 		return "redirect:PetitionDetail.do?petition_no="+petition_no+"&list="+list;
@@ -178,19 +181,18 @@ public class PetitionHandler {
 	
 	@RequestMapping("/PetitionFileDownload")
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException { 
-		System.out.println("File Handler");
-		
+		 
 		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
 		
 		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
+		
 		String path = petitionDto.getFile_path();
-		String file_ori_name= new String(petitionDto.getFile_ori_name().getBytes("UTF-8"), "ISO-8859-1"); 
-		 
+		String file_ori_name= new String( petitionDto.getFile_ori_name().getBytes("UTF-8"), "ISO-8859-1" ); 
 		File file = new File(path);
  
-		response.setContentLength((int)file.length()); 
-		response.setHeader("Content-Disposition", "attachment; filename=\""+file_ori_name+"\";");
-		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setContentLength( (int)file.length() ); 
+		response.setHeader( "Content-Disposition", "attachment; filename=\""+file_ori_name+"\";" );
+		response.setHeader( "Content-Transfer-Encoding", "binary" );
 		
 		OutputStream out = response.getOutputStream();
 		FileInputStream fis = null; 
@@ -204,10 +206,9 @@ public class PetitionHandler {
 		
 	}
 	 
-	@RequestMapping("/PetitionList")
+	@RequestMapping("/PetitionList") // 청원메인
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("List Handler");
-		
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("start",0);
 		
@@ -220,10 +221,9 @@ public class PetitionHandler {
 		return new ModelAndView("petition/list");
 	} 
 	
-	@RequestMapping("/AllList")
+	@RequestMapping("/AllList") // 모든청원
 	public ModelAndView all(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("All");
-
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		
 		int totalList = 0;
@@ -266,10 +266,9 @@ public class PetitionHandler {
 		return new ModelAndView("petition/all");
 	} 
 	
-	@RequestMapping("/OngoingList")
+	@RequestMapping("/OngoingList") // 진행중인 청원
 	public ModelAndView ongoing(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Ongoing");
-	
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("sort","ongoing");
 		
@@ -315,10 +314,9 @@ public class PetitionHandler {
 	} 
 	
 	
-	@RequestMapping("/ExpireList") // 마감
+	@RequestMapping("/ExpireList") // 기간이 만료된 청원
 	public ModelAndView expire(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Expire");
-		
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>();
 		map.put("sort","expire");
 		
@@ -345,6 +343,7 @@ public class PetitionHandler {
 			
 			totalList = list.size();
 		}
+		
 		totalList = petitionDao.petitionListCount(map);
   
 		int maxPage = (int)(totalList/10.0+0.9);  
@@ -361,10 +360,9 @@ public class PetitionHandler {
 		return new ModelAndView("petition/expire");
 	} 
 	
-	@RequestMapping("/EvaluateList")
+	@RequestMapping("/EvaluateList") // 심사중인 청원
 	public ModelAndView evaluate(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Evaluate");
-		
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("sort","evaluate");
 		
@@ -391,6 +389,7 @@ public class PetitionHandler {
 			
 			totalList = list.size();
 		}
+		
 		totalList = petitionDao.petitionListCount(map);
   
 		int maxPage = (int)(totalList/10.0+0.9);  
@@ -407,10 +406,9 @@ public class PetitionHandler {
 		return new ModelAndView("petition/evaluate");
 	} 
 	
-	@RequestMapping("/AnswerList")
+	@RequestMapping("/AnswerList") // 심사완료된 청원
 	public ModelAndView accept(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Answer");
-		
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		map.put("sort","answer");
 		
@@ -454,12 +452,12 @@ public class PetitionHandler {
 		return new ModelAndView("petition/answer");
 	} 
 	
-	@RequestMapping("/ManageList")
+	@RequestMapping("/ManageList") // 관리자 청원
 	public ModelAndView manage(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-		System.out.println("Manage");
-	
+		 
 		HashMap<String, Object> map = new HashMap<String,Object>(); 
 		List<PetitionDto> list; 
+		
 		int totalList = 0;
 		int spage = 1;
 		
@@ -511,16 +509,15 @@ public class PetitionHandler {
 	} 
 	
 	
-	@RequestMapping("/ReplyWrite")
-	public ModelAndView replyWrite(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {  // String IOException
-		System.out.println("ReplyWrite Handler");
-	
+	@RequestMapping("/ReplyWrite") // 관리자 답변 작성 페이지
+	public ModelAndView replyWrite(HttpServletRequest request, HttpServletResponse response)  throws Throwable {  
+		 
 		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
 		String list = request.getParameter("list");
 		
 		PetitionDto petitionDto = petitionDao.petitionDetail(petition_no);
 		
-		String content = (petitionDto.getContent()).replace("\r\n", "<br>");
+		String content = ( petitionDto.getContent()).replace("\r\n", "<br>" );
 		
 		request.setAttribute("content",content);
 		request.setAttribute("list",list);
@@ -530,22 +527,21 @@ public class PetitionHandler {
 	}
 	
 	@RequestMapping("/ReplyWritePro")
-	public String replyWritePro(HttpServletRequest request, HttpServletResponse response)  throws IllegalStateException,IOException {  // String IOException
-		System.out.println("ReplyWritePro"); 
-
-		int petition_no = Integer.parseInt( request.getParameter("petition_no") );
-		System.out.println(request.getParameter("category"));
+	public String replyWritePro(HttpServletRequest request, HttpServletResponse response)  throws Throwable {  
+		 
+		int petition_no = Integer.parseInt( request.getParameter("petition_no") ); 
 		String category = request.getParameter("category");
 		 
 		PetitionDto petitionDto = new PetitionDto();
 		petitionDto.setPetition_no(petition_no);
 		petitionDto.setComment(request.getParameter("comment")); 
+		
 		petitionDao.replyWrite(petitionDto);
 		
 		if (category.equals("Y")) {
-			petitionDao.acceptUpdate(petition_no);
+			petitionDao.acceptUpdate(petition_no);  // 채택
 		}else {
-			petitionDao.refusalUpdate(petition_no);
+			petitionDao.refusalUpdate(petition_no); // 거부
 		}
  
 		return "redirect:ManageList.do"; 

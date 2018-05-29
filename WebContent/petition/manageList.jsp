@@ -112,7 +112,7 @@ function searchClick(){
 				<option value="0" <c:if test="${src eq '0'}">selected</c:if>>제목</option>
 				<option value="1" <c:if test="${src eq '1'}">selected</c:if>>내용</option>
 				<option value="2" <c:if test="${src eq '2'}">selected</c:if>>제목/내용</option>
-				<option value="3" <c:if test="${src eq '3'}">selected</c:if>>글쓴이</option>
+				<option value="3" <c:if test="${src eq '3'}">selected</c:if>>사원번호</option>
 			</select> 
 			<input type="text" size="17" name="search" value="${search}"/> <input type="submit" value="검색" />
 		</form>

@@ -90,7 +90,8 @@
 	
 	
 	<select id="InstructorCount" resultType="int">
-		select count(*) from instructor
+		select count(*) from instructor where
+		approval_state = 3
 	</select>
 	<select id="InstructorCategoryCount" resultType="int">
 		select count(*) from instructor where
@@ -102,11 +103,12 @@
 		</if>
 		<choose>
 			<when test="cat == 'number'">
-				instructor_no like concat('%', #{word}, '%')
+				instructor_no like concat('%', #{word}, '%') and
 			</when>
 			<when test="cat == 'name'">
-				name like concat('%', #{word}, '%')
+				name like concat('%', #{word}, '%') and
 			</when>
 		</choose>
+		approval_state = 3
 	</select>
 </mapper>

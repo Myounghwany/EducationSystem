@@ -50,7 +50,7 @@
 			<mvc:exclude-mapping path="/user/login.do" />
 			<bean class="com.es.interceptor.session" />
 		</mvc:interceptor> <!-- 추가로 여러개의 인터셉터 설정 가능 -->
-</mvc:interceptors>
+	</mvc:interceptors>
 
 
 	
@@ -65,6 +65,7 @@
 	<context:component-scan base-package="com.es.projectCommunity" />
 	<context:component-scan base-package="com.es.interceptor" />
 	<context:component-scan base-package="com.es.user" />
+	<context:component-scan base-package="com.es.main" />
 	
 	<mvc:annotation-driven />
 

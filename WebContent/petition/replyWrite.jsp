@@ -70,7 +70,7 @@ function writecheck() {
 		<td style="padding: 20px 0;">${content}</td>
 		</tr>
 		<tr>
-		<td><input type="radio" name="category" value="Y">채택</td>
+		<td><input type="radio" name="category" value="Y" checked="checked">채택</td>
 		<td><input type="radio" name="category" value="N">거절</td>
 		</tr>
 		<tr>
