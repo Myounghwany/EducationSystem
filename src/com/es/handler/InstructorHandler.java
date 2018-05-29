@@ -213,6 +213,7 @@ public class InstructorHandler {
 			File f = new File(file_path+file.getOriginalFilename());
 			file.transferTo(f);			
 			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+			file_path += "\\" + file_save_name;
 		}
 		
 		String edu_code = request.getParameter("edu_code");
@@ -484,17 +485,6 @@ public class InstructorHandler {
 			File f = new File(file_path+file.getOriginalFilename());
 			file.transferTo(f);			
 			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
-			file_path += "\\" + file_save_name;
-		}
-		if(file_ori_name.length() != 0) {
-			file_path = request.getServletContext().getRealPath("/save");
-			file_save_name = uploadFile(file_path, file_ori_name, file.getBytes());
-			File dir = new File(file_path);
-			if(!dir.isDirectory()) {
-				dir.mkdirs();
-			}
-			File f = new File(file_path+file.getOriginalFilename());
-			file.transferTo(f);			
 			file_path += "\\" + file_save_name;
 		}
 	    System.out.println("file_path : " + file_path + "file_ori_name : " + file_ori_name + " / "+"file_save_name" + file_save_name);

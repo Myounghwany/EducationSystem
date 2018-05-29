@@ -16,6 +16,7 @@
 
 <!-- 나현 로그인모달 & 드롭다운-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <style>
@@ -257,5 +258,5 @@
 	
 	
 	</div>
-<jsp:include page="../common/fixedFooter.jsp" />
+	
 </body>
