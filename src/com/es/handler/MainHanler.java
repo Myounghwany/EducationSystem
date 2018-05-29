@@ -55,11 +55,23 @@ public class MainHanler {
 	
 		@RequestMapping("main")
 		public ModelAndView noitce(HttpServletRequest request, HttpServletResponse response, MainDto maindto, Model model, HttpSession session) throws Throwable {
+			
 			HttpSession httpSession = request.getSession();
-			String account_no =  (String) httpSession.getAttribute("no");
-			String name =  (String) httpSession.getAttribute("name");
+			String account_no = (String) httpSession.getAttribute("no");
+			System.out.println("acc no : " + account_no);
 			InstructorDto instructorDto = new InstructorDto();
 			
+			//직원이 아닐 경우
+			if(account_no == null) {
+				String instructor_check = instructorDao.selectInstructorCheck(account_no);
+				System.out.println( instructor_check);
+				if(instructor_check.equals("0")) {
+					request.setAttribute("account_no", null);
+					
+					return new ModelAndView("index");
+				}
+			}
+
 			//직원일 경우
 			if(account_no.substring(0, 1).equals("E")) {
 				String instructor_check = instructorDao.selectInstructorCheck(account_no);
@@ -103,13 +115,16 @@ public class MainHanler {
 			}else {
 				request.setAttribute("approval_state", "3");
 				request.setAttribute("instructor_no", account_no);
+				
 				//강사정보
 				instructorDto.setInstructor_no(account_no);
 				List <InstructorDto> instInfo = instructorDao.selectInstructorInfo(instructorDto);
 				request.setAttribute("instInfo", instInfo);
 				EduList(account_no, request, 1);
+
 			}
 			
+
 			
 			//===================================================
 			String emp_no = (String) session.getAttribute("no");

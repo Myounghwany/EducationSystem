@@ -9,7 +9,7 @@ public class NoticeDataBean {
 	private String content;
 	private String writer;
 	private String writer_name;
-	private Timestamp write_time;
+	private String write_time;
 	private int hit;
 	private String file_path;
 	private String file_save_name;
@@ -46,10 +46,11 @@ public class NoticeDataBean {
 	public void setWriter_name(String writer_name) {
 		this.writer_name = writer_name;
 	}
-	public Timestamp getWrite_time() {
+
+	public String getWrite_time() {
 		return write_time;
 	}
-	public void setWrite_time(Timestamp write_time) {
+	public void setWrite_time(String write_time) {
 		this.write_time = write_time;
 	}
 	public int getHit() {
