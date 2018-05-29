@@ -227,9 +227,8 @@ public class ManagerEduHandler {
 				+ '/'+ endDate + '/'+ edu_date + '/'+ input_time + '/'+ closing_date + '/'+ edu_location + '/'+ budget + '/'+ note + '/'+ applicants_limit );
 		//필수교육대상
 		String checkTarget = request.getParameter("checkTarget");
-		if(checkTarget.equals("noTarget")) {//필수교육대상 없을 때
-			instructorDto.setEdu_target(null);
-		} else {
+		String value = "noTarget";
+		if(!(value.equals(checkTarget))) {//필수교육대상 있을 때
 			String[] select1 = request.getParameterValues("select1");
 			int length = select1.length;
 			String[] belong_no1 = new String[length];
@@ -468,11 +467,8 @@ public class ManagerEduHandler {
 		//필수교육대상
 		String checkTarget = request.getParameter("checkTarget");
 		JSONArray arr = new JSONArray();
-		if(checkTarget.equals("noTarget")) {//필수교육대상 없을 때
-			
-			/*instructorDto.setEdu_target(arr.toString());*/
-			
-		}else {//필수교육대상 있을 때
+		String value = "noTarget";
+		if(!(value.equals(checkTarget))) {//필수교육대상 있을 때
 			String[] select1 = request.getParameterValues("select1");
 			int length = select1.length;
 			String[] belong_no1 = new String[length];
