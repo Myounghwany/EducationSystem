@@ -214,6 +214,7 @@ public class InstructorHandler {
 			file.transferTo(f);			
 			file_path += "\\" + file_save_name;
 			System.out.println("file_ori_name : " + file_ori_name + " / "+"file_save_name : " + file_save_name);
+			file_path += "\\" + file_save_name;
 		}
 		
 		String edu_code = request.getParameter("edu_code");

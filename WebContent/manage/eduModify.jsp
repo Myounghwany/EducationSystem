@@ -225,7 +225,7 @@
 	<h3>강의계획서 수정 페이지</h3>
 	<div style="width: 90%; margin: 20px auto">
 		<br />
-		<form name="eduModifyForm" method="post" action="/EducationSystem/manage/eduModify.do"
+		<form name="eduForm" method="post" action="/EducationSystem/manage/eduModify.do"
 			enctype="multipart/form-data" onsubmit="return inputCheck()">
 			<input type="hidden" name="edu_no" value="${edu_no}">
 			<input type="hidden" name="instructor_no" value="${instructor_no}">
@@ -323,6 +323,7 @@
 									type="button" value="삭제" onclick="removeTarget()"></td>
 							</tr>
 						</table>
+						</div>
 					</td>
 
 				</tr>
