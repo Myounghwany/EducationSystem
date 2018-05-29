@@ -189,7 +189,9 @@ table tr td .title:hover {
 					</c:otherwise>
 				</c:choose>
 				<tr>
+				<c:if test="${sessionScope.account eq 'hr'}">
 				<button id="writeBtn" class="w3-button w3-white w3-border">작성하기</button>
+				</c:if>
 				</tr>
 			</table>
 		</div>

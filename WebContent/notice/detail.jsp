@@ -171,6 +171,7 @@ table tr td .title:hover {
 				href="${path}/ProjectCommunity/fileDownload.do?project_no=${result.notice_no}">${result.file_ori_name}</a></td>
 		</tr>
 		<tr>
+		<c:if test="${sessionScope.account eq 'hr'}">
 					<td colspan="4">
 					
 					<div align="center">
@@ -179,6 +180,7 @@ table tr td .title:hover {
 						onclick="if(confirm('정말 삭제 하시겠습니까?')){location='${path}/notice/delete.do?notice_no=${result.notice_no}'}"/>
 						<input class="w3-button w3-white w3-border" type="button" value="목록보기" onclick="location='${path}/notice.do'">
 					</div>
+					</c:if>
 				</td>
 			
 		</tr>	

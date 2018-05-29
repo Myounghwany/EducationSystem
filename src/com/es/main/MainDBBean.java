@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.es.db.SqlMapClient;
 import com.es.education.EduHistoryDto;
+import com.es.instructor.InstructorDto;
+import com.es.manager.InstListDto;
 
 @Component("mainDao")
 public class MainDBBean implements MainDao{
@@ -28,13 +30,24 @@ public class MainDBBean implements MainDao{
 		return result;
 	}
 	
-	@Override
-	public List<MainDto> instructorFive(MainDto maindto) {
-		return SqlMapClient.getSession().selectList("main.instructorFive", maindto);
-	}
+
 	
 	@Override
 	public List<MainDto> eduFive(MainDto maindto) {
 		return SqlMapClient.getSession().selectList("main.eduFive", maindto);
+	}
+	
+	public List selectEduList(InstructorDto instructorDto) {
+		return SqlMapClient.getSession().selectList("main.selectEduList", instructorDto);
+	}
+	
+	@Override
+	public List<InstructorDto> selectEduList2(String edu_no) {
+		return SqlMapClient.getSession().selectList("Instructor.selectEduList2", edu_no);
+	}
+	
+	@Override
+	public List<InstListDto> getReqInstList(int approval_state) {
+		return SqlMapClient.getSession().selectList("Manager.ReqInstList", approval_state);
 	}
 }

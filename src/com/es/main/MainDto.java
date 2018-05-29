@@ -31,7 +31,6 @@ public class MainDto {
 	private int applicants_limit;//신청자제한수
 	private String closing_date; //신청마감일
 	private int approval_state;  //승인여부
-	
 	/* 교육번호로 교육명, 강사번호로 강사명, 교육번호로 일정 알아내기 추가 */
 	private String emp_eval; //직원평가
 	private String instructor_eval;
@@ -44,6 +43,17 @@ public class MainDto {
 	private String name; 	
 	private Timestamp hire_date;
 	private String instructor_name;
+	
+	
+	//수강자
+	private int student;//
+	
+	public int getStudent() {
+		return student;
+	}
+	public void setStudent(int student) {
+		this.student = student;
+	}
 	public int getNotice_no() {
 		return notice_no;
 	}

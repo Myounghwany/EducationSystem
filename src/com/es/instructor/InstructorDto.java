@@ -7,7 +7,7 @@ public class InstructorDto {
 	private String phone;
 	private String email;
 	private String account_no;
-	private String instructor_no;
+	private String instructor_no;//
 	private int approval_state;
 	private String instructor_check;
 	private String hire_date;
@@ -18,7 +18,7 @@ public class InstructorDto {
 	private String name;
 	private String edu_field;
 	private int edu_code;
-	private String edu_name;
+	private String edu_name;//
 	private String edu_target;
 	private String manager;
 	private String edu_way;
@@ -27,7 +27,7 @@ public class InstructorDto {
 	private String edu_location;
 	private String budget;
 	private String note;
-	private int applicants_limit;
+	private int applicants_limit;//
 	private String closing_date;
 	private String emp_no;
 	private int dept_no;
@@ -49,7 +49,7 @@ public class InstructorDto {
 	private String edu_code_name;
 	private String instructor_name;
 	private String deadLine;
-	private int student;
+	private int student;//
 	private int page;
 	private int eduListNum;
 	public String getIdentity_no() {
