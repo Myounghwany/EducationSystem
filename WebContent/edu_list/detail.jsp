@@ -10,7 +10,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
     
-	var edu_target =  ${eduTarget};  
+	
+	if($('#edu_target').text() !=""){
+		
+	
+	var edu_target = ${eduTarget};  
 	var str = JSON.stringify(edu_target);
 	var newArr = JSON.parse(str);
 	var target ="";
@@ -21,7 +25,7 @@ $(document).ready(function() {
 	
 	
 	$('#edu_target').html(target);
-
+	}
 	
 
 	$('#applicationBtn').click(function(){
