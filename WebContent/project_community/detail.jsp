@@ -92,7 +92,6 @@ $(document).ready(function(){
 					location.href="${path}/ProjectCommunity/detail.do?project_no="+project_no;
 			},
 			error : function(request,status,error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});
@@ -156,7 +155,6 @@ $(document).ready(function(){
 			         
 			},
 			error : function(request,status,error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});	 
@@ -174,7 +172,6 @@ $(document).ready(function(){
 					console.log('data : '+data);
 			},
 			error : function(request,status,error){
-				alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 			}
 		});	 
@@ -222,7 +219,6 @@ $(document).ready(function(){
 						console.log('data : '+data);
 				},
 				error : function(request,status,error){
-					alert("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 					console.log("code : "+"\n"+request.status+"\n"+"message: "+"\n"+request.responseText+"\n"+" error : "+"\n"+error);
 				}
 			}); 

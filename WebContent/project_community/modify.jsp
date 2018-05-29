@@ -16,6 +16,7 @@
 
 		console.log('tmp : '+tmp);
 		
+		
 		$("select option[value=" + tmp + "]").attr("selected", true);
 
 		$('#resultTransfer').css('display', "none");
@@ -98,7 +99,7 @@
 			<tr>
 				<td>게시글</td>
 				<td>
-					<textarea class="form-control" rows="10" name="text" id="text" style="width: 700px; height: 50%;" ></textarea>
+					<textarea class="form-control" rows="10" name="text" id="text" style="width: 700px; height: 50%;">${result.content}</textarea>
 					<span style="float: right;"> 
 						(<span id="textCount" class="textCount">0</span>/1000)
 					</span>

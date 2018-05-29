@@ -22,8 +22,19 @@
 			location = "ProjectCommunity/write.do";
 		});
 
-	});
+	
+	if($('#optV').val() !=""){
+		var  opt = $('#optV').val();
+		var condition =$('#conditionV').val();
+		
+		$(".selectDefault option:eq("+opt+")").attr("selected", "selected");
+		$("#condition").val(condition);
+		
+	}
 
+	});
+	
+	
 	function searchCheck() {
 	
 	if (searchform[1].value == "") {
@@ -53,7 +64,7 @@
 					<option value="2">제목+내용</option>
 					<option value="3">작성자</option>
 				</select> 
-				<input type="text" size="20" name="condition" />&nbsp; 
+				<input type="text" size="20" name="condition" id="condition"/>&nbsp; 
 				<input type="submit" value="검색" />
 			</form>
 		
@@ -139,6 +150,9 @@
 			</c:if>
 
 		</div>
+		
+		<input type="hidden" value="${opt}" id="optV" name="optV">
+		<input type="hidden" value="${condition}" id="conditionV">
 		
 		<!-- 검색시 되돌아가기 -->
 		<div align="center">
