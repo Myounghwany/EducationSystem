@@ -195,4 +195,8 @@
 		ORDER BY h.emp_no ASC
 	</select>
 	
+	<delete id="DeleteReqInst">
+		DELETE FROM instructor
+		WHERE emp_no = #{emp_no}
+	</delete>
 </mapper>

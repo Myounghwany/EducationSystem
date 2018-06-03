@@ -438,6 +438,28 @@ public class ManagerHandler {
 		return instEval(request, response);
 	}
 	
+	@RequestMapping("reqInstDelete")
+	public ModelAndView deleteReqInst(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		String emp_no = request.getParameter("emp_no");
+		int result = managerDao.deleteReqInst(emp_no);
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		if(result == 1) {
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('삭제되었습니다.')");
+			out.println("</script>");
+			out.flush();
+		} else {
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('삭제에 실패하였습니다. 다시 시도해주세요.');");
+			out.println("</script>");
+			out.flush();
+		}
+		return instEval(request, response);
+	}
+	
 	@RequestMapping("mustEmpList")
 	public ModelAndView mustList(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 		List<EduCodeDto> eduList = managerDao.getMustEduList();

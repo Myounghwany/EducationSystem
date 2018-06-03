@@ -68,4 +68,6 @@ public interface ManagerDao {
 
 	List<MustEduDto> getMustEduStateList(int edu_code);
 
+	int deleteReqInst(String inst_no);
+
 }

@@ -51,6 +51,10 @@
 			$('#approval_state').val(approval_state);
 			$('#sendReq').submit();
 		});
+		$('.approval_delete').click(function() {
+			var emp_no = $(this).val();
+			location.href='reqInstDelete.do?emp_no='+emp_no;
+		});
 	});
 </script>
 <style>

@@ -152,4 +152,9 @@ public class ManagerDBBean implements ManagerDao {
 	public List<MustEduDto> getMustEduStateList(int edu_code) {
 		return SqlMapClient.getSession().selectList("Manager.MustEduCationStateList", edu_code);
 	}
+
+	@Override
+	public int deleteReqInst(String inst_no) {
+		return SqlMapClient.getSession().delete("Manager.DeleteReqInst", inst_no);
+	}
 }
